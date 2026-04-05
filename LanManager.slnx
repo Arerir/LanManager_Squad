@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LanManager.Api/LanManager.Api.csproj" />
+    <Project Path="src/LanManager.AppHost/LanManager.AppHost.csproj" />
+    <Project Path="src/LanManager.Maui/LanManager.Maui.csproj" />
+    <Project Path="src/LanManager.ServiceDefaults/LanManager.ServiceDefaults.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,18 @@
+# Squad: ignore runtime state (logs, inbox, sessions)
+.squad/orchestration-log/
+.squad/log/
+.squad/decisions/inbox/
+.squad/sessions/
+# Squad: SubSquad activation file (local to this machine)
+.squad-workstream
+# Frontend env files (keep .env.example tracked)
+frontend/.env.development
+frontend/.env.local
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Node
+frontend/node_modules/
+frontend/dist/

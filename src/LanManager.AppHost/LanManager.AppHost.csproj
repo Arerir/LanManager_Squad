@@ -1,0 +1,15 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.2.1">
+
+  <ItemGroup>
+    <ProjectReference Include="..\LanManager.Api\LanManager.Api.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>eefbbcad-174e-43bf-a41c-50f982bed0e4</UserSecretsId>
+  </PropertyGroup>
+
+</Project>
