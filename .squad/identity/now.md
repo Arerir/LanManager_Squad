@@ -1,29 +1,24 @@
 ---
-updated_at: 2026-04-05T15:29:00.000Z
-focus_area: Foundation PRs awaiting review + backend APIs ready to start
-active_issues: [1, 2, 3, 4, 5, 6, 7, 8]
+updated_at: 2026-04-05T16:58:32.000Z
+focus_area: Sprint 2 — SignalR attendance board + MAUI check-in operator app
+active_issues: [9, 10]
 ---
 
 # What We're Focused On
 
-Foundation work complete — three branches are open as PRs awaiting review and merge.
+Issues #1–#8 are closed. Master has: data layer, full REST API, React event + user views.
 
-## Open PRs (need review → merge)
-
-| PR | Issue | Agent | Work |
-|----|-------|-------|------|
-| #13 | #1 | Morpheus | Aspire scaffold — AppHost, ServiceDefaults, API, MAUI projects |
-| #14 | #2 | Tank | EF Core data models — Event, User, Registration, CheckInRecord + migration |
-| #15 | #6 | Trinity | React frontend — Vite+TS, React Router v6, AppLayout, stub pages |
-
-## Next Up (unstarted)
+## Sprint 2 — In Flight
 
 | Issue | Agent | Work |
 |-------|-------|------|
-| #3 | Tank | Events CRUD API |
-| #4 | Tank | Users & Registration API |
-| #5 | Tank | Check-in/Check-out API |
-| #7 | Trinity | Event management views |
-| #8 | Trinity | User registration forms |
-| #9 | Switch | MAUI check-in app |
-| #10 | Tank + Trinity | Real-time attendance with SignalR |
+| #9 | Switch | MAUI check-in operator app — search attendees, check in/out, visual feedback |
+| #10 (backend) | Tank | SignalR hub broadcasting check-in/check-out events |
+| #10 (frontend) | Trinity | React attendance board subscribing to SignalR hub |
+
+## Post-MVP (deferred)
+
+| Issue | Agent | Work |
+|-------|-------|------|
+| #11 | Tank + Trinity | Tournament bracket service with live standings |
+| #12 | Tank + Trinity | Interactive seating/floor map |

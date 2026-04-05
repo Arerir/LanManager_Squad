@@ -50,7 +50,22 @@ All issues properly labeled for triage workflow.
 **What:** Vite + React 18 + TypeScript in frontend/. React Router v6 for client-side routing. VITE_API_URL env var for backend URL (defaults to localhost:5000). No CSS framework yet — base styles inline until we settle on a design system.  
 **Why:** Vite is fast for dev. TypeScript everywhere from day one. No design system decision yet — keep it flexible.
 
+### 2026-04-05: API contracts (Tank)
+**By:** Tank  
+**What:** All REST API routes prefixed `/api`. GUIDs as IDs throughout. UTC ISO8601 dates. Status fields serialized as strings (not integers). `[ApiController]` returns `ProblemDetails` for errors; `ValidationProblemDetails` for 400s. `POST /register` and `POST /events` return `201 Created` with `Location` header.  
+**Key endpoints:** `GET/POST /api/events`, `GET/PUT/DELETE /api/events/{id}`, `POST /api/users/register`, `GET /api/users/{id}`, `GET /api/users`, `POST /api/events/{id}/register`, `GET /api/events/{id}/attendees`, `POST /api/events/{id}/checkin`, `POST /api/events/{id}/checkout`, `GET /api/events/{id}/attendance`.  
+**Why:** Documented for Trinity (React) and Switch (MAUI) to consume without ambiguity.
+
+### 2026-04-05: Frontend API module and routing conventions (Trinity)
+**By:** Trinity  
+**What:** All API calls in `frontend/src/api/events.ts` and `frontend/src/api/users.ts`. Flat routes in `App.tsx`. Auth/session via `localStorage` (`currentUser` key). No CSS framework — inline styles with consistent patterns. Login stubs against `/api/auth/login` (not yet implemented).  
+**Why:** Keeps API surface isolated and typed. Routing is flat for simplicity. Auth deferred to a later issue.
+
 ## Governance
+
+- All meaningful changes require team consensus
+- Document architectural decisions here
+- Keep history focused on work, decisions focused on direction
 
 - All meaningful changes require team consensus
 - Document architectural decisions here
