@@ -2,6 +2,7 @@
 using LanManager.Maui.Services;
 using LanManager.Maui.ViewModels;
 using LanManager.Maui.Views;
+using ZXing.Net.Maui.Controls;
 
 namespace LanManager.Maui;
 
@@ -12,6 +13,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+			.UseBarcodeReader()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -30,11 +32,13 @@ public static class MauiProgram
 		builder.Services.AddTransient<MainViewModel>();
 		builder.Services.AddTransient<CheckInViewModel>();
 		builder.Services.AddTransient<AttendanceViewModel>();
+		builder.Services.AddTransient<DoorScanViewModel>();
 
 		// Register Views
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<CheckInPage>();
 		builder.Services.AddTransient<AttendancePage>();
+		builder.Services.AddTransient<DoorScanPage>();
 
 		return builder.Build();
 	}
