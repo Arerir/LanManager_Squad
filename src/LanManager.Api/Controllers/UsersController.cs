@@ -41,6 +41,8 @@ public class UsersController(UserManager<ApplicationUser> userManager) : Control
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20)
     {
+        if (page < 1) page = 1;
+        pageSize = Math.Clamp(pageSize, 1, 100);
         var query = userManager.Users.OrderBy(u => u.UserName);
         var total = await query.CountAsync();
         var users = await query

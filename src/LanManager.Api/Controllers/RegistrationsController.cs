@@ -25,6 +25,11 @@ public class RegistrationsController(LanManagerDbContext db, UserManager<Applica
         if (existing is not null)
             return Conflict(new { message = "User is already registered for this event." });
 
+        var registeredCount = await db.Registrations
+            .CountAsync(r => r.EventId == eventId && r.Status == RegistrationStatus.Confirmed);
+        if (registeredCount >= ev.Capacity)
+            return Conflict(new { message = "Event is at full capacity." });
+
         var registration = new Registration
         {
             EventId = eventId,
