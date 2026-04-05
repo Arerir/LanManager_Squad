@@ -70,6 +70,12 @@ export function EventDetailPage() {
             Edit
           </button>
           <button
+            onClick={() => navigate(`/attendance?eventId=${event.id}&tab=doorlog`)}
+            style={{ background: '#6c757d', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}
+          >
+            📋 Door Log
+          </button>
+          <button
             onClick={handleDelete}
             disabled={deleting}
             style={{ background: '#dc3545', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}
