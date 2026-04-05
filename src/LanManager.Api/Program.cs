@@ -1,4 +1,6 @@
 using LanManager.Api.Data;
+using LanManager.Api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,10 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<LanManagerDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
         ?? "Data Source=lanmanager.db"));
+
+builder.Services.AddIdentityCore<ApplicationUser>()
+    .AddRoles<IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<LanManagerDbContext>();
 
 var app = builder.Build();
 

@@ -1,17 +1,21 @@
 using LanManager.Api.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LanManager.Api.Data;
 
-public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options) : DbContext(options)
+public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Event> Events => Set<Event>();
-    public DbSet<User> Users => Set<User>();
     public DbSet<Registration> Registrations => Set<Registration>();
     public DbSet<CheckInRecord> CheckInRecords => Set<CheckInRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Registration>()
             .HasIndex(r => new { r.EventId, r.UserId })
             .IsUnique();
