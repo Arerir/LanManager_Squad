@@ -12,6 +12,7 @@ public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
     public DbSet<Registration> Registrations => Set<Registration>();
     public DbSet<CheckInRecord> CheckInRecords => Set<CheckInRecord>();
     public DbSet<DoorPassRecord> DoorPasses => Set<DoorPassRecord>();
+    public DbSet<Seat> Seats => Set<Seat>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,6 +39,12 @@ public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
 
         modelBuilder.Entity<DoorPassRecord>()
             .HasIndex(d => new { d.EventId, d.UserId, d.ScannedAt });
+
+        modelBuilder.Entity<Seat>(b => {
+            b.HasKey(s => s.Id);
+            b.HasIndex(s => new { s.EventId, s.Row, s.Column }).IsUnique();
+            b.HasOne(s => s.Event).WithMany().HasForeignKey(s => s.EventId).OnDelete(DeleteBehavior.Cascade);
+        });
 
         SeedRoles(modelBuilder);
     }

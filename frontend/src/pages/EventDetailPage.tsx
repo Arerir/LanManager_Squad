@@ -75,6 +75,10 @@ export function EventDetailPage() {
           >
             📋 Door Log
           </button>
+          <button onClick={() => navigate(`/seating?eventId=${event.id}`)}
+            style={{ background: '#16a085', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}>
+            🪑 Seating
+          </button>
           <button
             onClick={handleDelete}
             disabled={deleting}
