@@ -1,5 +1,6 @@
-using LanManager.Api.DTOs;
+﻿using LanManager.Api.DTOs;
 using LanManager.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace LanManager.Api.Controllers;
 public class UsersController(UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<ActionResult<UserDto>> Register([FromBody] CreateUserRequest request)
     {
         var user = new ApplicationUser
@@ -29,6 +31,7 @@ public class UsersController(UserManager<ApplicationUser> userManager) : Control
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<ActionResult<UserDto>> GetById(Guid id)
     {
         var user = await userManager.FindByIdAsync(id.ToString());
@@ -37,6 +40,7 @@ public class UsersController(UserManager<ApplicationUser> userManager) : Control
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin,Organizer")]
     public async Task<ActionResult<PagedResult<UserDto>>> GetAll(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20)

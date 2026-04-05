@@ -1,6 +1,7 @@
-using LanManager.Api.DTOs;
+﻿using LanManager.Api.DTOs;
 using LanManager.Data;
 using LanManager.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace LanManager.Api.Controllers;
 
 [ApiController]
 [Route("api/events/{eventId:guid}")]
+[Authorize(Roles = "Operator,Admin")]
 public class DoorPassController(LanManagerDbContext db, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet("attendees/{userId:guid}/qrcode")]

@@ -1,4 +1,5 @@
-import { config } from '../config';
+﻿import { config } from '../config';
+import { apiFetch } from './apiClient';
 
 export interface AttendanceDto {
   userId: string;
@@ -9,7 +10,7 @@ export interface AttendanceDto {
 const BASE = `${config.apiUrl}/api/events`;
 
 export async function getAttendance(eventId: string): Promise<AttendanceDto[]> {
-  const res = await fetch(`${BASE}/${eventId}/attendance`);
+  const res = await apiFetch(`${BASE}/${eventId}/attendance`);
   if (!res.ok) throw new Error(`Failed to fetch attendance: ${res.statusText}`);
   return res.json();
 }

@@ -1,5 +1,5 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import type { UserDto } from '../api/users';
+﻿import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { clearToken, getUser } from '../api/auth';
 
 const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties => ({
   color: isActive ? '#7eb3ff' : '#ccc',
@@ -11,11 +11,10 @@ const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties 
 
 export function AppLayout() {
   const navigate = useNavigate();
-  const raw = localStorage.getItem('currentUser');
-  const currentUser: UserDto | null = raw ? (JSON.parse(raw) as UserDto) : null;
+  const currentUser = getUser();
 
   function handleLogout() {
-    localStorage.removeItem('currentUser');
+    clearToken();
     navigate('/login');
   }
 
