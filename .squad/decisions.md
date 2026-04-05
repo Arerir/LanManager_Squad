@@ -35,6 +35,21 @@
 
 All issues properly labeled for triage workflow.
 
+### 2026-04-05: Aspire solution structure
+**By:** Morpheus  
+**What:** Solution at repo root. Projects under src/. Frontend React app at frontend/. Solution: LanManager.sln. AppHost orchestrates API; frontend commented out until Trinity scaffolds it. MAUI integrated separately by Switch.  
+**Why:** Standard Aspire layout. Separation of src/ and frontend/ keeps dotnet and npm tooling isolated.
+
+### 2026-04-05: Data model decisions
+**By:** Tank  
+**What:** SQLite for dev DB (easy swap to SQL Server for prod via connection string). Enums stored as strings in DB for readability. Unique constraint on Registration(EventId, UserId) prevents double-registration. CheckInRecord tracks check-out via nullable CheckedOutAt (single record per visit).  
+**Why:** Pragmatic dev setup. Relationships are clean and direct — no over-engineering.
+
+### 2026-04-05: Frontend scaffold decisions
+**By:** Trinity  
+**What:** Vite + React 18 + TypeScript in frontend/. React Router v6 for client-side routing. VITE_API_URL env var for backend URL (defaults to localhost:5000). No CSS framework yet — base styles inline until we settle on a design system.  
+**Why:** Vite is fast for dev. TypeScript everywhere from day one. No design system decision yet — keep it flexible.
+
 ## Governance
 
 - All meaningful changes require team consensus
