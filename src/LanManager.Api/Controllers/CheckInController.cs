@@ -20,6 +20,12 @@ public class CheckInController(LanManagerDbContext db, UserManager<ApplicationUs
         var user = await userManager.FindByIdAsync(request.UserId.ToString());
         if (user is null) return NotFound(new { message = "User not found." });
 
+        var isRegistered = await db.Registrations
+            .AnyAsync(r => r.EventId == eventId && r.UserId == request.UserId
+                      && r.Status == RegistrationStatus.Confirmed);
+        if (!isRegistered)
+            return BadRequest(new { message = "User is not registered for this event." });
+
         var active = await db.CheckInRecords
             .FirstOrDefaultAsync(c => c.EventId == eventId && c.UserId == request.UserId && c.CheckedOutAt == null);
         if (active is not null)
