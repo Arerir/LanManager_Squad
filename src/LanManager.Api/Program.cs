@@ -1,4 +1,5 @@
 using LanManager.Api.Hubs;
+using LanManager.Api.Services;
 using LanManager.Data;
 using LanManager.Data.Models;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<DataSeeder>();
 
 builder.Services.AddCors(options =>
 {
