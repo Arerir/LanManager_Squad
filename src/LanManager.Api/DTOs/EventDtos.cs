@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using LanManager.Data.Models;
 
 namespace LanManager.Api.DTOs;
@@ -15,21 +16,21 @@ public record EventDto(
 );
 
 public record CreateEventRequest(
-    string Name,
+    [Required] string Name,
     string? Description,
     string? Location,
-    DateTime StartDate,
-    DateTime EndDate,
-    int Capacity,
+    [Required] DateTime StartDate,
+    [Required] DateTime EndDate,
+    [Range(1, int.MaxValue)] int Capacity,
     EventStatus Status
 );
 
 public record UpdateEventRequest(
-    string Name,
+    [Required] string Name,
     string? Description,
     string? Location,
-    DateTime StartDate,
-    DateTime EndDate,
-    int Capacity,
+    [Required] DateTime StartDate,
+    [Required] DateTime EndDate,
+    [Range(1, int.MaxValue)] int Capacity,
     EventStatus Status
 );
