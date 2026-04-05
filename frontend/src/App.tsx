@@ -10,6 +10,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SeatingPage } from './pages/SeatingPage';
+import { TournamentPage } from './pages/TournamentPage';
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="seating" element={<SeatingPage />} />
+          <Route path="tournaments" element={<TournamentPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

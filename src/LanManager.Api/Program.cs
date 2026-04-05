@@ -14,6 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<DataSeeder>();
+builder.Services.AddScoped<BracketService>();
 
 builder.Services.AddCors(options =>
 {
@@ -65,5 +66,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<AttendanceHub>("/hubs/attendance");
+app.MapHub<TournamentHub>("/hubs/tournament");
 
 app.Run();

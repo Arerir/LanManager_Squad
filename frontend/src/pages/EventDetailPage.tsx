@@ -79,6 +79,10 @@ export function EventDetailPage() {
             style={{ background: '#16a085', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}>
             🪑 Seating
           </button>
+          <button onClick={() => navigate(`/tournaments?eventId=${event.id}`)}
+            style={{ background: '#8e44ad', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}>
+            🏆 Tournaments
+          </button>
           <button
             onClick={handleDelete}
             disabled={deleting}
