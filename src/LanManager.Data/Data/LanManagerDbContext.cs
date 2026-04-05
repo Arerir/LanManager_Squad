@@ -11,6 +11,7 @@ public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
     public DbSet<Event> Events => Set<Event>();
     public DbSet<Registration> Registrations => Set<Registration>();
     public DbSet<CheckInRecord> CheckInRecords => Set<CheckInRecord>();
+    public DbSet<DoorPassRecord> DoorPasses => Set<DoorPassRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,6 +31,13 @@ public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
         modelBuilder.Entity<Registration>()
             .Property(r => r.Status)
             .HasConversion<string>();
+
+        modelBuilder.Entity<DoorPassRecord>()
+            .Property(d => d.Direction)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<DoorPassRecord>()
+            .HasIndex(d => new { d.EventId, d.UserId, d.ScannedAt });
 
         SeedRoles(modelBuilder);
     }
