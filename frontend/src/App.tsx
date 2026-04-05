@@ -6,6 +6,9 @@ import { EventDetailPage } from './pages/EventDetailPage';
 import { EventFormPage } from './pages/EventFormPage';
 import { UsersPage } from './pages/UsersPage';
 import { AttendancePage } from './pages/AttendancePage';
+import { RegisterPage } from './pages/RegisterPage';
+import { LoginPage } from './pages/LoginPage';
+import { ProfilePage } from './pages/ProfilePage';
 
 export default function App() {
   return (
@@ -19,6 +22,9 @@ export default function App() {
           <Route path="events/:id/edit" element={<EventFormPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="attendance" element={<AttendancePage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
