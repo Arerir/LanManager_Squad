@@ -1,4 +1,4 @@
-namespace LanManager.Api.Models;
+namespace LanManager.Data.Models;
 
 public class Event
 {

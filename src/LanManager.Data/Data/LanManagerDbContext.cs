@@ -1,9 +1,9 @@
-using LanManager.Api.Models;
+using LanManager.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace LanManager.Api.Data;
+namespace LanManager.Data;
 
 public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
     : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
