@@ -1,6 +1,6 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginUser } from '../api/users';
+import { login, setToken, setUser } from '../api/auth';
 
 interface FormState {
   email: string;
@@ -61,9 +61,10 @@ export function LoginPage() {
     setSubmitting(true);
     setApiError(null);
     try {
-      const user = await loginUser(form.email.trim(), form.password);
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      navigate('/profile');
+      const res = await login(form.email.trim(), form.password);
+      setToken(res.token);
+      setUser(res);
+      navigate('/events');
     } catch (e) {
       setApiError((e as Error).message);
     } finally {

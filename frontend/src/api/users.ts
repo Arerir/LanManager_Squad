@@ -1,4 +1,5 @@
-import { config } from '../config';
+﻿import { config } from '../config';
+import { apiFetch } from './apiClient';
 
 export interface UserDto {
   id: string;
@@ -30,26 +31,13 @@ export async function registerUser(data: RegisterRequest): Promise<UserDto> {
 }
 
 export async function getUser(id: string): Promise<UserDto> {
-  const res = await fetch(`${BASE}/${id}`);
+  const res = await apiFetch(`${BASE}/${id}`);
   if (!res.ok) throw new Error(`Failed to fetch user: ${res.statusText}`);
   return res.json();
 }
 
 export async function getUsers(page = 1, pageSize = 20): Promise<UserDto[]> {
-  const res = await fetch(`${BASE}?page=${page}&pageSize=${pageSize}`);
+  const res = await apiFetch(`${BASE}?page=${page}&pageSize=${pageSize}`);
   if (!res.ok) throw new Error(`Failed to fetch users: ${res.statusText}`);
-  return res.json();
-}
-
-export async function loginUser(email: string, password: string): Promise<UserDto> {
-  const res = await fetch(`${config.apiUrl}/api/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || `Login failed: ${res.statusText}`);
-  }
   return res.json();
 }

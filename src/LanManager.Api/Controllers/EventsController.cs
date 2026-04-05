@@ -1,6 +1,7 @@
 using LanManager.Api.DTOs;
 using LanManager.Data;
 using LanManager.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,7 @@ namespace LanManager.Api.Controllers;
 public class EventsController(LanManagerDbContext db) : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<EventDto>>> GetAll(
         [FromQuery] EventStatus? status,
         [FromQuery] string? sort)
@@ -31,6 +33,7 @@ public class EventsController(LanManagerDbContext db) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<ActionResult<EventDto>> GetById(Guid id)
     {
         var ev = await db.Events.FindAsync(id);
@@ -39,6 +42,7 @@ public class EventsController(LanManagerDbContext db) : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Organizer")]
     public async Task<ActionResult<EventDto>> Create([FromBody] CreateEventRequest request)
     {
         var ev = new Event
@@ -59,6 +63,7 @@ public class EventsController(LanManagerDbContext db) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin,Organizer")]
     public async Task<ActionResult<EventDto>> Update(Guid id, [FromBody] UpdateEventRequest request)
     {
         var ev = await db.Events.FindAsync(id);
@@ -77,6 +82,7 @@ public class EventsController(LanManagerDbContext db) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var ev = await db.Events.FindAsync(id);

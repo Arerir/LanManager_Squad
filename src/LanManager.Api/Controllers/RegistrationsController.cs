@@ -1,6 +1,7 @@
-using LanManager.Api.DTOs;
+﻿using LanManager.Api.DTOs;
 using LanManager.Data;
 using LanManager.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace LanManager.Api.Controllers;
 public class RegistrationsController(LanManagerDbContext db, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpPost("register")]
+    [Authorize(Roles = "Attendee,Admin")]
     public async Task<ActionResult<RegistrationDto>> Register(Guid eventId, [FromBody] RegisterForEventRequest request)
     {
         var ev = await db.Events.FindAsync(eventId);
@@ -44,6 +46,7 @@ public class RegistrationsController(LanManagerDbContext db, UserManager<Applica
     }
 
     [HttpGet("attendees")]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<RegistrationDto>>> GetAttendees(Guid eventId)
     {
         var ev = await db.Events.FindAsync(eventId);

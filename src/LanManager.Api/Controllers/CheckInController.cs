@@ -1,7 +1,8 @@
-using LanManager.Api.DTOs;
+﻿using LanManager.Api.DTOs;
 using LanManager.Api.Hubs;
 using LanManager.Data;
 using LanManager.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -17,6 +18,7 @@ public class CheckInController(
     IHubContext<AttendanceHub> hubContext) : ControllerBase
 {
     [HttpPost("checkin")]
+    [Authorize(Roles = "Operator,Admin")]
     public async Task<ActionResult<CheckInDto>> CheckIn(Guid eventId, [FromBody] CheckInRequest request)
     {
         var ev = await db.Events.FindAsync(eventId);
@@ -53,6 +55,7 @@ public class CheckInController(
     }
 
     [HttpPost("checkout")]
+    [Authorize(Roles = "Operator,Admin")]
     public async Task<ActionResult<CheckInDto>> CheckOut(Guid eventId, [FromBody] CheckInRequest request)
     {
         var record = await db.CheckInRecords
@@ -72,6 +75,7 @@ public class CheckInController(
     }
 
     [HttpGet("attendance")]
+    [Authorize(Roles = "Organizer,Operator,Admin")]
     public async Task<ActionResult<IEnumerable<AttendanceDto>>> GetAttendance(Guid eventId)
     {
         var ev = await db.Events.FindAsync(eventId);
