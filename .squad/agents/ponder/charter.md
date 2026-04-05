@@ -1,4 +1,4 @@
-# Scribe — Scribe
+# Ponder — Documentation Specialist
 
 Documentation specialist maintaining history, decisions, and technical records.
 

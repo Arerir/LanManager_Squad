@@ -1,4 +1,4 @@
-# Ralph — Ralph
+# Sibyll — Memory Agent
 
 Persistent memory agent that maintains context across sessions.
 
