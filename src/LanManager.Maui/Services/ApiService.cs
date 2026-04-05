@@ -38,7 +38,8 @@ public class ApiService
         try
         {
             var url = $"/api/users?page={page}&pageSize={pageSize}";
-            return await _httpClient.GetFromJsonAsync<List<UserDto>>(url, _jsonOptions) ?? new List<UserDto>();
+            var result = await _httpClient.GetFromJsonAsync<PagedResult<UserDto>>(url, _jsonOptions);
+            return result?.Items.ToList() ?? new List<UserDto>();
         }
         catch (Exception ex)
         {
@@ -111,3 +112,4 @@ public record CheckInDto(Guid Id, Guid EventId, Guid UserId, string UserName, Da
 public record AttendanceDto(Guid UserId, string UserName, DateTime CheckedInAt);
 public record UserDto(Guid Id, string Name, string UserName, string Email);
 public record EventDto(Guid Id, string Name, string? Description, string? Location, DateTime StartDate, DateTime EndDate, int Capacity, string Status, DateTime CreatedAt);
+public record PagedResult<T>(IEnumerable<T> Items, int Page, int PageSize, int TotalCount);
