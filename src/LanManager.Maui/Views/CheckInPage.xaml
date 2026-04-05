@@ -13,6 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -80,8 +81,15 @@
                     Margin="5,0,0,0" />
         </Grid>
 
+        <!-- Door scanner button -->
+        <Button Grid.Row="4"
+                Text="📷 Door Scanner"
+                Command="{Binding GoToDoorScannerCommand}"
+                BackgroundColor="#e74c3c" TextColor="White"
+                CornerRadius="6" Margin="0,0,0,10" />
+
         <!-- User list -->
-        <CollectionView Grid.Row="4"
+        <CollectionView Grid.Row="5"
                        ItemsSource="{Binding FilteredUsers}"
                        SelectionMode="None">
             <CollectionView.ItemTemplate>
@@ -120,7 +128,7 @@
         </CollectionView>
 
         <!-- Loading overlay -->
-        <ActivityIndicator Grid.RowSpan="5"
+        <ActivityIndicator Grid.RowSpan="6"
                           IsRunning="{Binding IsLoading}"
                           IsVisible="{Binding IsLoading}"
                           Color="{StaticResource Primary}"

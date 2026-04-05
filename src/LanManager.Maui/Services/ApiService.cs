@@ -105,6 +105,24 @@ public class ApiService
             return new List<AttendanceDto>();
         }
     }
+
+    public async Task<DoorPassDto?> DoorScanAsync(Guid eventId, Guid userId, string direction)
+    {
+        var request = new DoorScanRequest(userId, direction);
+        var response = await _httpClient.PostAsJsonAsync($"/api/events/{eventId}/door-scan", request);
+        if (response.IsSuccessStatusCode)
+            return await response.Content.ReadFromJsonAsync<DoorPassDto>(_jsonOptions);
+        var error = await response.Content.ReadAsStringAsync();
+        throw new HttpRequestException($"Door scan failed ({response.StatusCode}): {error}");
+    }
+
+    public async Task<int> GetOutsideCountAsync(Guid eventId)
+    {
+        try {
+            var outside = await _httpClient.GetFromJsonAsync<List<OutsideUserDto>>($"/api/events/{eventId}/outside", _jsonOptions);
+            return outside?.Count ?? 0;
+        } catch { return 0; }
+    }
 }
 
 public record CheckInRequest(Guid UserId);
@@ -113,3 +131,6 @@ public record AttendanceDto(Guid UserId, string UserName, DateTime CheckedInAt);
 public record UserDto(Guid Id, string Name, string UserName, string Email);
 public record EventDto(Guid Id, string Name, string? Description, string? Location, DateTime StartDate, DateTime EndDate, int Capacity, string Status, DateTime CreatedAt);
 public record PagedResult<T>(IEnumerable<T> Items, int Page, int PageSize, int TotalCount);
+public record DoorScanRequest(Guid UserId, string Direction);
+public record DoorPassDto(Guid Id, Guid EventId, Guid UserId, string UserName, string Direction, DateTime ScannedAt);
+public record OutsideUserDto(Guid UserId, string UserName, DateTime ExitedAt);

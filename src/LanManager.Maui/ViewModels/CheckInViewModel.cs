@@ -140,6 +140,12 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
     }
 
     [RelayCommand]
+    private async Task GoToDoorScannerAsync()
+    {
+        await Shell.Current.GoToAsync($"DoorScanPage?eventId={_eventId}&eventName={Uri.EscapeDataString(EventName)}");
+    }
+
+    [RelayCommand]
     private void ToggleCheckOutMode()
     {
         IsCheckOutMode = !IsCheckOutMode;
