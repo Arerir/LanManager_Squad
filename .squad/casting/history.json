@@ -1,0 +1,17 @@
+{
+  "universe_usage_history": [
+    {
+      "universe": "The Matrix",
+      "used_at": "2026-04-05T08:02:02.180Z",
+      "assignment_id": "lanmanager-squad-001"
+    }
+  ],
+  "assignment_cast_snapshots": {
+    "lanmanager-squad-001": {
+      "universe": "The Matrix",
+      "cast_at": "2026-04-05T08:02:02.180Z",
+      "project": "LanManager_Squad",
+      "agents": ["Morpheus", "Trinity", "Tank", "Switch", "Apoc"]
+    }
+  }
+}
