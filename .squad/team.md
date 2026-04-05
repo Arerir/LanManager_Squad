@@ -27,3 +27,9 @@
 - **Stack:** .NET Aspire orchestration, React frontend, .NET 9 Web API backend, .NET MAUI check-in/check-out apps
 - **Created:** 2026-04-05
 - **Universe:** The Matrix
+
+## Issue Source
+
+- **Repository:** Arerir/LanManager_Squad
+- **Connected:** 2026-04-05
+- **Filter:** All open issues with `squad` label
