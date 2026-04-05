@@ -14,6 +14,10 @@ public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
     public DbSet<DoorPassRecord> DoorPasses => Set<DoorPassRecord>();
     public DbSet<Seat> Seats => Set<Seat>();
 
+    public DbSet<Tournament> Tournaments => Set<Tournament>();
+    public DbSet<TournamentParticipant> TournamentParticipants => Set<TournamentParticipant>();
+    public DbSet<TournamentMatch> TournamentMatches => Set<TournamentMatch>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -44,6 +48,22 @@ public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
             b.HasKey(s => s.Id);
             b.HasIndex(s => new { s.EventId, s.Row, s.Column }).IsUnique();
             b.HasOne(s => s.Event).WithMany().HasForeignKey(s => s.EventId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Tournament>(b => {
+            b.HasKey(t => t.Id);
+            b.HasIndex(t => t.EventId);
+            b.HasOne(t => t.Event).WithMany().HasForeignKey(t => t.EventId).OnDelete(DeleteBehavior.Cascade);
+        });
+        modelBuilder.Entity<TournamentParticipant>(b => {
+            b.HasKey(p => p.Id);
+            b.HasIndex(p => new { p.TournamentId, p.UserId }).IsUnique();
+            b.HasOne(p => p.Tournament).WithMany(t => t.Participants).HasForeignKey(p => p.TournamentId).OnDelete(DeleteBehavior.Cascade);
+        });
+        modelBuilder.Entity<TournamentMatch>(b => {
+            b.HasKey(m => m.Id);
+            b.HasIndex(m => new { m.TournamentId, m.Round, m.MatchNumber });
+            b.HasOne(m => m.Tournament).WithMany(t => t.Matches).HasForeignKey(m => m.TournamentId).OnDelete(DeleteBehavior.Cascade);
         });
 
         SeedRoles(modelBuilder);

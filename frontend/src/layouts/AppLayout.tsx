@@ -27,6 +27,7 @@ export function AppLayout() {
           <li><NavLink to="/events" style={navLinkStyle}>Events</NavLink></li>
           <li><NavLink to="/users" style={navLinkStyle}>Users</NavLink></li>
           <li><NavLink to="/attendance" style={navLinkStyle}>Attendance</NavLink></li>
+          <li><NavLink to="/tournaments" style={navLinkStyle}>Tournaments</NavLink></li>
           <li><NavLink to="/seating" style={navLinkStyle}>Seating</NavLink></li>
         </ul>
         <div style={{ borderTop: '1px solid #333', paddingTop: '1rem', marginTop: 'auto' }}>
