@@ -1,15 +1,20 @@
 using LanManager.Api.DTOs;
+using LanManager.Api.Hubs;
 using LanManager.Data;
 using LanManager.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LanManager.Api.Controllers;
 
 [ApiController]
 [Route("api/events/{eventId:guid}")]
-public class CheckInController(LanManagerDbContext db, UserManager<ApplicationUser> userManager) : ControllerBase
+public class CheckInController(
+    LanManagerDbContext db,
+    UserManager<ApplicationUser> userManager,
+    IHubContext<AttendanceHub> hubContext) : ControllerBase
 {
     [HttpPost("checkin")]
     public async Task<ActionResult<CheckInDto>> CheckIn(Guid eventId, [FromBody] CheckInRequest request)
@@ -40,6 +45,9 @@ public class CheckInController(LanManagerDbContext db, UserManager<ApplicationUs
         db.CheckInRecords.Add(record);
         await db.SaveChangesAsync();
 
+        await hubContext.Clients.All.SendAsync("UserCheckedIn",
+            new AttendanceBroadcast(eventId, record.UserId, user.UserName ?? "", record.CheckedInAt));
+
         return CreatedAtAction(nameof(GetAttendance), new { eventId },
             ToDto(record, user.UserName ?? string.Empty));
     }
@@ -56,6 +64,9 @@ public class CheckInController(LanManagerDbContext db, UserManager<ApplicationUs
 
         record.CheckedOutAt = DateTime.UtcNow;
         await db.SaveChangesAsync();
+
+        await hubContext.Clients.All.SendAsync("UserCheckedOut",
+            new CheckOutBroadcast(eventId, record.UserId, record.User.UserName ?? "", record.CheckedOutAt!.Value));
 
         return Ok(ToDto(record, record.User.UserName ?? string.Empty));
     }
