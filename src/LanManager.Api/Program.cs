@@ -1,5 +1,5 @@
-using LanManager.Api.Data;
-using LanManager.Api.Models;
+using LanManager.Data;
+using LanManager.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
