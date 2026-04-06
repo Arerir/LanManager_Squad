@@ -6,6 +6,7 @@ var api = builder.AddProject<Projects.LanManager_Api>("lanmanager-api");
 
 var frontend = builder.AddJavaScriptApp("frontend", "../../frontend", "dev")
     .WithReference(api)
+    .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
     .WithHttpEndpoint(port: 5173, env: "VITE_PORT")
     .WithExternalHttpEndpoints();
 
