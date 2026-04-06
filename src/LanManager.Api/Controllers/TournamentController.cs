@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace LanManager.Api.Controllers;
 
@@ -118,4 +119,43 @@ public class TournamentController : ControllerBase
         2 => "Quarter-Final",
         _ => $"Round {round}"
     };
+
+    [HttpPost("/api/tournaments/{tournamentId:guid}/participants/me")]
+    [Authorize]
+    public async Task<IActionResult> SelfEnrol(Guid tournamentId)
+    {
+        var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdStr, out var userId))
+            return Unauthorized();
+
+        var tournament = await _db.Tournaments.FindAsync(tournamentId);
+        if (tournament == null) return NotFound();
+
+        var isCheckedIn = await _db.CheckInRecords
+            .AnyAsync(c => c.EventId == tournament.EventId && c.UserId == userId && c.CheckedOutAt == null);
+        if (!isCheckedIn)
+            return BadRequest(new { message = "You must be checked in to the event to join a tournament" });
+
+        if (tournament.Status != "Open")
+            return BadRequest(new { message = "Tournament is not open for registration" });
+
+        var alreadyEnrolled = await _db.TournamentParticipants
+            .AnyAsync(p => p.TournamentId == tournamentId && p.UserId == userId);
+        if (alreadyEnrolled)
+            return Conflict(new { message = "Already enrolled" });
+
+        var participant = new TournamentParticipant
+        {
+            TournamentId = tournamentId,
+            UserId = userId,
+            DisplayName = User.Identity?.Name ?? userId.ToString()
+        };
+        _db.TournamentParticipants.Add(participant);
+        await _db.SaveChangesAsync();
+
+        var enrolledAt = DateTime.UtcNow;
+        return CreatedAtAction(nameof(GetBracket),
+            new { eventId = tournament.EventId, id = tournamentId },
+            new TournamentEnrolmentDto(tournamentId, userId, enrolledAt));
+    }
 }

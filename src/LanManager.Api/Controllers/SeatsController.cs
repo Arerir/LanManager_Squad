@@ -4,6 +4,7 @@ using LanManager.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace LanManager.Api.Controllers;
 
@@ -14,6 +15,19 @@ public class SeatsController : ControllerBase
 {
     private readonly LanManagerDbContext _db;
     public SeatsController(LanManagerDbContext db) { _db = db; }
+
+    [HttpGet("my-seat")]
+    public async Task<ActionResult<SeatDto>> GetMySeat(Guid eventId)
+    {
+        var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdStr, out var userId))
+            return Unauthorized();
+
+        var seat = await _db.Seats.FirstOrDefaultAsync(s => s.EventId == eventId && s.AssignedUserId == userId);
+        if (seat == null) return NotFound();
+
+        return Ok(new SeatDto(seat.Id, seat.EventId, seat.Row, seat.Column, seat.Label, seat.AssignedUserId, seat.AssignedUserName, seat.AssignedAt));
+    }
 
     [HttpGet]
     public async Task<ActionResult<List<SeatDto>>> GetAll(Guid eventId)

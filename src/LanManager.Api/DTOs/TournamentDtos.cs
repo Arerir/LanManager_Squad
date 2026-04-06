@@ -7,3 +7,4 @@ public record TournamentDto(Guid Id, Guid EventId, string Name, string Format, s
 public record BracketDto(Guid TournamentId, string Name, string Status, List<RoundDto> Rounds);
 public record RoundDto(int Round, string RoundName, List<MatchDto> Matches);
 public record MatchDto(Guid Id, int Round, int MatchNumber, Guid? Player1Id, string? Player1Name, Guid? Player2Id, string? Player2Name, Guid? WinnerId, string? WinnerName, string Status);
+public record TournamentEnrolmentDto(Guid TournamentId, Guid UserId, DateTime EnrolledAt);
