@@ -24,17 +24,28 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
-		// Register HttpClient and ApiService
-		builder.Services.AddSingleton<HttpClient>();
-		builder.Services.AddSingleton<ApiService>();
+		// Auth
+		builder.Services.AddSingleton<AuthService>();
+		builder.Services.AddTransient<AuthHandler>();
+
+		// Register HttpClient (with AuthHandler) and ApiService
+		builder.Services.AddSingleton<ApiService>(sp =>
+		{
+			var authHandler = sp.GetRequiredService<AuthHandler>();
+			authHandler.InnerHandler = new HttpClientHandler();
+			var httpClient = new HttpClient(authHandler);
+			return new ApiService(httpClient);
+		});
 
 		// Register ViewModels
+		builder.Services.AddTransient<LoginViewModel>();
 		builder.Services.AddTransient<MainViewModel>();
 		builder.Services.AddTransient<CheckInViewModel>();
 		builder.Services.AddTransient<AttendanceViewModel>();
 		builder.Services.AddTransient<DoorScanViewModel>();
 
 		// Register Views
+		builder.Services.AddTransient<LoginPage>();
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<CheckInPage>();
 		builder.Services.AddTransient<AttendancePage>();

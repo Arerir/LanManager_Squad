@@ -8,6 +8,7 @@ namespace LanManager.Maui.ViewModels;
 public partial class CheckInViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
+    private readonly AuthService _authService;
     private List<UserDto> _allUsers = new();
     private Guid _eventId;
 
@@ -30,14 +31,20 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
     private bool _isLoading;
 
     [ObservableProperty]
+    private bool _canAccessDoorScan;
+
+    [ObservableProperty]
     private string _statusMessage = string.Empty;
 
     [ObservableProperty]
     private Color _statusColor = Colors.Transparent;
 
-    public CheckInViewModel(ApiService apiService)
+    public CheckInViewModel(ApiService apiService, AuthService authService)
     {
         _apiService = apiService;
+        _authService = authService;
+        CanAccessDoorScan = _authService.CurrentUser?.Roles
+            .Any(r => r == "Admin" || r == "Organizer") ?? false;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)

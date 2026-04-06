@@ -7,6 +7,7 @@ namespace LanManager.Maui.ViewModels;
 public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
+    private readonly AuthService _authService;
     private Guid _eventId;
     private DateTime _lastScanTime = DateTime.MinValue;
     private const int ScanCooldownMs = 1000;
@@ -20,17 +21,35 @@ public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] private int _outsideCount;
     [ObservableProperty] private bool _isBusy;
 
-    public DoorScanViewModel(ApiService apiService) { _apiService = apiService; }
+    public DoorScanViewModel(ApiService apiService, AuthService authService)
+    {
+        _apiService = apiService;
+        _authService = authService;
+    }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue("eventId", out var id) && Guid.TryParse(id?.ToString(), out var guid))
         {
             _eventId = guid;
-            _ = RefreshOutsideCountAsync();
+            _ = InitAsync();
         }
         if (query.TryGetValue("eventName", out var name))
             EventName = name?.ToString() ?? string.Empty;
+    }
+
+    private async Task InitAsync()
+    {
+        var roles = _authService.CurrentUser?.Roles;
+        var hasAccess = roles?.Any(r => r == "Admin" || r == "Organizer") ?? false;
+        if (!hasAccess)
+        {
+            ShowError("Access denied: insufficient role.");
+            await Task.Delay(1500);
+            await Shell.Current.GoToAsync("..");
+            return;
+        }
+        await RefreshOutsideCountAsync();
     }
 
     [RelayCommand]
