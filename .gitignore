@@ -16,3 +16,8 @@ frontend/.env.local
 # Node
 frontend/node_modules/
 frontend/dist/
+*.v2
+*.vsidx
+*.suo
+/.vs/LanManager.slnx/solutionOpened
+*.user
