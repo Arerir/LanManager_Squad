@@ -59,13 +59,13 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
             }
 
             var allTournaments = await tournamentsTask;
-            var open = allTournaments.Where(t => t.Status == "Open").ToList();
+            var enrollable = allTournaments.Where(t => t.Status == "Active").ToList();
             Tournaments.Clear();
-            foreach (var t in open)
+            foreach (var t in enrollable)
                 Tournaments.Add(t);
 
             if (Tournaments.Count == 0)
-                TournamentStatus = "No open tournaments at this time";
+                TournamentStatus = "No active tournaments at this time";
         }
         catch (Exception ex)
         {

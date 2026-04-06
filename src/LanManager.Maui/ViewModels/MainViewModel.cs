@@ -8,6 +8,7 @@ namespace LanManager.Maui.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     private readonly ApiService _apiService;
+    private readonly AuthService _authService;
 
     [ObservableProperty]
     private ObservableCollection<EventDto> _events = new();
@@ -21,9 +22,10 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private string _statusMessage = string.Empty;
 
-    public MainViewModel(ApiService apiService)
+    public MainViewModel(ApiService apiService, AuthService authService)
     {
         _apiService = apiService;
+        _authService = authService;
     }
 
     [RelayCommand]
@@ -71,6 +73,12 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        await Shell.Current.GoToAsync($"//CheckInPage?eventId={SelectedEvent.Id}");
+        var isAttendeeOnly = _authService.CurrentUser?.Roles
+            .All(r => r == "Attendee") ?? true;
+
+        if (isAttendeeOnly)
+            await Shell.Current.GoToAsync($"AttendeeHubPage?eventId={SelectedEvent.Id}");
+        else
+            await Shell.Current.GoToAsync($"//CheckInPage?eventId={SelectedEvent.Id}");
     }
 }
