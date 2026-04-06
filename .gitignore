@@ -9,6 +9,9 @@
 frontend/.env.development
 frontend/.env.local
 
+# .VS / Visual Studio local state (open files, window layout — machine-specific, not shareable)
+.vs/
+
 # .NET build output
 **/bin/
 **/obj/
@@ -19,7 +22,5 @@ frontend/dist/
 *.v2
 *.vsidx
 *.suo
-/.vs/LanManager.slnx/solutionOpened
 *.user
 *.db
-/.vs/LanManager/CopilotIndices/18.3.502.33069
