@@ -18,6 +18,9 @@ public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
     public DbSet<TournamentParticipant> TournamentParticipants => Set<TournamentParticipant>();
     public DbSet<TournamentMatch> TournamentMatches => Set<TournamentMatch>();
 
+    public DbSet<Equipment> Equipment => Set<Equipment>();
+    public DbSet<EquipmentLoan> EquipmentLoans => Set<EquipmentLoan>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -64,6 +67,20 @@ public class LanManagerDbContext(DbContextOptions<LanManagerDbContext> options)
             b.HasKey(m => m.Id);
             b.HasIndex(m => new { m.TournamentId, m.Round, m.MatchNumber });
             b.HasOne(m => m.Tournament).WithMany(t => t.Matches).HasForeignKey(m => m.TournamentId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Equipment>(e => {
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Name).IsRequired().HasMaxLength(100);
+            e.Property(x => x.QrCode).IsRequired().HasMaxLength(50);
+            e.HasIndex(x => x.QrCode).IsUnique();
+        });
+
+        modelBuilder.Entity<EquipmentLoan>(e => {
+            e.HasKey(x => x.Id);
+            e.HasOne(x => x.Equipment).WithMany(eq => eq.Loans).HasForeignKey(x => x.EquipmentId);
+            e.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
+            e.HasOne(x => x.Event).WithMany().HasForeignKey(x => x.EventId);
         });
 
     }

@@ -6,17 +6,28 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QRCoder;
+using System.Security.Claims;
 
 namespace LanManager.Api.Controllers;
 
 [ApiController]
 [Route("api/events/{eventId:guid}")]
-[Authorize(Roles = "Operator,Admin")]
+[Authorize(Roles = "Admin,Organizer,Operator")]
 public class DoorPassController(LanManagerDbContext db, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet("attendees/{userId:guid}/qrcode")]
+    [Authorize]
     public async Task<IActionResult> GetQrCode(Guid eventId, Guid userId)
     {
+        var callerIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var callerIsStaff = User.IsInRole("Admin") || User.IsInRole("Organizer") || User.IsInRole("Operator");
+
+        if (!callerIsStaff)
+        {
+            if (!Guid.TryParse(callerIdStr, out var callerId) || callerId != userId)
+                return Forbid();
+        }
+
         var isRegistered = await db.Registrations
             .AnyAsync(r => r.EventId == eventId && r.UserId == userId);
         if (!isRegistered)
@@ -30,7 +41,7 @@ public class DoorPassController(LanManagerDbContext db, UserManager<ApplicationU
     }
 
     [HttpPost("door-scan")]
-    public async Task<ActionResult<DoorPassDto>> DoorScan(Guid eventId, [FromBody] DoorScanRequest request)
+    public async Task<ActionResult<DoorScanResultDto>> DoorScan(Guid eventId, [FromBody] DoorScanRequest request)
     {
         var ev = await db.Events.FindAsync(eventId);
         if (ev is null) return NotFound(new { message = "Event not found." });
@@ -38,13 +49,24 @@ public class DoorPassController(LanManagerDbContext db, UserManager<ApplicationU
         var user = await userManager.FindByIdAsync(request.UserId.ToString());
         if (user is null) return NotFound(new { message = "User not found." });
 
-        var isCheckedIn = await db.CheckInRecords
-            .AnyAsync(c => c.EventId == eventId && c.UserId == request.UserId && c.CheckedOutAt == null);
-        if (!isCheckedIn)
-            return BadRequest(new { message = "User is not currently checked in to this event." });
-
         if (!Enum.TryParse<DoorPassDirection>(request.Direction, out var dir))
             return BadRequest(new { message = $"Invalid direction '{request.Direction}'. Use 'Exit' or 'Entry'." });
+
+        var isCheckedIn = await db.CheckInRecords
+            .AnyAsync(c => c.EventId == eventId && c.UserId == request.UserId && c.CheckedOutAt == null);
+
+        bool wasAutoCheckedIn = false;
+        if (!isCheckedIn)
+        {
+            // Auto check-in: create a CheckInRecord and force Entry direction
+            db.CheckInRecords.Add(new CheckInRecord
+            {
+                EventId = eventId,
+                UserId = request.UserId
+            });
+            dir = DoorPassDirection.Entry;
+            wasAutoCheckedIn = true;
+        }
 
         var record = new DoorPassRecord
         {
@@ -56,10 +78,11 @@ public class DoorPassController(LanManagerDbContext db, UserManager<ApplicationU
         db.DoorPasses.Add(record);
         await db.SaveChangesAsync();
 
-        var dto = new DoorPassDto(record.Id, record.EventId, record.UserId,
+        var passDto = new DoorPassDto(record.Id, record.EventId, record.UserId,
             user.UserName ?? string.Empty, record.Direction.ToString(), record.ScannedAt);
 
-        return CreatedAtAction(nameof(GetDoorLog), new { eventId }, dto);
+        var result = new DoorScanResultDto(passDto, wasAutoCheckedIn, user.UserName ?? string.Empty);
+        return CreatedAtAction(nameof(GetDoorLog), new { eventId }, result);
     }
 
     [HttpGet("door-log")]

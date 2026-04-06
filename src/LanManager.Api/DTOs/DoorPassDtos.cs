@@ -11,6 +11,12 @@ public record DoorPassDto(
     DateTime ScannedAt
 );
 
+public record DoorScanResultDto(
+    DoorPassDto DoorPass,
+    bool WasAutoCheckedIn,
+    string UserName
+);
+
 public record OutsideUserDto(
     Guid UserId,
     string UserName,

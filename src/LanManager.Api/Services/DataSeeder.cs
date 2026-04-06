@@ -93,6 +93,9 @@ public class DataSeeder
         // --- Tournament (active event: 4-player single elimination) ---
         await EnsureTournament(activeEvent.Id, attendees.Take(4).ToList(), now);
 
+        // --- Equipment ---
+        await EnsureEquipment();
+
         await _db.SaveChangesAsync();
     }
 
@@ -245,5 +248,28 @@ public class DataSeeder
             Participants = tp,
             Matches      = matches
         });
+    }
+
+    private async Task EnsureEquipment()
+    {
+        if (await _db.Equipment.AnyAsync()) return;
+
+        var items = new Equipment[]
+        {
+            new() { Id = Guid.NewGuid(), Name = "VR Headset #1",          Type = EquipmentType.VrHeadset, QrCode = "EQ-VR-1" },
+            new() { Id = Guid.NewGuid(), Name = "VR Headset #2",          Type = EquipmentType.VrHeadset, QrCode = "EQ-VR-2" },
+            new() { Id = Guid.NewGuid(), Name = "VR Headset #3",          Type = EquipmentType.VrHeadset, QrCode = "EQ-VR-3" },
+            new() { Id = Guid.NewGuid(), Name = "Gaming PC #1",           Type = EquipmentType.Computer,  QrCode = "EQ-PC-1" },
+            new() { Id = Guid.NewGuid(), Name = "Gaming PC #2",           Type = EquipmentType.Computer,  QrCode = "EQ-PC-2" },
+            new() { Id = Guid.NewGuid(), Name = "Gaming PC #3",           Type = EquipmentType.Computer,  QrCode = "EQ-PC-3" },
+            new() { Id = Guid.NewGuid(), Name = "Mechanical Keyboard #1", Type = EquipmentType.Keyboard,  QrCode = "EQ-KB-1" },
+            new() { Id = Guid.NewGuid(), Name = "Mechanical Keyboard #2", Type = EquipmentType.Keyboard,  QrCode = "EQ-KB-2" },
+            new() { Id = Guid.NewGuid(), Name = "Gaming Mouse #1",        Type = EquipmentType.Mouse,     QrCode = "EQ-MS-1" },
+            new() { Id = Guid.NewGuid(), Name = "Gaming Mouse #2",        Type = EquipmentType.Mouse,     QrCode = "EQ-MS-2" },
+            new() { Id = Guid.NewGuid(), Name = "XL Mousemat #1",         Type = EquipmentType.Mousemat,  QrCode = "EQ-MM-1" },
+            new() { Id = Guid.NewGuid(), Name = "HDMI Cable Set",         Type = EquipmentType.Other,     QrCode = "EQ-OT-1" },
+        };
+
+        _db.Equipment.AddRange(items);
     }
 }
