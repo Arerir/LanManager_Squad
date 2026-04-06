@@ -9,6 +9,7 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly ApiService _apiService;
     private readonly AuthService _authService;
+    private readonly AppStateService _appState;
 
     [ObservableProperty]
     private ObservableCollection<EventDto> _events = new();
@@ -25,10 +26,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool _isAttendee;
 
-    public MainViewModel(ApiService apiService, AuthService authService)
+    public MainViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {
         _apiService = apiService;
         _authService = authService;
+        _appState = appState;
         IsAttendee = _authService.CurrentUser?.Roles.Contains("Attendee") ?? false;
     }
 
@@ -79,9 +81,9 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        var isAttendeeOnly = _authService.CurrentUser?.Roles
-            .All(r => r == "Attendee") ?? true;
+        _appState.SetEvent(SelectedEvent.Id, SelectedEvent.Name);
 
+        var isAttendeeOnly = _authService.CurrentUser?.Roles.All(r => r == "Attendee") ?? true;
         if (isAttendeeOnly)
             await Shell.Current.GoToAsync($"AttendeeHubPage?eventId={SelectedEvent.Id}");
         else
@@ -97,6 +99,7 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
+        _appState.SetEvent(SelectedEvent.Id, SelectedEvent.Name);
         await Shell.Current.GoToAsync($"AttendeeHubPage?eventId={SelectedEvent.Id}");
     }
 }

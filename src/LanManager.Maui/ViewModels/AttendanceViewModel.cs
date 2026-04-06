@@ -8,6 +8,7 @@ namespace LanManager.Maui.ViewModels;
 public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
+    private readonly AppStateService _appState;
     private Guid _eventId;
 
     [ObservableProperty]
@@ -22,23 +23,30 @@ public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty]
     private string _statusMessage = string.Empty;
 
-    public AttendanceViewModel(ApiService apiService)
+    public AttendanceViewModel(ApiService apiService, AppStateService appState)
     {
         _apiService = apiService;
+        _appState = appState;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue("eventId", out var eventIdObj) && Guid.TryParse(eventIdObj.ToString(), out var eventId))
-        {
             _eventId = eventId;
-            _ = LoadAttendanceAsync();
-        }
+        else if (_appState.HasEvent)
+            _eventId = _appState.EventId;
+        _ = LoadAttendanceAsync();
     }
 
     [RelayCommand]
     private async Task LoadAttendanceAsync()
     {
+        if (_eventId == Guid.Empty)
+        {
+            await Shell.Current.GoToAsync("//MainPage");
+            return;
+        }
+
         IsLoading = true;
         StatusMessage = "Loading attendance...";
         
