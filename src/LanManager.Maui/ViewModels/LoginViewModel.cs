@@ -35,7 +35,8 @@ public partial class LoginViewModel : ObservableObject
             var success = await _authService.LoginAsync(Email, Password);
             if (success)
             {
-                await Shell.Current.GoToAsync("//MainPage");
+                // LoginPage is the root page (not in a Shell), so navigate by replacing MainPage
+                Application.Current!.MainPage = new AppShell();
             }
             else
             {
