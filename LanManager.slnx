@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/LanManager.Api.Tests/LanManager.Api.Tests.csproj" />
     <Project Path="src/LanManager.Api/LanManager.Api.csproj" />
     <Project Path="src/LanManager.AppHost/LanManager.AppHost.csproj" />
     <Project Path="src/LanManager.Data/LanManager.Data.csproj" />
