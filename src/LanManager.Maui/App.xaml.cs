@@ -11,19 +11,33 @@ public partial class App : Application
 
     public App(AuthService authService, IServiceProvider serviceProvider)
     {
-        InitializeComponent();  // loads App.xaml resources FIRST
+        InitializeComponent();
         _authService = authService;
         _serviceProvider = serviceProvider;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-    {
-        var isLoggedIn = _authService.IsLoggedInAsync().GetAwaiter().GetResult();
-        // Resolve LoginPage after InitializeComponent so App.xaml StaticResources are available
-        Page startPage = isLoggedIn
-            ? new AppShell()
-            : _serviceProvider.GetRequiredService<LoginPage>();
+        => new Window(new AppShell());
 
-        return new Window(startPage);
+    protected override async void OnStart()
+    {
+        base.OnStart();
+        try
+        {
+            var isLoggedIn = await _authService.IsLoggedInAsync();
+            if (!isLoggedIn)
+                ShowLoginPage();
+        }
+        catch
+        {
+            ShowLoginPage();
+        }
+    }
+
+    internal void ShowLoginPage()
+    {
+        var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
+        if (Windows.Count > 0)
+            Windows[0].Page = loginPage;
     }
 }
