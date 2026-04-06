@@ -21,3 +21,5 @@ frontend/dist/
 *.suo
 /.vs/LanManager.slnx/solutionOpened
 *.user
+*.db
+/.vs/LanManager/CopilotIndices/18.3.502.33069
