@@ -64,6 +64,11 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     private async Task LoadDataAsync()
     {
+        // Re-evaluate role access each time the page loads in case CurrentUser
+        // was populated asynchronously after the ViewModel was constructed
+        CanAccessDoorScan = _authService.CurrentUser?.Roles
+            .Any(r => r == "Admin" || r == "Organizer") ?? false;
+
         IsLoading = true;
         
         try
