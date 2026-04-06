@@ -5,22 +5,110 @@
 .squad/sessions/
 # Squad: SubSquad activation file (local to this machine)
 .squad-workstream
-# Frontend env files (keep .env.example tracked)
-frontend/.env.development
-frontend/.env.local
 
-# .VS / Visual Studio local state (open files, window layout — machine-specific, not shareable)
-.vs/
+# ============================================================
+# .NET / ASP.NET Core
+# ============================================================
 
-# .NET build output
+# Build output
 **/bin/
 **/obj/
 
-# Node
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# User-specific / local overrides (may contain secrets or machine paths)
+*.user
+appsettings.Local.json
+appsettings.local.json
+
+# .NET user secrets (stored in AppData normally, but guard the file if present)
+secrets.json
+
+# Publish output
+**/publish/
+
+# Test results
+**/TestResults/
+**/*.trx
+**/*.coverage
+**/*.coveragexml
+
+# Crash dumps
+*.dmp
+
+# ============================================================
+# Visual Studio / Rider IDE
+# ============================================================
+
+# VS local state (open documents, window layout — machine-specific)
+.vs/
+*.suo
+*.vsidx
+*.v2
+
+# Rider
+.idea/
+*.sln.iml
+
+# ============================================================
+# MAUI / Mobile
+# ============================================================
+
+# Android signing keys — NEVER commit these
+*.keystore
+*.jks
+
+# iOS certificates / provisioning
+*.p12
+*.pfx
+*.cer
+*.mobileprovision
+
+# Firebase config files (contain project credentials)
+google-services.json
+GoogleService-Info.plist
+
+# ============================================================
+# React / Node / Vite
+# ============================================================
+
 frontend/node_modules/
 frontend/dist/
-*.v2
-*.vsidx
-*.suo
-*.user
+frontend/.env
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
+frontend/.env.*.local
+
+# ============================================================
+# General
+# ============================================================
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temp files
+*.tmp
+*.temp
+*.swp
+*.bak
+
+# SQLite databases (local dev data)
 *.db
+*.db-shm
+*.db-wal
+
+# Certificates / secrets (catch-all)
+*.pem
+*.key
