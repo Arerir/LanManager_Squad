@@ -11,6 +11,7 @@ import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SeatingPage } from './pages/SeatingPage';
 import { TournamentPage } from './pages/TournamentPage';
+import { EquipmentPage } from './pages/EquipmentPage';
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="seating" element={<SeatingPage />} />
           <Route path="tournaments" element={<TournamentPage />} />
+          <Route path="equipment" element={<EquipmentPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

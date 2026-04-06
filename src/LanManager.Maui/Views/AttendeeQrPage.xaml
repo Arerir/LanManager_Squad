@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LanManager.Maui.ViewModels"
+             x:Class="LanManager.Maui.Views.AttendeeQrPage"
+             x:DataType="vm:AttendeeQrViewModel"
+             BackgroundColor="#0d0d1a"
+             Title="My QR Code">
+  <Grid RowDefinitions="Auto,*,Auto" Padding="20">
+    <Label Grid.Row="0" Text="{Binding UserName}" TextColor="White" FontSize="22"
+           FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
+    <Frame Grid.Row="1" BackgroundColor="White" CornerRadius="12" Padding="16"
+           HorizontalOptions="Center" VerticalOptions="Center"
+           IsVisible="{Binding QrImageSource, Converter={StaticResource IsNotNullConverter}}">
+      <Image Source="{Binding QrImageSource}" WidthRequest="260" HeightRequest="260"/>
+    </Frame>
+    <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                       Color="White" VerticalOptions="Center"/>
+    <Label Grid.Row="2" Text="{Binding StatusMessage}" TextColor="#aaa"
+           HorizontalOptions="Center" Margin="0,20,0,0"/>
+  </Grid>
+</ContentPage>
