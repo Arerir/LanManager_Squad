@@ -22,10 +22,14 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private string _statusMessage = string.Empty;
 
+    [ObservableProperty]
+    private bool _isAttendee;
+
     public MainViewModel(ApiService apiService, AuthService authService)
     {
         _apiService = apiService;
         _authService = authService;
+        IsAttendee = _authService.CurrentUser?.Roles.Contains("Attendee") ?? false;
     }
 
     [RelayCommand]
@@ -53,6 +57,8 @@ public partial class MainViewModel : ObservableObject
                 StatusMessage = string.Empty;
                 SelectedEvent = Events.FirstOrDefault();
             }
+
+            IsAttendee = _authService.CurrentUser?.Roles.Contains("Attendee") ?? false;
         }
         catch (Exception ex)
         {
@@ -80,5 +86,17 @@ public partial class MainViewModel : ObservableObject
             await Shell.Current.GoToAsync($"AttendeeHubPage?eventId={SelectedEvent.Id}");
         else
             await Shell.Current.GoToAsync($"//CheckInPage?eventId={SelectedEvent.Id}");
+    }
+
+    [RelayCommand]
+    private async Task GoToAttendeeHubAsync()
+    {
+        if (SelectedEvent == null)
+        {
+            StatusMessage = "Please select an event first";
+            return;
+        }
+
+        await Shell.Current.GoToAsync($"AttendeeHubPage?eventId={SelectedEvent.Id}");
     }
 }
