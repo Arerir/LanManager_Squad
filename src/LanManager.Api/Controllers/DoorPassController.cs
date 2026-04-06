@@ -85,15 +85,18 @@ public class DoorPassController(LanManagerDbContext db, UserManager<ApplicationU
         var ev = await db.Events.FindAsync(eventId);
         if (ev is null) return NotFound(new { message = "Event not found." });
 
-        var outside = await (
-            from d in db.DoorPasses
-            where d.EventId == eventId
-            group d by d.UserId into g
-            let latest = g.OrderByDescending(x => x.ScannedAt).First()
-            where latest.Direction == DoorPassDirection.Exit
-            join u in db.Users on latest.UserId equals u.Id
-            select new OutsideUserDto(latest.UserId, u.UserName ?? string.Empty, latest.ScannedAt)
-        ).ToListAsync();
+        var passes = await db.DoorPasses
+            .Where(d => d.EventId == eventId)
+            .Include(d => d.User)
+            .OrderByDescending(d => d.ScannedAt)
+            .ToListAsync();
+
+        var outside = passes
+            .GroupBy(d => d.UserId)
+            .Select(g => g.First())                          // latest pass per user (already desc ordered)
+            .Where(d => d.Direction == DoorPassDirection.Exit)
+            .Select(d => new OutsideUserDto(d.UserId, d.User.UserName ?? string.Empty, d.ScannedAt))
+            .ToList();
 
         return Ok(outside);
     }
