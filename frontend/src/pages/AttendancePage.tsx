@@ -109,6 +109,7 @@ function LiveAttendanceTab({ eventId }: { eventId: string }) {
       )}
 
       {attendees.length > 0 && (
+        <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid #333', textAlign: 'left' }}>
@@ -127,6 +128,7 @@ function LiveAttendanceTab({ eventId }: { eventId: string }) {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );
@@ -174,6 +176,7 @@ function OutsideNowTab({ eventId }: { eventId: string }) {
       )}
 
       {users.length > 0 && (
+        <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid #333', textAlign: 'left' }}>
@@ -196,6 +199,7 @@ function OutsideNowTab({ eventId }: { eventId: string }) {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );
@@ -243,6 +247,7 @@ function DoorLogTab({ eventId }: { eventId: string }) {
 
       {pageRecords.length > 0 && (
         <>
+          <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #333', textAlign: 'left' }}>
@@ -270,6 +275,7 @@ function DoorLogTab({ eventId }: { eventId: string }) {
               ))}
             </tbody>
           </table>
+          </div>
 
           {totalPages > 1 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 16 }}>

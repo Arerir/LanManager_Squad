@@ -51,7 +51,7 @@ export function EventDetailPage() {
   if (!event) return <p>Event not found.</p>;
 
   return (
-    <div style={{ maxWidth: 700 }}>
+    <div style={{ maxWidth: 700, width: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
         <div>
           <button
@@ -60,9 +60,9 @@ export function EventDetailPage() {
           >
             ← Back to Events
           </button>
-          <h1 style={{ margin: 0 }}>{event.name}</h1>
+          <h1 className="page-title">{event.name}</h1>
         </div>
-        <div style={{ display: 'flex', gap: 8, marginTop: 32 }}>
+        <div style={{ display: 'flex', gap: 8, marginTop: 32, flexWrap: 'wrap' }}>
           <button
             onClick={() => navigate(`/events/${event.id}/edit`)}
             style={{ background: '#0d6efd', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}

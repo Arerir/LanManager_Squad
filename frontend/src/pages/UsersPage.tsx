@@ -25,7 +25,7 @@ export function UsersPage() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: '1.5rem' }}>Users</h1>
+      <h1 className="page-title" style={{ marginBottom: '1.5rem' }}>Users</h1>
 
       {loading && <p>Loading users…</p>}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
@@ -35,6 +35,7 @@ export function UsersPage() {
       )}
 
       {!loading && !error && users.length > 0 && (
+        <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid #dee2e6', textAlign: 'left' }}>
@@ -53,6 +54,7 @@ export function UsersPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {!loading && !error && (

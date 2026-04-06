@@ -36,8 +36,8 @@ function TournamentListView({ eventId, onSelect }: { eventId: string; onSelect: 
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-        <h1 style={{ margin: 0 }}>Tournaments</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+        <h1 className="page-title">Tournaments</h1>
         {canManage && (
           <button onClick={() => setShowCreate(true)}
             style={{ padding: '8px 16px', background: '#3498db', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
@@ -186,7 +186,7 @@ function BracketView({ eventId, tournamentId, onBack }:
           style={{ background: 'none', border: '1px solid #333', color: '#aaa', padding: '6px 12px', borderRadius: 6, cursor: 'pointer' }}>
           ← Back
         </button>
-        <h1 style={{ margin: 0 }}>{bracket?.name ?? 'Loading…'}</h1>
+        <h1 className="page-title">{bracket?.name ?? 'Loading…'}</h1>
         {bracket && (
           <span style={{ background: bracket.status === 'Completed' ? '#2ecc71' : '#f0a500',
             color: '#000', borderRadius: 999, padding: '2px 10px', fontSize: '0.8rem', fontWeight: 600 }}>
