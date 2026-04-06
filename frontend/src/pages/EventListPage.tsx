@@ -50,8 +50,8 @@ export function EventListPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h1 style={{ margin: 0 }}>Events</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <h1 className="page-title">Events</h1>
         <button
           onClick={() => navigate('/events/new')}
           style={{ background: '#0d6efd', color: '#fff', border: 'none', padding: '8px 18px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}
@@ -60,7 +60,7 @@ export function EventListPage() {
         </button>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
         <label htmlFor="status-filter" style={{ fontWeight: 500 }}>Status:</label>
         <select
           id="status-filter"
@@ -89,6 +89,7 @@ export function EventListPage() {
       )}
 
       {!loading && !error && events.length > 0 && (
+        <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid #dee2e6', textAlign: 'left' }}>
@@ -117,6 +118,7 @@ export function EventListPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );

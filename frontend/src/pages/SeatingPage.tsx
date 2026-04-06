@@ -81,7 +81,7 @@ export function SeatingPage() {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-        <h1 style={{ margin: 0 }}>Seating Map</h1>
+        <h1 className="page-title">Seating Map</h1>
         <span style={{ color: '#aaa', fontSize: '0.9rem' }}>{assignedCount}/{seats.length} seats assigned</span>
         {canSetup && (
           <button onClick={() => setShowSetup(v => !v)}
@@ -113,9 +113,9 @@ export function SeatingPage() {
       {error && <p style={{ color: '#f66', marginBottom: '1rem' }}>Error: {error}</p>}
       {loading && <p style={{ color: '#aaa' }}>Loading…</p>}
 
-      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         {/* SVG Map */}
-        <div style={{ flex: 1, overflowX: 'auto' }}>
+        <div style={{ flex: 1, overflowX: 'auto', minWidth: 280 }}>
           {seats.length === 0 && !loading ? (
             <div style={{ color: '#aaa', padding: '3rem', textAlign: 'center', border: '2px dashed #333', borderRadius: 8 }}>
               No seats configured.{canSetup ? ' Use ⚙ Setup Grid to create seats.' : ''}
@@ -151,7 +151,7 @@ export function SeatingPage() {
         </div>
 
         {/* Right panel */}
-        <div style={{ width: 280, flexShrink: 0 }}>
+        <div style={{ width: 280, flexShrink: 0, minWidth: 240, flex: '1 1 240px' }}>
           {selectedSeat && (
             <div style={{ background: '#1a1a2e', borderRadius: 8, padding: '1rem', marginBottom: '1rem', border: `1px solid ${selectedSeat.assignedUserId ? '#c0392b' : '#3498db'}` }}>
               <strong>Seat {selectedSeat.label}</strong>

@@ -109,3 +109,10 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-h);
+}
