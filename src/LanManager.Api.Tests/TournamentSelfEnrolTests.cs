@@ -54,7 +54,7 @@ public class TournamentSelfEnrolTests
         });
         db.Tournaments.Add(new Tournament
         {
-            Id = tournamentId, EventId = eventId, Name = "CS2 Cup", Status = "Open"
+            Id = tournamentId, EventId = eventId, Name = "CS2 Cup", Status = "Active"
         });
         db.CheckInRecords.Add(new CheckInRecord { EventId = eventId, UserId = userId });
         await db.SaveChangesAsync();
@@ -87,7 +87,7 @@ public class TournamentSelfEnrolTests
         });
         db.Tournaments.Add(new Tournament
         {
-            Id = tournamentId, EventId = eventId, Name = "CS2 Cup", Status = "Open"
+            Id = tournamentId, EventId = eventId, Name = "CS2 Cup", Status = "Active"
         });
         // No CheckInRecord seeded
         await db.SaveChangesAsync();
@@ -120,7 +120,7 @@ public class TournamentSelfEnrolTests
         });
         db.Tournaments.Add(new Tournament
         {
-            Id = tournamentId, EventId = eventId, Name = "CS2 Cup", Status = "Open"
+            Id = tournamentId, EventId = eventId, Name = "CS2 Cup", Status = "Active"
         });
         db.CheckInRecords.Add(new CheckInRecord { EventId = eventId, UserId = userId });
         db.TournamentParticipants.Add(new TournamentParticipant
@@ -157,7 +157,7 @@ public class TournamentSelfEnrolTests
         });
         db.Tournaments.Add(new Tournament
         {
-            Id = tournamentId, EventId = eventId, Name = "CS2 Cup", Status = "Active"  // not "Open"
+            Id = tournamentId, EventId = eventId, Name = "CS2 Cup", Status = "Completed"  // not "Active"
         });
         db.CheckInRecords.Add(new CheckInRecord { EventId = eventId, UserId = userId });
         await db.SaveChangesAsync();

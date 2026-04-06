@@ -136,7 +136,7 @@ public class TournamentController : ControllerBase
         if (!isCheckedIn)
             return BadRequest(new { message = "You must be checked in to the event to join a tournament" });
 
-        if (tournament.Status != "Open")
+        if (tournament.Status != "Active")
             return BadRequest(new { message = "Tournament is not open for registration" });
 
         var alreadyEnrolled = await _db.TournamentParticipants
