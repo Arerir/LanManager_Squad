@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LanManager.Maui.ViewModels"
+             xmlns:services="clr-namespace:LanManager.Maui.Services"
+             x:Class="LanManager.Maui.Views.AttendeeHubPage"
+             x:DataType="vm:AttendeeHubViewModel"
+             BackgroundColor="#0d0d1a"
+             Title="My Hub">
+  <ScrollView>
+    <StackLayout Padding="20" Spacing="20">
+
+      <!-- Seat card -->
+      <Frame BackgroundColor="#1a1a2e" CornerRadius="10" Padding="16">
+        <StackLayout>
+          <Label Text="My Seat" TextColor="#aaa" FontSize="14"/>
+          <Label Text="{Binding SeatLabel}" TextColor="White" FontSize="32" FontAttributes="Bold"/>
+          <Label Text="{Binding SeatDetail}" TextColor="#aaa" FontSize="14"/>
+        </StackLayout>
+      </Frame>
+
+      <!-- My QR code button -->
+      <Button Text="📷 Show My QR Code" Command="{Binding GoToQrPageCommand}"
+              BackgroundColor="#3498db" TextColor="White" CornerRadius="8"/>
+
+      <!-- Borrow equipment button -->
+      <Button Text="🔧 Borrow Equipment" Command="{Binding GoToEquipmentScanCommand}"
+              BackgroundColor="#8e44ad" TextColor="White" CornerRadius="8"/>
+
+      <!-- Tournaments -->
+      <Label Text="Tournaments" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+      <Label Text="{Binding TournamentStatus}" TextColor="#aaa" FontSize="14"
+             IsVisible="{Binding TournamentStatus, Converter={StaticResource StringNotEmptyConverter}}"/>
+      <CollectionView ItemsSource="{Binding Tournaments}">
+        <CollectionView.ItemTemplate>
+          <DataTemplate x:DataType="services:TournamentDto">
+            <Frame BackgroundColor="#1a1a2e" CornerRadius="8" Padding="12" Margin="0,0,0,8">
+              <Grid ColumnDefinitions="*,Auto">
+                <StackLayout Grid.Column="0">
+                  <Label Text="{Binding Name}" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                  <Label Text="{Binding Format}" TextColor="#aaa" FontSize="13"/>
+                </StackLayout>
+                <Button Grid.Column="1"
+                        Text="Enrol"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AttendeeHubViewModel}}, Path=EnrolCommand}"
+                        CommandParameter="{Binding Id}"
+                        BackgroundColor="#27ae60" TextColor="White"
+                        CornerRadius="6" Padding="10,6"/>
+              </Grid>
+            </Frame>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+
+      <!-- Loading -->
+      <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="White"/>
+
+      <!-- Status -->
+      <Label Text="{Binding StatusMessage}"
+             IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotEmptyConverter}}"
+             TextColor="{Binding StatusColor}" HorizontalOptions="Center"/>
+
+    </StackLayout>
+  </ScrollView>
+</ContentPage>

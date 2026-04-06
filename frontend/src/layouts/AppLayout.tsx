@@ -68,6 +68,7 @@ export function AppLayout() {
           <li><NavLink to="/attendance" style={navLinkStyle} onClick={() => setNavOpen(false)}>Attendance</NavLink></li>
           <li><NavLink to="/tournaments" style={navLinkStyle} onClick={() => setNavOpen(false)}>Tournaments</NavLink></li>
           <li><NavLink to="/seating" style={navLinkStyle} onClick={() => setNavOpen(false)}>Seating</NavLink></li>
+          <li><NavLink to="/equipment" style={navLinkStyle} onClick={() => setNavOpen(false)}>Equipment</NavLink></li>
         </ul>
         <div style={{ borderTop: '1px solid #333', paddingTop: '1rem', marginTop: 'auto' }}>
           {currentUser ? (

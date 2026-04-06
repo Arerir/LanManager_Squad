@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:vm="clr-namespace:LanManager.Maui.ViewModels"
+             xmlns:services="clr-namespace:LanManager.Maui.Services"
+             x:Class="LanManager.Maui.Views.EquipmentScanPage"
+             x:DataType="vm:EquipmentScanViewModel"
+             Title="Borrow Equipment">
+
+  <Grid RowDefinitions="Auto,*,Auto,Auto">
+    <!-- Header -->
+    <Grid Grid.Row="0" Padding="12" ColumnDefinitions="*,Auto" BackgroundColor="#1a1a2e">
+      <Label Text="Scan equipment QR code" TextColor="White" FontSize="16" VerticalOptions="Center"/>
+      <Button Grid.Column="1" Text="← Back" Command="{Binding GoBackCommand}"
+              BackgroundColor="Transparent" TextColor="White"/>
+    </Grid>
+
+    <!-- Camera -->
+    <zxing:CameraBarcodeReaderView Grid.Row="1" x:Name="cameraView" BarcodesDetected="OnBarcodesDetected"/>
+
+    <!-- Active loans list -->
+    <Frame Grid.Row="2" BackgroundColor="#1a1a2e" Padding="12" Margin="0" CornerRadius="0">
+      <StackLayout>
+        <Label Text="Currently borrowed:" TextColor="#aaa" FontSize="13"/>
+        <CollectionView ItemsSource="{Binding MyLoans}">
+          <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="services:EquipmentLoanDto">
+              <Label TextColor="White" FontSize="13" Margin="0,2">
+                <Label.FormattedText>
+                  <FormattedString>
+                    <Span Text="• "/>
+                    <Span Text="{Binding EquipmentName}" FontAttributes="Bold"/>
+                  </FormattedString>
+                </Label.FormattedText>
+              </Label>
+            </DataTemplate>
+          </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Label Text="None" TextColor="#666" FontSize="13"
+               IsVisible="{Binding MyLoans.Count, Converter={StaticResource IsZeroConverter}}"/>
+      </StackLayout>
+    </Frame>
+
+    <!-- Status Banner -->
+    <Border Grid.Row="3" BackgroundColor="{Binding StatusColor}"
+            IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotEmptyConverter}}"
+            Padding="16">
+      <Label Text="{Binding StatusMessage}" TextColor="White" FontSize="18"
+             FontAttributes="Bold" HorizontalOptions="Center"/>
+    </Border>
+  </Grid>
+</ContentPage>

@@ -123,6 +123,85 @@ public class ApiService
             return outside?.Count ?? 0;
         } catch { return 0; }
     }
+
+    public async Task<byte[]?> GetAttendeeQrCodeAsync(Guid eventId, Guid userId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"/api/events/{eventId}/attendees/{userId}/qrcode");
+            if (response.IsSuccessStatusCode)
+                return await response.Content.ReadAsByteArrayAsync();
+            return null;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetAttendeeQrCodeAsync error: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<SeatDto?> GetMySeatAsync(Guid eventId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"/api/events/{eventId}/seats/my-seat");
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                return null;
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<SeatDto>(_jsonOptions);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetMySeatAsync error: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<List<TournamentDto>> GetTournamentsAsync(Guid eventId)
+    {
+        try
+        {
+            return await _httpClient.GetFromJsonAsync<List<TournamentDto>>($"/api/tournaments?eventId={eventId}", _jsonOptions)
+                   ?? new List<TournamentDto>();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetTournamentsAsync error: {ex.Message}");
+            return new List<TournamentDto>();
+        }
+    }
+
+    public async Task<bool> SelfEnrolTournamentAsync(Guid tournamentId)
+    {
+        var response = await _httpClient.PostAsync($"/api/tournaments/{tournamentId}/participants/me", null);
+        if (response.StatusCode == System.Net.HttpStatusCode.Created)
+            return true;
+        var error = await response.Content.ReadAsStringAsync();
+        throw new HttpRequestException($"Enrol failed ({(int)response.StatusCode}): {error}", null, response.StatusCode);
+    }
+
+    public async Task<List<EquipmentLoanDto>> GetMyLoansAsync()
+    {
+        try
+        {
+            return await _httpClient.GetFromJsonAsync<List<EquipmentLoanDto>>("/api/equipment/my-loans", _jsonOptions)
+                   ?? new List<EquipmentLoanDto>();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetMyLoansAsync error: {ex.Message}");
+            return new List<EquipmentLoanDto>();
+        }
+    }
+
+    public async Task<EquipmentLoanDto?> BorrowEquipmentAsync(string qrCode)
+    {
+        var response = await _httpClient.PostAsync($"/api/equipment/borrow/{Uri.EscapeDataString(qrCode)}", null);
+        if (response.IsSuccessStatusCode)
+            return await response.Content.ReadFromJsonAsync<EquipmentLoanDto>(_jsonOptions);
+        var error = await response.Content.ReadAsStringAsync();
+        throw new HttpRequestException($"Borrow failed ({(int)response.StatusCode}): {error}", null, response.StatusCode);
+    }
 }
 
 public record CheckInRequest(Guid UserId);
@@ -134,3 +213,6 @@ public record PagedResult<T>(IEnumerable<T> Items, int Page, int PageSize, int T
 public record DoorScanRequest(Guid UserId, string Direction);
 public record DoorPassDto(Guid Id, Guid EventId, Guid UserId, string UserName, string Direction, DateTime ScannedAt);
 public record OutsideUserDto(Guid UserId, string UserName, DateTime ExitedAt);
+public record SeatDto(Guid Id, Guid EventId, int Row, int Column, string Label, Guid? AssignedUserId, string? AssignedUserName, DateTime? AssignedAt);
+public record TournamentDto(Guid Id, Guid EventId, string Name, string Format, string Status, int ParticipantCount);
+public record EquipmentLoanDto(Guid Id, Guid EquipmentId, string EquipmentName, Guid UserId, string UserName, Guid EventId, DateTime BorrowedAt, DateTime? ReturnedAt);
