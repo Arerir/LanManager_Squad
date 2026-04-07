@@ -37,6 +37,9 @@ secrets.json
 **/*.coverage
 **/*.coveragexml
 
+# Coverage reports
+**/Coverage/
+
 # Crash dumps
 *.dmp
 
