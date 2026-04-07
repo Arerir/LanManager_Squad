@@ -8,3 +8,6 @@
 ## Learnings
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
+
+### 2026-04-10: Events Playwright flow tests (#73)
+**What:** Added event flow E2E coverage for `/events`, detail navigation, unknown ids, and localStorage context persistence, with skips for missing backend data.
