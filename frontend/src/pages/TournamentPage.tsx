@@ -7,11 +7,17 @@ import type { TournamentDto, BracketDto, MatchDto } from '../api/tournaments';
 import { getUser } from '../api/auth';
 import { getAttendance } from '../api/attendance';
 import type { AttendanceDto } from '../api/attendance';
+import { useEventContext } from '../context/EventContext';
 
 export function TournamentPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const eventId = searchParams.get('eventId') ?? '';
   const tournamentId = searchParams.get('tournamentId');
+  const { setSelectedEventId } = useEventContext();
+
+  useEffect(() => {
+    if (eventId) setSelectedEventId(eventId);
+  }, [eventId, setSelectedEventId]);
 
   if (!eventId) return <div style={{ padding: '2rem', color: '#aaa' }}>Select an event to view tournaments.</div>;
 

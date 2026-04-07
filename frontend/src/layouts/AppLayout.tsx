@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { clearToken, getUser } from '../api/auth';
+import { useEventContext } from '../context/EventContext';
 
 const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties => ({
   color: isActive ? '#00d4ff' : '#9ca3c8',
@@ -19,6 +20,7 @@ export function AppLayout() {
   const currentUser = getUser();
   const [navOpen, setNavOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const { selectedEventId } = useEventContext();
 
   useEffect(() => {
     const handle = () => {
@@ -70,10 +72,10 @@ export function AppLayout() {
           <li><NavLink to="/" end style={navLinkStyle} onClick={() => setNavOpen(false)}>Dashboard</NavLink></li>
           <li><NavLink to="/events" style={navLinkStyle} onClick={() => setNavOpen(false)}>Events</NavLink></li>
           <li><NavLink to="/users" style={navLinkStyle} onClick={() => setNavOpen(false)}>Users</NavLink></li>
-          <li><NavLink to="/attendance" style={navLinkStyle} onClick={() => setNavOpen(false)}>Attendance</NavLink></li>
-          <li><NavLink to="/tournaments" style={navLinkStyle} onClick={() => setNavOpen(false)}>Tournaments</NavLink></li>
-          <li><NavLink to="/seating" style={navLinkStyle} onClick={() => setNavOpen(false)}>Seating</NavLink></li>
-          <li><NavLink to="/equipment" style={navLinkStyle} onClick={() => setNavOpen(false)}>Equipment</NavLink></li>
+          <li><NavLink to={selectedEventId ? `/attendance?eventId=${selectedEventId}` : '/attendance'} style={navLinkStyle} onClick={() => setNavOpen(false)}>Attendance</NavLink></li>
+          <li><NavLink to={selectedEventId ? `/tournaments?eventId=${selectedEventId}` : '/tournaments'} style={navLinkStyle} onClick={() => setNavOpen(false)}>Tournaments</NavLink></li>
+          <li><NavLink to={selectedEventId ? `/seating?eventId=${selectedEventId}` : '/seating'} style={navLinkStyle} onClick={() => setNavOpen(false)}>Seating</NavLink></li>
+          <li><NavLink to={selectedEventId ? `/equipment?eventId=${selectedEventId}` : '/equipment'} style={navLinkStyle} onClick={() => setNavOpen(false)}>Equipment</NavLink></li>
         </ul>
         <div style={{ borderTop: '1px solid #1e1e42', paddingTop: '1rem', marginTop: 'auto' }}>
           {currentUser ? (

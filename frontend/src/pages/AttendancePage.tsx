@@ -6,6 +6,7 @@ import { getAttendance } from '../api/attendance';
 import type { AttendanceDto } from '../api/attendance';
 import { getOutside, getDoorLog } from '../api/doorpass';
 import type { OutsideUserDto, DoorPassDto } from '../api/doorpass';
+import { useEventContext } from '../context/EventContext';
 
 interface CheckedInBroadcast {
   eventId: string;
@@ -310,6 +311,11 @@ export function AttendancePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const eventId = searchParams.get('eventId') ?? '';
   const tab = (searchParams.get('tab') ?? 'live') as 'live' | 'outside' | 'doorlog';
+  const { setSelectedEventId } = useEventContext();
+
+  useEffect(() => {
+    if (eventId) setSelectedEventId(eventId);
+  }, [eventId, setSelectedEventId]);
 
   const setTab = (t: string) =>
     setSearchParams(p => { p.set('tab', t); return p; });
