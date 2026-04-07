@@ -1,4 +1,4 @@
-using LanManager.Maui.Services;
+using LanManager.Maui.Shared.Services;
 using LanManager.Maui.Views;
 using Microsoft.Extensions.DependencyInjection;
 

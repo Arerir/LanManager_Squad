@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace LanManager.Maui.Services;
+namespace LanManager.Maui.Shared.Services;
 
 public record AuthUser(string Id, string Name, List<string> Roles);
 
@@ -163,3 +163,4 @@ public class AuthService
         return result;
     }
 }
+

@@ -1,4 +1,4 @@
-namespace LanManager.Maui.Services;
+namespace LanManager.Maui.Shared.Services;
 
 public class AuthHandler : DelegatingHandler
 {
@@ -20,3 +20,4 @@ public class AuthHandler : DelegatingHandler
         return await base.SendAsync(request, cancellationToken);
     }
 }
+
