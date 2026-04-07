@@ -15,3 +15,7 @@
 ### 2026-04-09: Auth flow Playwright coverage (#72)
 **What:** Added auth flow E2E checks for login form fields, invalid credentials, and unauthenticated route redirects. Valid-credential login is skipped pending a live API.
 
+### 2026-04-10: Profile Page E2E Coverage (#76)
+**What:** Added Playwright coverage for the profile page to validate user info rendering, sidebar navigation access, and sign-out redirect behavior.
+
+
