@@ -25,6 +25,7 @@ public static class MauiProgram
 #endif
 
 		// Auth
+		builder.Services.AddSingleton<AppStateService>();
 		builder.Services.AddSingleton<AuthService>();
 		builder.Services.AddTransient<AuthHandler>();
 

@@ -8,6 +8,7 @@ public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
     private readonly AuthService _authService;
+    private readonly AppStateService _appState;
     private Guid _eventId;
     private DateTime _lastScanTime = DateTime.MinValue;
     private const int ScanCooldownMs = 1000;
@@ -21,21 +22,26 @@ public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] private int _outsideCount;
     [ObservableProperty] private bool _isBusy;
 
-    public DoorScanViewModel(ApiService apiService, AuthService authService)
+    public DoorScanViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {
         _apiService = apiService;
         _authService = authService;
+        _appState = appState;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue("eventId", out var id) && Guid.TryParse(id?.ToString(), out var guid))
-        {
             _eventId = guid;
-            _ = InitAsync();
-        }
-        if (query.TryGetValue("eventName", out var name))
-            EventName = name?.ToString() ?? string.Empty;
+        else if (_appState.HasEvent)
+            _eventId = _appState.EventId;
+
+        if (query.TryGetValue("eventName", out var name) && !string.IsNullOrEmpty(name?.ToString()))
+            EventName = name.ToString()!;
+        else if (!string.IsNullOrEmpty(_appState.EventName))
+            EventName = _appState.EventName;
+
+        _ = InitAsync();
     }
 
     private async Task InitAsync()

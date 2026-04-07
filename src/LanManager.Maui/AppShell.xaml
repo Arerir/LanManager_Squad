@@ -21,4 +21,11 @@
         ContentTemplate="{DataTemplate views:AttendancePage}"
         Route="AttendancePage" />
 
+    <ShellContent
+        x:Name="ScannerContent"
+        Title="QR Scanner"
+        ContentTemplate="{DataTemplate views:DoorScanPage}"
+        Route="DoorScanPage"
+        IsVisible="False" />
+
 </Shell>
