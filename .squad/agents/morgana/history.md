@@ -9,6 +9,21 @@
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
 
+## Event Context Persistence (2026-04-07)
+
+Implemented `EventContext` at `frontend/src/context/EventContext.tsx` to persist the selected event across sidebar navigation.
+
+**What was done:**
+- Created `EventProvider` + `useEventContext` hook backed by `localStorage` (key: `selectedEventId`)
+- Wrapped `<BrowserRouter>` in `EventProvider` inside `App.tsx`
+- `AppLayout.tsx` reads `selectedEventId` from context; nav links for Attendance, Tournaments, Seating, and Equipment build hrefs dynamically (`/page?eventId=<id>` when set, `/page` otherwise)
+- `AttendancePage`, `SeatingPage`, `TournamentPage` call `setSelectedEventId` when `eventId` is present in search params
+- `EventDetailPage` calls `setSelectedEventId` when an event loads (covers the "click event → use sidebar" flow)
+
+**EquipmentPage note:** EquipmentPage currently doesn't use `eventId` from search params at all (global equipment list), so no context sync needed there — nav link still carries `?eventId=` for future use.
+
+**TypeScript:** All changes pass `tsc --noEmit` with zero errors. No implicit `any`.
+
 ## Issue #6 — React scaffold (2026-04-05)
 Scaffolded frontend/ with Vite + React 18 + TypeScript. React Router v6. AppLayout with sidebar nav. Stub pages for Dashboard, Events, Users, Attendance. VITE_API_URL config. PR opened. Next: events views (#7) and user registration forms (#8) once Tank defines API contracts.
 
@@ -40,3 +55,20 @@ Reviewed feat/frontend-theme-e2e branch containing GameVille cyberpunk theme red
 - Consistent table styling: #0d0d2b header bg, #1e1e42 borders, alternating row backgrounds
 
 Commit: edf150a on feat/frontend-theme-e2e
+
+## Event Context Persistence (2026-04-07)
+
+Implemented `EventContext` at `frontend/src/context/EventContext.tsx` to persist the selected event across sidebar navigation.
+
+**What was done:**
+- Created `EventProvider` + `useEventContext` hook backed by `localStorage` (key: `selectedEventId`)
+- Wrapped `<BrowserRouter>` in `EventProvider` inside `App.tsx`
+- `AppLayout.tsx` reads `selectedEventId` from context; nav links for Attendance, Tournaments, Seating, and Equipment build hrefs dynamically (`/page?eventId=<id>` when set, `/page` otherwise)
+- `AttendancePage`, `SeatingPage`, `TournamentPage` call `setSelectedEventId` when `eventId` is present in search params
+- `EventDetailPage` calls `setSelectedEventId` when an event loads (covers the "click event → use sidebar" flow)
+
+**EquipmentPage note:** EquipmentPage currently doesn't use `eventId` from search params at all (global equipment list), so no context sync needed there — nav link still carries `?eventId=` for future use.
+
+**TypeScript:** All changes pass `tsc --noEmit` with zero errors. No implicit `any`.
+
+📌 Team update (2026-04-07T15-26-09): Merlin broadcast DoorScanBroadcast via SignalR; Circe wired MAUI listener with JWT auth and auto-clearing notifications — decided by Tank, Merlin, Circe
