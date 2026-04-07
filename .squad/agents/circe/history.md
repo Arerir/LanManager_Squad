@@ -9,6 +9,7 @@
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
 - Crew app logins must validate Admin/Organizer roles and logout non-staff users.
+- Crew app uses shared admin pages (Login/Main/CheckIn/Attendance/DoorScan) wired via CrewAppShell and AppStateService for event context.
 
 - LanManager.Maui now always routes event selection to AttendeeHubPage; admin/organizer flows live in LanManager.Maui.Crew.
 

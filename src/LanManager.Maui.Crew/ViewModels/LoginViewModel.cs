@@ -1,8 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LanManager.Maui.Crew;
 using LanManager.Maui.Shared.Services;
-using Microsoft.Maui.Controls;
+using LanManager.Maui.Crew;
 
 namespace LanManager.Maui.Crew.ViewModels;
 
