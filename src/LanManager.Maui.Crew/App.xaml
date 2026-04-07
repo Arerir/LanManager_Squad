@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:LanManager.Maui.Crew.Converters"
              x:Class="LanManager.Maui.Crew.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter" />
+            <converters:CheckModeTextConverter x:Key="CheckModeTextConverter" />
+            <converters:CheckModeColorConverter x:Key="CheckModeColorConverter" />
+            <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+            <converters:IsZeroConverter x:Key="IsZeroConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>
