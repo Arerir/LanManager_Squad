@@ -46,9 +46,9 @@ export function EventDetailPage() {
     }
   }
 
-  if (loading) return <p>Loading…</p>;
-  if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
-  if (!event) return <p>Event not found.</p>;
+  if (loading) return <p style={{ color: 'var(--text)' }}>Loading…</p>;
+  if (error) return <p style={{ color: 'var(--danger)' }}>Error: {error}</p>;
+  if (!event) return <p style={{ color: 'var(--text-muted)' }}>Event not found.</p>;
 
   return (
     <div style={{ maxWidth: 700, width: '100%' }}>
@@ -56,7 +56,7 @@ export function EventDetailPage() {
         <div>
           <button
             onClick={() => navigate('/events')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#0d6efd', padding: 0, marginBottom: 8, fontSize: '0.9rem' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--cyan)', padding: 0, marginBottom: 8, fontSize: '0.9rem' }}
           >
             ← Back to Events
           </button>
@@ -65,28 +65,33 @@ export function EventDetailPage() {
         <div style={{ display: 'flex', gap: 8, marginTop: 32, flexWrap: 'wrap' }}>
           <button
             onClick={() => navigate(`/events/${event.id}/edit`)}
-            style={{ background: '#0d6efd', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}
+            className="btn-primary"
+            style={{ padding: '8px 16px', borderRadius: 6 }}
           >
             Edit
           </button>
           <button
             onClick={() => navigate(`/attendance?eventId=${event.id}&tab=doorlog`)}
-            style={{ background: '#6c757d', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}
+            className="btn-ghost"
+            style={{ padding: '8px 16px', borderRadius: 6 }}
           >
             📋 Door Log
           </button>
           <button onClick={() => navigate(`/seating?eventId=${event.id}`)}
-            style={{ background: '#16a085', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}>
+            className="btn-ghost"
+            style={{ padding: '8px 16px', borderRadius: 6 }}>
             🪑 Seating
           </button>
           <button onClick={() => navigate(`/tournaments?eventId=${event.id}`)}
-            style={{ background: '#8e44ad', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}>
+            className="btn-ghost"
+            style={{ padding: '8px 16px', borderRadius: 6 }}>
             🏆 Tournaments
           </button>
           <button
             onClick={handleDelete}
             disabled={deleting}
-            style={{ background: '#dc3545', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, cursor: 'pointer' }}
+            className="btn-danger"
+            style={{ padding: '8px 16px', borderRadius: 6 }}
           >
             {deleting ? 'Deleting…' : 'Delete'}
           </button>
@@ -96,8 +101,10 @@ export function EventDetailPage() {
       <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '2rem' }}>
         <Field label="Status">
           <span style={{
-            background: STATUS_COLORS[event.status] ?? '#6c757d',
-            color: '#fff', padding: '2px 10px', borderRadius: 12, fontSize: '0.85rem', fontWeight: 600,
+            background: STATUS_COLORS[event.status]?.bg ?? 'rgba(90,90,128,0.2)',
+            color: STATUS_COLORS[event.status]?.color ?? '#9ca3c8',
+            padding: '2px 10px', borderRadius: 12, fontSize: '0.85rem', fontWeight: 600,
+            border: `1px solid ${STATUS_COLORS[event.status]?.color ?? '#9ca3c8'}33`,
           }}>
             {event.status}
           </span>
@@ -117,8 +124,8 @@ export function EventDetailPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'baseline' }}>
-      <span style={{ fontWeight: 600, minWidth: 100, color: '#555' }}>{label}</span>
-      <span>{children}</span>
+      <span style={{ fontWeight: 600, minWidth: 100, color: 'var(--text)' }}>{label}</span>
+      <span style={{ color: 'var(--text-h)' }}>{children}</span>
     </div>
   );
 }
