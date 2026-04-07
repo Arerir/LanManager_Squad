@@ -108,6 +108,171 @@ All issues properly labeled for triage workflow.
 **By:** Switch  
 **What:** No new architectural decisions required. Crew app mirrors existing MAUI structure: MVVM with CommunityToolkit.Mvvm, centralized ApiService singleton, DI container in MauiProgram. File structure: ViewModels/, Views/, Converters/, Resources/Styles/.  
 **Why:** Consistency with established MAUI patterns supports parallel development and team onboarding.
+### 2026-04-07: Persistent Event Context via React Context + localStorage
+**By:** Morgana  
+**What:** Introduced `EventContext` (`frontend/src/context/EventContext.tsx`) to share and persist the currently selected event ID across the app.
+- **Storage:** `localStorage` key `selectedEventId` — survives page refreshes
+- **Provider location:** Wraps `<BrowserRouter>` in `App.tsx` so context is available everywhere including inside `NavLink`
+- **Sidebar nav:** `AppLayout` reads `selectedEventId`; links for Attendance, Tournaments, Seating, Equipment include `?eventId=<id>` when set
+- **Context setters:** `AttendancePage`, `SeatingPage`, `TournamentPage`, `EventDetailPage` each call `setSelectedEventId` when they receive an `eventId`
+
+**Why:** Nav sidebar links had no event context — clicking "Attendance" after viewing an event detail page would drop `?eventId=` from the URL, breaking the page. This pattern (Context + localStorage) keeps it simple, dependency-free, and consistent with existing auth patterns in the codebase (`currentUser` via `localStorage`).
+
+**Note:** `EquipmentPage` does not currently use `eventId` from search params (global inventory list). The nav link still carries `?eventId=` for future use if equipment becomes event-scoped.
+
+### 2026-04-07: SignalR Door Scan Event — Backend Broadcast
+**By:** Merlin  
+**Status:** Implemented and compiled ✅
+
+**What:** Added `DoorScanBroadcast` record to `AttendanceBroadcast.cs` and injected `IHubContext<AttendanceHub>` into `DoorPassController` via primary constructor. After `db.SaveChangesAsync()` in `DoorScan` endpoint, broadcasts `"UserDoorScanned"` to all connected SignalR clients.
+
+**Broadcast Payload:**
+```csharp
+public record DoorScanBroadcast(
+    Guid EventId,
+    Guid UserId,
+    string UserName,
+    string Direction,   // "Entry" or "Exit"
+    DateTime ScannedAt
+);
+```
+
+JSON shape (camelCase from System.Text.Json):
+```json
+{
+  "eventId": "...",
+  "userId": "...",
+  "userName": "...",
+  "direction": "Entry",   // or "Exit"
+  "scannedAt": "2026-04-07T18:00:00Z"
+}
+```
+
+**Hub Details:**
+- Event Name: `UserDoorScanned`
+- Hub endpoint: `/hubs/attendance` (same hub as `UserCheckedIn` / `UserCheckedOut`)
+- Triggered from `POST /api/events/{eventId}/door-scan` after door pass is persisted
+- Broadcast to **all** connected clients
+
+**MAUI Implementation Notes:**
+- Subscribe on `AttendanceHubConnection.On<DoorScanBroadcast>("UserDoorScanned", handler)`
+- `Direction == "Exit"` → user went outside; `Direction == "Entry"` → user returned
+- `ScannedAt` is UTC; convert for local display
+- Filter by `EventId` if the app is scoped to a specific event
+
+### 2026-04-07: SignalR Attendee Real-Time Notifications — MAUI Implementation
+**By:** Circe  
+**Status:** Implemented ✅
+
+**What:** Added real-time SignalR notifications to the attendee MAUI app (`src/LanManager.Maui`).
+- New `SignalRService` singleton at `Services/SignalRService.cs` with JWT authentication
+- `AttendeeHubViewModel` connects on load, disconnects on page disappear
+- Added `Microsoft.AspNetCore.SignalR.Client` (version `10.*`) to the MAUI .csproj
+
+**Hub Events Handled:**
+| Event | Filter | UI message |
+|---|---|---|
+| `UserCheckedIn` | eventId + userId | ✓ You're checked in! (green, 4s) |
+| `UserDoorScanned` direction=Exit | eventId + userId | → You went outside (blue, 4s) |
+| `UserDoorScanned` direction=Entry | eventId + userId | ← Welcome back! (blue, 4s) |
+
+**Architecture Decisions:**
+1. **`SignalRService` is a singleton** — one shared connection instance per app session. `AttendeeHubViewModel` is transient, so `ConnectAsync` must be called each time the page loads (replaces any prior connection). This is correct because a user can only be in one event context at a time.
+
+2. **`CleanupAsync` in code-behind** — `AttendeeHubPage.OnDisappearing` calls `vm.CleanupAsync()`. This is the minimum code-behind lifecycle hook needed to avoid hanging SignalR connections; no business logic lives there.
+
+3. **JWT for SignalR**: Uses `options.AccessTokenProvider = async () => await _authService.GetTokenAsync()` — same `SecureStorage`-backed token as REST calls.
+
+4. **Event shape:** `(Guid eventId, string userId, string userName, string direction, DateTime scannedAt)` — matches Merlin's DoorScanBroadcast signature.
+
+### 2026-04-07: Test Coverage Expansion — API Controllers
+**By:** Apoc (Tester)  
+**Status:** ✅ Complete  
+**Coverage Impact:** 14.45% → 47.38% line coverage (+229% relative increase)
+
+**What:** Expanded test coverage for LanManager API from 14% to 47% line coverage by writing comprehensive xUnit tests for five previously untested controllers: AuthController, EventsController, RegistrationsController, TournamentController, and UsersController.
+
+**New Test Files Created:**
+1. **AuthControllerTests.cs** — 4 tests
+   - Login with valid credentials → returns JWT token with user info
+   - Invalid email → 401 Unauthorized
+   - Invalid password → 401 Unauthorized  
+   - Multiple roles → all roles in token
+
+2. **EventsControllerTests.cs** — 14 tests
+   - GetAll: empty, multiple events, filter by status, sort by name
+   - GetById: existing event, not found
+   - Create: valid event (organizer/admin only)
+   - Update: existing event, not found
+   - Delete: existing event, not found
+
+**Existing Test Files Fixed:**
+3. **RegistrationsControllerTests.cs** — already existed with 9 tests
+4. **TournamentControllerTests.cs** — already existed with 9 tests, **fixed BracketService mocking bug** (methods aren't virtual — switched to real instance)
+5. **UsersControllerTests.cs** — already existed with 5 tests, **fixed async queryable bug** (Mock UserManager.Users didn't support async — used in-memory DB context instead)
+
+**Test Coverage Report:**
+```
+Module: LanManager.Api
+- Line: 47.38%
+- Branch: 34.05%
+- Method: 59.82%
+
+Test Summary:
+- Total: 77 tests
+- Failed: 0
+- Succeeded: 77
+- Duration: 1.3s
+```
+
+**Patterns Established:**
+- **In-memory DB:** `TestDbContextFactory.Create("unique-test-name")` for isolated test data
+- **Mocking UserManager:** Mock<IUserStore> + Mock<UserManager<ApplicationUser>> for identity ops
+- **Mocking SignalR:** Mock<IHubContext<THub>> with chained Clients/Groups/SendCoreAsync
+- **Auth context:** `ClaimsHelper.SetUser(controller, userId, roles...)` to set ControllerContext.User
+- **Real services:** BracketService used as real instance (methods not virtual, can't mock)
+
+**Recommendations:**
+1. **Set CI coverage threshold:** Add `dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings` with minimum 45% line coverage gate
+2. **Expand to missing areas:** Focus next on LanManager.Data (currently 2.88% coverage) — test repository patterns, model validations, and database constraints
+3. **Integration tests:** These are unit tests with mocked dependencies. Consider E2E tests for critical flows (login → register → check-in → tournament enrol)
+4. **Coverage visibility:** Add coverage badge to README.md using Codecov or Coveralls integration
+
+### 2026-04-07: Coverage HTML Reports via Coverlet
+**By:** Apoc (Tester)  
+**Status:** ✅ Implemented
+
+**What:** Configured `coverlet.msbuild` package and MSBuild properties to produce Cobertura coverage XML on every test run. CI workflow extended with `reportgenerator` tool to convert XML → HTML.
+
+**Changes Made:**
+1. **Test project** (`src/LanManager.Api.Tests/LanManager.Api.Tests.csproj`):
+   - Added `coverlet.msbuild` v6.0.4 package
+   - Added `<CollectCoverage>true</CollectCoverage>`
+   - Added `<CoverletOutputFormat>cobertura</CoverletOutputFormat>`
+   - Added `<CoverletOutput>Coverage/</CoverletOutput>`
+
+2. **CI workflow** (`.github/workflows/ci.yml`):
+   - Install `dotnet-reportgenerator-globaltool`
+   - Run `reportgenerator` against `coverage.cobertura.xml`
+   - Upload HTML reports as `coverage-report` artifact
+
+3. **`.gitignore`**:
+   - Added `**/Coverage/` to ignore generated reports
+
+**Rationale:**
+- **MSBuild integration:** Automatic coverage on `dotnet test` — no CLI flags required
+- **Cobertura format:** Industry-standard, enables HTML report generation
+- **Self-contained:** Coverage folder lives in test project, no solution-level changes
+- **CI-ready:** Reports uploaded as artifacts for every PR test run
+
+**Trade-offs:**
+- **Storage:** Coverage artifacts increase CI storage usage (acceptable for test quality)
+- **Build time:** ReportGenerator adds ~5-10s to CI pipeline (worth the visibility)
+
+**Future Work:**
+- Add coverage threshold enforcement (e.g., fail build if < 80%)
+- Consider badge generation for README
+- Explore code coverage trend tracking
 
 ## Governance
 

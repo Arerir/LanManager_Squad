@@ -15,3 +15,20 @@ Created Event, User, Registration, CheckInRecord entities. LanManagerDbContext i
 ## Sprint 2026-04-08 — Fixes & Architecture
 Fixed DoorPassController tests for SignalR broadcast feature (#82). Updated DoorPassControllerTests.cs to mock IHubContext<AttendanceHub>. All 77 unit tests passing. Enables door scan broadcast to real-time clients via AttendanceHub.
 
+## Door Scan SignalR Broadcast (2026-04-07)
+Added `DoorScanBroadcast` record to `AttendanceBroadcast.cs` and wired `IHubContext<AttendanceHub>` into `DoorPassController` (primary constructor injection, matching CheckInController pattern). After `db.SaveChangesAsync()` in `DoorScan`, broadcasts `"UserDoorScanned"` to all connected SignalR clients. Build verified clean. Decisions inbox written at `.squad/decisions/inbox/merlin-doorscan-signalr.md` for Circe/Switch to implement MAUI listener.
+
+**Broadcast Record:**
+```csharp
+public record DoorScanBroadcast(
+    Guid EventId,
+    Guid UserId,
+    string UserName,
+    string Direction,   // "Entry" or "Exit"
+    DateTime ScannedAt
+);
+```
+
+**Event Name:** `UserDoorScanned` on `/hubs/attendance`
+
+📌 Team update (2026-04-07T15-26-09): Morgana implemented EventContext for nav persistence; Circe wired MAUI listener with JWT auth and auto-clearing notifications — decided by Tank, Morgana, Circe
