@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:vm="clr-namespace:LanManager.Maui.Crew.ViewModels"
+             x:Class="LanManager.Maui.Crew.Views.DoorScanPage"
+             x:DataType="vm:DoorScanViewModel"
+             Title="Door Scanner">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="12" ColumnDefinitions="*,Auto" BackgroundColor="#1a1a2e">
+            <Label Text="{Binding EventName}" TextColor="White" FontSize="16" VerticalOptions="Center"/>
+            <Button Grid.Column="1" Text="← Back" Command="{Binding GoBackCommand}"
+                    BackgroundColor="Transparent" TextColor="White"/>
+        </Grid>
+
+        <!-- Direction Toggle -->
+        <Button Grid.Row="1" Text="{Binding DirectionLabel}"
+                BackgroundColor="{Binding DirectionColor}"
+                TextColor="White" FontSize="24" FontAttributes="Bold"
+                HeightRequest="70" Command="{Binding ToggleDirectionCommand}"
+                Margin="0"/>
+
+        <!-- Outside Count -->
+        <Label Grid.Row="2" Text="{Binding OutsideCount, StringFormat='{0} outside'}"
+               HorizontalOptions="Center" Margin="8" FontSize="14" TextColor="Gray"/>
+
+        <!-- Camera -->
+        <zxing:CameraBarcodeReaderView Grid.Row="3"
+                          x:Name="cameraView"
+                          BarcodesDetected="OnBarcodesDetected"/>
+
+        <!-- Status Banner -->
+        <Border Grid.Row="4" BackgroundColor="{Binding StatusColor}"
+                IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotEmptyConverter}}"
+                Padding="16" Margin="0">
+            <Label Text="{Binding StatusMessage}" TextColor="White"
+                   FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+        </Border>
+    </Grid>
+</ContentPage>
+

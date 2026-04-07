@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:LanManager.Maui.Crew.ViewModels"
+             x:Class="LanManager.Maui.Crew.Views.MainPage"
+             x:DataType="viewmodels:MainViewModel"
+             Title="LAN Manager - Event Selector">
+
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0"
+               Text="Select Active Event"
+               FontSize="24"
+               FontAttributes="Bold"
+               Margin="0,0,0,20" />
+
+        <ActivityIndicator Grid.Row="1"
+                          IsRunning="{Binding IsLoading}"
+                          IsVisible="{Binding IsLoading}"
+                          Color="{StaticResource Primary}"
+                          Margin="0,10" />
+
+        <Picker Grid.Row="2"
+                Title="Choose an event..."
+                ItemsSource="{Binding Events}"
+                SelectedItem="{Binding SelectedEvent}"
+                ItemDisplayBinding="{Binding Name}"
+                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                VerticalOptions="Start"
+                FontSize="18" />
+
+        <Label Grid.Row="3"
+               Text="{Binding StatusMessage}"
+               IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotEmptyConverter}}"
+               TextColor="Gray"
+               FontSize="16"
+               HorizontalTextAlignment="Center"
+               Margin="0,20" />
+
+        <Button Grid.Row="4"
+                Text="Select Event"
+                Command="{Binding SelectEventCommand}"
+                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                FontSize="18"
+                Padding="20"
+                Margin="0,10,0,0" />
+    </Grid>
+
+</ContentPage>
+

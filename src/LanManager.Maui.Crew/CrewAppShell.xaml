@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:LanManager.Maui.Crew.Views"
        x:Class="LanManager.Maui.Crew.CrewAppShell"
        Title="LanManager Crew">
+
+    <ShellContent
+        Title="Event Selector"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
+
+    <ShellContent
+        Title="Check-In"
+        ContentTemplate="{DataTemplate views:CheckInPage}"
+        Route="CheckInPage" />
+
+    <ShellContent
+        Title="Attendance"
+        ContentTemplate="{DataTemplate views:AttendancePage}"
+        Route="AttendancePage" />
+
+    <ShellContent
+        Title="QR Scanner"
+        ContentTemplate="{DataTemplate views:DoorScanPage}"
+        Route="DoorScanPage" />
 </Shell>

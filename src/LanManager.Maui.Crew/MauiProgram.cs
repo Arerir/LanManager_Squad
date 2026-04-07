@@ -25,6 +25,7 @@ public static class MauiProgram
 #endif
 
         // Auth
+        builder.Services.AddSingleton<AppStateService>();
         builder.Services.AddSingleton<AuthService>();
         builder.Services.AddTransient<AuthHandler>();
 
@@ -37,8 +38,19 @@ public static class MauiProgram
             return new ApiService(httpClient);
         });
 
+        // ViewModels
         builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient<MainViewModel>();
+        builder.Services.AddTransient<CheckInViewModel>();
+        builder.Services.AddTransient<AttendanceViewModel>();
+        builder.Services.AddTransient<DoorScanViewModel>();
+
+        // Views
         builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<CheckInPage>();
+        builder.Services.AddTransient<AttendancePage>();
+        builder.Services.AddTransient<DoorScanPage>();
 
         return builder.Build();
     }
