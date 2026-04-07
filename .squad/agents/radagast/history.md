@@ -11,3 +11,7 @@
 
 ### 2026-04-08: Playwright E2E Infrastructure Setup (#71)
 **What:** Added Playwright config and e2e scaffolding in `frontend/`, including auth fixture (email/password selectors) and smoke tests. Tests run via `npm run test:e2e` and expect login to redirect to `/events`.
+
+### 2026-04-09: Auth flow Playwright coverage (#72)
+**What:** Added auth flow E2E checks for login form fields, invalid credentials, and unauthenticated route redirects. Valid-credential login is skipped pending a live API.
+
