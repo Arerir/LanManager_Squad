@@ -9,4 +9,11 @@ public partial class AttendeeHubPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+
+    protected override async void OnDisappearing()
+    {
+        base.OnDisappearing();
+        if (BindingContext is AttendeeHubViewModel vm)
+            await vm.CleanupAsync();
+    }
 }
