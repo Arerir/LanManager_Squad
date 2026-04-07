@@ -4,11 +4,11 @@ import { getEvent, getEventAttendees, deleteEvent } from '../api/events';
 import type { EventDto } from '../api/events';
 import type { UserDto } from '../api/users';
 
-const STATUS_COLORS: Record<string, string> = {
-  Draft: '#6c757d',
-  Published: '#0d6efd',
-  Active: '#198754',
-  Closed: '#dc3545',
+const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
+  Draft:     { bg: 'rgba(90,90,128,0.2)',   color: '#9ca3c8' },
+  Published: { bg: 'rgba(0,212,255,0.15)',  color: '#00d4ff' },
+  Active:    { bg: 'rgba(0,230,118,0.15)',  color: '#00e676' },
+  Closed:    { bg: 'rgba(255,56,96,0.15)',  color: '#ff3860' },
 };
 
 export function EventDetailPage() {

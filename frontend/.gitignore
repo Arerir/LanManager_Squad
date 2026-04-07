@@ -23,4 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
+e2e/
+playwright-report/
+test-results/
 .env.development
