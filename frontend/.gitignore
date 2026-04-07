@@ -26,3 +26,7 @@ dist-ssr
 playwright-report/
 test-results/
 .env.development
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
