@@ -14,3 +14,4 @@
 - Created LanManager.Maui.Shared to host AuthService, AuthHandler, ApiService, and Config for reuse across MAUI apps.
 - LanManager.Maui now references the shared library; AppStateService remains app-specific.
 
+- LanManager.Maui.Crew lives in src/LanManager.Maui.Crew, mirrors the main MAUI app resources/platforms, and references LanManager.Maui.Shared.
