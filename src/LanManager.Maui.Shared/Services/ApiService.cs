@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace LanManager.Maui.Services;
+namespace LanManager.Maui.Shared.Services;
 
 public class ApiService
 {
@@ -216,3 +216,4 @@ public record OutsideUserDto(Guid UserId, string UserName, DateTime ExitedAt);
 public record SeatDto(Guid Id, Guid EventId, int Row, int Column, string Label, Guid? AssignedUserId, string? AssignedUserName, DateTime? AssignedAt);
 public record TournamentDto(Guid Id, Guid EventId, string Name, string Format, string Status, int ParticipantCount);
 public record EquipmentLoanDto(Guid Id, Guid EquipmentId, string EquipmentName, Guid UserId, string UserName, Guid EventId, DateTime BorrowedAt, DateTime? ReturnedAt);
+

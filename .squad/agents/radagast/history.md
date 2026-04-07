@@ -15,6 +15,9 @@
 ### 2026-04-09: Auth flow Playwright coverage (#72)
 **What:** Added auth flow E2E checks for login form fields, invalid credentials, and unauthenticated route redirects. Valid-credential login is skipped pending a live API.
 
+### 2026-04-10: Events Playwright flow tests (#73)
+**What:** Added event flow E2E coverage for `/events`, detail navigation, unknown ids, and localStorage context persistence, with skips for missing backend data.
+
 ### 2026-04-10: Attendance Playwright coverage (#74)
 **What:** Added attendance E2E checks for rendering without an event, rendering with an eventId, and outside-tab empty state with mocked API responses.
 

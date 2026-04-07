@@ -1,7 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LanManager.Maui.Services;
+using LanManager.Maui.Shared.Services;
 using System.Collections.ObjectModel;
+using LanManager.Maui.Services;
 
 namespace LanManager.Maui.ViewModels;
 
@@ -86,3 +87,4 @@ public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
         await Shell.Current.GoToAsync($"//CheckInPage?eventId={_eventId}");
     }
 }
+

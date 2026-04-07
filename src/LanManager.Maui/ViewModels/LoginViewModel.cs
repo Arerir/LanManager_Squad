@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LanManager.Maui.Services;
+using LanManager.Maui.Shared.Services;
 
 namespace LanManager.Maui.ViewModels;
 
@@ -55,3 +55,4 @@ public partial class LoginViewModel : ObservableObject
         }
     }
 }
+

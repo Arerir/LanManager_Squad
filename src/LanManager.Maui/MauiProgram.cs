@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using LanManager.Maui.Services;
+using Microsoft.Extensions.Logging;
+using LanManager.Maui.Shared.Services;
 using LanManager.Maui.ViewModels;
 using LanManager.Maui.Views;
 using ZXing.Net.Maui.Controls;
+using LanManager.Maui.Services;
 
 namespace LanManager.Maui;
 
@@ -61,3 +62,4 @@ public static class MauiProgram
 		return builder.Build();
 	}
 }
+
