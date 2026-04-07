@@ -61,11 +61,38 @@ All issues properly labeled for triage workflow.
 **What:** All API calls in `frontend/src/api/events.ts` and `frontend/src/api/users.ts`. Flat routes in `App.tsx`. Auth/session via `localStorage` (`currentUser` key). No CSS framework — inline styles with consistent patterns. Login stubs against `/api/auth/login` (not yet implemented).  
 **Why:** Keeps API surface isolated and typed. Routing is flat for simplicity. Auth deferred to a later issue.
 
-## Governance
+### 2026-04-07: PR Creation Summary
+**By:** Gandalf  
+**What:** Created 5 GitHub PRs for active branches: fix/maui-event-context-hub (#58), feat/frontend-theme-e2e (#59), squad/25-auth-jwt (#60), squad/28-door-scanner (#61), squad/29-door-log-ui (#62). All targeting `master`.  
+**Why:** Standardize PR creation process; enable parallel team review. Remote-only branches required local tracking refs before GitHub API could resolve SHAs. All PRs include issue closures and architecture notes for dependent work.
 
-- All meaningful changes require team consensus
-- Document architectural decisions here
-- Keep history focused on work, decisions focused on direction
+### 2026-04-07: Theme System Conventions  
+**By:** Morgana  
+**Branch:** feat/frontend-theme-e2e  
+**What:** GameVille cyberpunk theme defined entirely via CSS variables. Core palette: `--bg` (#060612), `--surface` (#0d0d2b), `--text` (#9ca3c8), neon accents (cyan, magenta, purple, orange). Reusable classes: `.btn-primary`, `.btn-ghost`, `.btn-danger`, `.badge-available`, `.badge-loan`. Playwright E2E setup with config in `playwright.config.ts`, tests in `frontend/e2e/`. Reports/results gitignored.  
+**Why:** Centralized theme system eliminates color duplication. CSS variables enable runtime theme switching. Playwright foundation ready for e2e automation. e2e directory tracked (only generated artifacts ignored).  
+**Best Practices:** Use semantic variables over palette hex; always use button/badge classes; input elements inherit theme automatically.
+
+### 2026-04-07: SignalR Architecture — Real-Time Attendance
+**By:** Tank + Trinity  
+**Related PRs:** #21 (backend), #22 (frontend)  
+**What:** Hub at `/hubs/attendance` (mapped in `Program.cs`). Broadcast-only: `UserCheckedIn` and `UserCheckedOut` events with `AttendanceBroadcast` and `CheckOutBroadcast` DTOs. CORS requires `AllowCredentials()`. Frontend connection via `HubConnectionBuilder` with `config.apiUrl/hubs/attendance`. Initial snapshot from `GET /api/events/{eventId}/attendance`.  
+**Why:** Real-time user status without polling. SignalR broadcast pattern keeps hub simple and scalable. CORS credentials required for SignalR sockets. AttendancePage filters by `?eventId=<guid>` query parameter.
+
+### 2026-04-07: MAUI Architecture Patterns
+**By:** Switch  
+**What:** MVVM pattern with `CommunityToolkit.Mvvm`. ViewModels inherit `ObservableObject`, use `[ObservableProperty]` and `[RelayCommand]` source generators (no code-behind logic). Centralized `ApiService` singleton wrapping `HttpClient` with DTOs co-located. DI container in `MauiProgram.CreateMauiApp()`: Services = singletons, ViewModels/Views = transient. Custom `IValueConverter` implementations in `Converters/`. Shell navigation with `IQueryAttributable` for query parameter handling. Use `Border` instead of deprecated `Frame` (.NET 10 compatibility).  
+**Why:** Source generators eliminate boilerplate. Centralized API service enables easy retry/logging/auth. DI container keeps concerns separate and testable. Shell navigation is type-safe and cross-platform. Border is future-proof.  
+**File Structure:** `Config.cs` (constants), `Converters/`, `Services/` (HTTP + DTOs), `ViewModels/`, `Views/` (XAML).
+
+### 2026-04-07: Door Pass API Contracts
+**By:** Tank  
+**Issue:** #27  
+**What:** 4 endpoints: `GET /api/events/{eventId}/attendees/{userId}/qrcode` (PNG), `POST /api/events/{eventId}/door-scan` (returns `201` with `DoorPassDto`), `GET /api/events/{eventId}/door-log` (ordered by `ScannedAt` desc), `GET /api/events/{eventId}/outside` (users with most recent Exit direction). QR payload = plain GUID string. Direction enum: `Entry` or `Exit` (stored as string).  
+**DTO Shapes:** `DoorScanRequest(UserId, Direction)`, `DoorPassDto(Id, EventId, UserId, UserName, Direction, ScannedAt)`, `OutsideUserDto(UserId, UserName, ExitedAt)`.  
+**Why:** QR-based door workflow for venue access tracking. Separates entry/exit scanning from check-in (which happens via API). Door log provides audit trail; outside query enables live occupancy.
+
+## Governance
 
 - All meaningful changes require team consensus
 - Document architectural decisions here

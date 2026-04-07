@@ -7,4 +7,8 @@
 
 ## Learnings
 
-<!-- Append new learnings below. Each entry is something lasting about the project. -->
+- **PR Workflow Established** (2026-04-07): Created 5 PRs for squad branches with clear, commit-based descriptions. PR creation requires local tracking branches for remote-only refs. All squad work now flows through GitHub PRs for team review.
+
+- **Branch Organization Pattern** (2026-04-07): Squad branches follow `squad/{issue-num}-{feature}` naming convention. Fix branches use `fix/{issue-type}`. Feature branches use `feat/{feature-name}`. This pattern supports parallel work streams and clear traceability.
+
+- **Feature Area Independence** (2026-04-07): Auth (JWT), door scanning (MAUI), attendance UI (React), and event context (MAUI) are independent features with separate PRs. No cross-PR dependencies detected. Supports parallel review and merge.
