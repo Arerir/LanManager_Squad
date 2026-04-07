@@ -19,6 +19,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<DashboardPage />} />
+          <Route path="dashboard" element={<DashboardPage />} />
           <Route path="events" element={<EventsPage />} />
           <Route path="events/new" element={<EventFormPage />} />
           <Route path="events/:id" element={<EventDetailPage />} />
