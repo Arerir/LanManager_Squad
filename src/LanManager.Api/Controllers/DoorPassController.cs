@@ -1,9 +1,11 @@
 ﻿using LanManager.Api.DTOs;
+using LanManager.Api.Hubs;
 using LanManager.Data;
 using LanManager.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using QRCoder;
 using System.Security.Claims;
@@ -13,7 +15,10 @@ namespace LanManager.Api.Controllers;
 [ApiController]
 [Route("api/events/{eventId:guid}")]
 [Authorize(Roles = "Admin,Organizer,Operator")]
-public class DoorPassController(LanManagerDbContext db, UserManager<ApplicationUser> userManager) : ControllerBase
+public class DoorPassController(
+    LanManagerDbContext db,
+    UserManager<ApplicationUser> userManager,
+    IHubContext<AttendanceHub> hubContext) : ControllerBase
 {
     [HttpGet("attendees/{userId:guid}/qrcode")]
     [Authorize]
@@ -77,6 +82,9 @@ public class DoorPassController(LanManagerDbContext db, UserManager<ApplicationU
 
         db.DoorPasses.Add(record);
         await db.SaveChangesAsync();
+
+        await hubContext.Clients.All.SendAsync("UserDoorScanned", new DoorScanBroadcast(
+            eventId, request.UserId, user.UserName ?? string.Empty, dir.ToString(), record.ScannedAt));
 
         var passDto = new DoorPassDto(record.Id, record.EventId, record.UserId,
             user.UserName ?? string.Empty, record.Direction.ToString(), record.ScannedAt);
