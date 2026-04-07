@@ -23,11 +23,6 @@
       <Button Text="📷 Show My QR Code" Command="{Binding GoToQrPageCommand}"
               BackgroundColor="#3498db" TextColor="White" CornerRadius="8"/>
 
-      <!-- Door Scanner button (Admin/Organizer/Operator only) -->
-      <Button Text="🚪 Door Scanner" Command="{Binding GoToDoorScannerCommand}"
-              IsVisible="{Binding CanAccessDoorScan}"
-              BackgroundColor="#e74c3c" TextColor="White" CornerRadius="8"/>
-
       <!-- Borrow equipment button -->
       <Button Text="🔧 Borrow Equipment" Command="{Binding GoToEquipmentScanCommand}"
               BackgroundColor="#8e44ad" TextColor="White" CornerRadius="8"/>
