@@ -40,3 +40,4 @@
 
 📌 Team update (2026-04-07T15-26-09): Morgana implemented EventContext for nav persistence; Merlin wired DoorScanBroadcast backend with JWT payload shape (Guid eventId, Guid userId, string userName, string direction, DateTime scannedAt) — decided by Morgana, Tank, Merlin
 
+- LanManager.Maui.Crew lives in src/LanManager.Maui.Crew, mirrors the main MAUI app resources/platforms, and references LanManager.Maui.Shared.
