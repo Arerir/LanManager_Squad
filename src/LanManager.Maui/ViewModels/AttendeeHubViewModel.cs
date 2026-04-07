@@ -9,7 +9,6 @@ namespace LanManager.Maui.ViewModels;
 public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
-    private readonly AuthService _authService;
     private readonly AppStateService _appState;
     private Guid _eventId;
 
@@ -20,15 +19,11 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] private string _statusMessage = string.Empty;
     [ObservableProperty] private Color _statusColor = Colors.Gray;
     [ObservableProperty] private string _tournamentStatus = string.Empty;
-    [ObservableProperty] private bool _canAccessDoorScan;
 
-    public AttendeeHubViewModel(ApiService apiService, AuthService authService, AppStateService appState)
+    public AttendeeHubViewModel(ApiService apiService, AppStateService appState)
     {
         _apiService = apiService;
-        _authService = authService;
         _appState = appState;
-        CanAccessDoorScan = _authService.CurrentUser?.Roles
-            .Any(r => r == "Admin" || r == "Organizer" || r == "Operator") ?? false;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -52,9 +47,6 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
         IsLoading = true;
         StatusMessage = string.Empty;
         TournamentStatus = string.Empty;
-
-        CanAccessDoorScan = _authService.CurrentUser?.Roles
-            .Any(r => r == "Admin" || r == "Organizer" || r == "Operator") ?? false;
 
         try
         {
