@@ -11,3 +11,7 @@
 
 ### 2026-04-08: Playwright E2E Infrastructure Setup (#71)
 **What:** Added Playwright config and e2e scaffolding in `frontend/`, including auth fixture (email/password selectors) and smoke tests. Tests run via `npm run test:e2e` and expect login to redirect to `/events`.
+
+### 2026-04-10: Profile Page E2E Coverage (#76)
+**What:** Added Playwright coverage for the profile page to validate user info rendering, sidebar navigation access, and sign-out redirect behavior.
+
