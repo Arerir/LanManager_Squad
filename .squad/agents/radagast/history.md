@@ -11,3 +11,6 @@
 
 ### 2026-04-08: Playwright E2E Infrastructure Setup (#71)
 **What:** Added Playwright config and e2e scaffolding in `frontend/`, including auth fixture (email/password selectors) and smoke tests. Tests run via `npm run test:e2e` and expect login to redirect to `/events`.
+
+### 2026-04-10: Attendance Playwright coverage (#74)
+**What:** Added attendance E2E checks for rendering without an event, rendering with an eventId, and outside-tab empty state with mocked API responses.
