@@ -1,3 +1,5 @@
+using LanManager.Maui.Crew.ViewModels;
+using LanManager.Maui.Crew.Views;
 using LanManager.Maui.Shared.Services;
 using Microsoft.Extensions.Logging;
 using ZXing.Net.Maui.Controls;
@@ -35,7 +37,8 @@ public static class MauiProgram
             return new ApiService(httpClient);
         });
 
-        // ViewModels and Views will be added in #65
+        builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient<LoginPage>();
 
         return builder.Build();
     }
