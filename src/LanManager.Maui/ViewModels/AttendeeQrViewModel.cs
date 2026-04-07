@@ -7,6 +7,7 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
     private readonly AuthService _authService;
+    private readonly AppStateService _appState;
     private Guid _eventId;
 
     [ObservableProperty] private ImageSource? _qrImageSource;
@@ -14,16 +15,19 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string _statusMessage = string.Empty;
 
-    public AttendeeQrViewModel(ApiService apiService, AuthService authService)
+    public AttendeeQrViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {
         _apiService = apiService;
         _authService = authService;
+        _appState = appState;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue("eventId", out var id) && Guid.TryParse(id?.ToString(), out var guid))
             _eventId = guid;
+        else if (_appState.HasEvent)
+            _eventId = _appState.EventId;
         _ = LoadAsync();
     }
 

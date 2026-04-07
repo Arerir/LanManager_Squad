@@ -17,7 +17,10 @@ public partial class App : Application
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-        => new Window(new AppShell());
+    {
+        var shell = new AppShell();
+        return new Window(shell);
+    }
 
     protected override async void OnStart()
     {
@@ -26,7 +29,13 @@ public partial class App : Application
         {
             var isLoggedIn = await _authService.IsLoggedInAsync();
             if (!isLoggedIn)
+            {
                 ShowLoginPage();
+            }
+            else if (Windows.Count > 0 && Windows[0].Page is AppShell shell)
+            {
+                shell.UpdateMenuForUser(_authService.CurrentUser);
+            }
         }
         catch
         {

@@ -9,6 +9,7 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
     private readonly AuthService _authService;
+    private readonly AppStateService _appState;
     private Guid _eventId;
 
     [ObservableProperty] private string _seatLabel = "No seat assigned";
@@ -18,26 +19,41 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] private string _statusMessage = string.Empty;
     [ObservableProperty] private Color _statusColor = Colors.Gray;
     [ObservableProperty] private string _tournamentStatus = string.Empty;
+    [ObservableProperty] private bool _canAccessDoorScan;
 
-    public AttendeeHubViewModel(ApiService apiService, AuthService authService)
+    public AttendeeHubViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {
         _apiService = apiService;
         _authService = authService;
+        _appState = appState;
+        CanAccessDoorScan = _authService.CurrentUser?.Roles
+            .Any(r => r == "Admin" || r == "Organizer" || r == "Operator") ?? false;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue("eventId", out var id) && Guid.TryParse(id?.ToString(), out var guid))
             _eventId = guid;
+        else if (_appState.HasEvent)
+            _eventId = _appState.EventId;
         _ = LoadAsync();
     }
 
     [RelayCommand]
     private async Task LoadAsync()
     {
+        if (_eventId == Guid.Empty)
+        {
+            await Shell.Current.GoToAsync("//MainPage");
+            return;
+        }
+
         IsLoading = true;
         StatusMessage = string.Empty;
         TournamentStatus = string.Empty;
+
+        CanAccessDoorScan = _authService.CurrentUser?.Roles
+            .Any(r => r == "Admin" || r == "Organizer" || r == "Operator") ?? false;
 
         try
         {
@@ -59,13 +75,13 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
             }
 
             var allTournaments = await tournamentsTask;
-            var open = allTournaments.Where(t => t.Status == "Open").ToList();
+            var open = allTournaments.Where(t => t.Status == "Active").ToList();
             Tournaments.Clear();
             foreach (var t in open)
                 Tournaments.Add(t);
 
             if (Tournaments.Count == 0)
-                TournamentStatus = "No open tournaments at this time";
+                TournamentStatus = "No active tournaments at this time";
         }
         catch (Exception ex)
         {
@@ -122,4 +138,11 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     private async Task GoToEquipmentScanAsync()
         => await Shell.Current.GoToAsync("EquipmentScanPage");
+
+    [RelayCommand]
+    private async Task GoToDoorScannerAsync()
+    {
+        var name = Uri.EscapeDataString(!string.IsNullOrEmpty(_appState.EventName) ? _appState.EventName : string.Empty);
+        await Shell.Current.GoToAsync($"DoorScanPage?eventId={_eventId}&eventName={name}");
+    }
 }

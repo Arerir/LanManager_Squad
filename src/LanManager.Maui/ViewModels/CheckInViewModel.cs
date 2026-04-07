@@ -9,6 +9,7 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
     private readonly AuthService _authService;
+    private readonly AppStateService _appState;
     private List<UserDto> _allUsers = new();
     private Guid _eventId;
 
@@ -39,10 +40,11 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty]
     private Color _statusColor = Colors.Transparent;
 
-    public CheckInViewModel(ApiService apiService, AuthService authService)
+    public CheckInViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {
         _apiService = apiService;
         _authService = authService;
+        _appState = appState;
         CanAccessDoorScan = _authService.CurrentUser?.Roles
             .Any(r => r == "Admin" || r == "Organizer") ?? false;
     }
@@ -52,8 +54,13 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
         if (query.TryGetValue("eventId", out var eventIdObj) && Guid.TryParse(eventIdObj.ToString(), out var eventId))
         {
             _eventId = eventId;
-            _ = LoadDataAsync();
+            _appState.SetEvent(_eventId, string.Empty);
         }
+        else if (_appState.HasEvent)
+        {
+            _eventId = _appState.EventId;
+        }
+        _ = LoadDataAsync();
     }
 
     partial void OnSearchTextChanged(string value)
@@ -64,8 +71,15 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     private async Task LoadDataAsync()
     {
-        // Re-evaluate role access each time the page loads in case CurrentUser
-        // was populated asynchronously after the ViewModel was constructed
+        if (_eventId == Guid.Empty && _appState.HasEvent)
+            _eventId = _appState.EventId;
+
+        if (_eventId == Guid.Empty)
+        {
+            await Shell.Current.GoToAsync("//MainPage");
+            return;
+        }
+
         CanAccessDoorScan = _authService.CurrentUser?.Roles
             .Any(r => r == "Admin" || r == "Organizer") ?? false;
 
@@ -154,7 +168,8 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     private async Task GoToDoorScannerAsync()
     {
-        await Shell.Current.GoToAsync($"DoorScanPage?eventId={_eventId}&eventName={Uri.EscapeDataString(EventName)}");
+        var name = Uri.EscapeDataString(!string.IsNullOrEmpty(EventName) ? EventName : _appState.EventName);
+        await Shell.Current.GoToAsync($"DoorScanPage?eventId={_eventId}&eventName={name}");
     }
 
     [RelayCommand]
