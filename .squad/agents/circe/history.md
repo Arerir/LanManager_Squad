@@ -10,7 +10,7 @@
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
 - Crew app logins must validate Admin/Organizer roles and logout non-staff users.
 
-### 2026-04-08: MAUI shared services library
+- LanManager.Maui now always routes event selection to AttendeeHubPage; admin/organizer flows live in LanManager.Maui.Crew.
 
 - Created LanManager.Maui.Shared to host AuthService, AuthHandler, ApiService, and Config for reuse across MAUI apps.
 - LanManager.Maui now references the shared library; AppStateService remains app-specific.
