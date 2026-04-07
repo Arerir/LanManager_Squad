@@ -5,14 +5,16 @@ import type { EquipmentDto } from '../api/equipment';
 
 const TYPES = ['Computer', 'Keyboard', 'Mouse', 'Mousemat', 'VrHeadset', 'Other'];
 
-const thStyle: React.CSSProperties = { padding: '10px 8px' };
-const tdStyle: React.CSSProperties = { padding: '10px 8px' };
+const thStyle: React.CSSProperties = { padding: '10px 8px', color: '#9ca3c8', fontWeight: 500, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em' };
+const tdStyle: React.CSSProperties = { padding: '10px 8px', color: '#e8e8ff' };
 
 const selectStyle: React.CSSProperties = {
   padding: '6px 10px',
   borderRadius: 4,
-  border: '1px solid #ccc',
+  border: '1px solid #1e1e42',
   fontSize: '0.9rem',
+  background: '#0d0d2b',
+  color: '#e8e8ff',
 };
 
 export function EquipmentPage() {
@@ -65,7 +67,7 @@ export function EquipmentPage() {
         {canAdd && (
           <button
             onClick={() => setShowAdd(true)}
-            style={{ background: '#0d6efd', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 4, cursor: 'pointer', fontWeight: 600 }}
+            className="btn-primary"
           >
             + Add Equipment
           </button>
@@ -84,14 +86,14 @@ export function EquipmentPage() {
         </select>
       </div>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {loading && <p>Loading…</p>}
+      {error && <p style={{ color: 'var(--danger)', marginBottom: '1rem' }}>{error}</p>}
+      {loading && <p style={{ color: 'var(--text-muted)' }}>Loading…</p>}
 
       {!loading && (
-        <div style={{ overflowX: 'auto' }}>
+        <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid #1e1e42' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ borderBottom: '2px solid #dee2e6', textAlign: 'left' }}>
+              <tr style={{ borderBottom: '1px solid #1e1e42', background: '#0d0d2b', textAlign: 'left' }}>
                 <th style={thStyle}>Name</th>
                 <th style={thStyle}>Type</th>
                 <th style={thStyle}>QR Code</th>
@@ -104,36 +106,29 @@ export function EquipmentPage() {
             <tbody>
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={canManage ? 7 : 6} style={{ ...tdStyle, color: '#888', textAlign: 'center' }}>
+                  <td colSpan={canManage ? 7 : 6} style={{ ...tdStyle, color: '#5a5a80', textAlign: 'center', padding: '2rem' }}>
                     No equipment found.
                   </td>
                 </tr>
               )}
-              {filtered.map(item => (
-                <tr key={item.id} style={{ borderBottom: '1px solid #eee' }}>
+              {filtered.map((item, idx) => (
+                <tr key={item.id} style={{ borderBottom: '1px solid #1e1e42', background: idx % 2 === 0 ? 'transparent' : 'rgba(13,13,43,0.4)' }}>
                   <td style={tdStyle}>{item.name}</td>
-                  <td style={tdStyle}>{item.type}</td>
+                  <td style={{ ...tdStyle, color: '#9ca3c8' }}>{item.type}</td>
                   <td style={tdStyle}><code style={{ fontSize: '0.85rem' }}>{item.qrCode}</code></td>
                   <td style={tdStyle}>
-                    <span style={{
-                      background: item.isAvailable ? '#d4edda' : '#f8d7da',
-                      color: item.isAvailable ? '#155724' : '#721c24',
-                      padding: '2px 8px', borderRadius: 12, fontSize: '0.85rem', fontWeight: 600,
-                    }}>
+                    <span className={item.isAvailable ? 'badge-available' : 'badge-loan'}>
                       {item.isAvailable ? 'Available' : 'On Loan'}
                     </span>
                   </td>
-                  <td style={tdStyle}>{item.activeLoan?.userName ?? '—'}</td>
-                  <td style={tdStyle}>
+                  <td style={{ ...tdStyle, color: '#9ca3c8' }}>{item.activeLoan?.userName ?? '—'}</td>
+                  <td style={{ ...tdStyle, color: '#9ca3c8' }}>
                     {item.activeLoan ? new Date(item.activeLoan.borrowedAt).toLocaleString() : '—'}
                   </td>
                   {canManage && (
                     <td style={tdStyle}>
                       {!item.isAvailable && (
-                        <button
-                          onClick={() => handleReturn(item.id)}
-                          style={{ background: '#dc3545', color: '#fff', border: 'none', padding: '4px 12px', borderRadius: 4, cursor: 'pointer', fontSize: '0.85rem' }}
-                        >
+                        <button onClick={() => handleReturn(item.id)} className="btn-danger">
                           Return
                         </button>
                       )}
@@ -179,16 +174,26 @@ function AddEquipmentModal({ onClose, onAdded }: { onClose: () => void; onAdded:
   }
 
   const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '8px 10px', borderRadius: 4, border: '1px solid #ccc', fontSize: '0.95rem', boxSizing: 'border-box',
+    width: '100%', padding: '8px 10px', borderRadius: 4,
+    border: '1px solid #1e1e42', fontSize: '0.95rem', boxSizing: 'border-box',
+    background: '#060612', color: '#e8e8ff',
   };
-  const labelStyle: React.CSSProperties = { display: 'block', marginBottom: '0.25rem', fontWeight: 500, fontSize: '0.9rem' };
+  const labelStyle: React.CSSProperties = { display: 'block', marginBottom: '0.25rem', fontWeight: 500, fontSize: '0.9rem', color: '#9ca3c8' };
   const fieldStyle: React.CSSProperties = { marginBottom: '1rem' };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ background: '#fff', borderRadius: 8, padding: '2rem', width: '100%', maxWidth: 420, boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
-        <h2 style={{ margin: '0 0 1.5rem' }}>Add Equipment</h2>
-        {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{
+        background: '#0d0d2b',
+        border: '1px solid #1e1e42',
+        borderRadius: 8,
+        padding: '2rem',
+        width: '100%',
+        maxWidth: 420,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.1)',
+      }}>
+        <h2 style={{ margin: '0 0 1.5rem', color: '#e8e8ff' }}>Add Equipment</h2>
+        {error && <p style={{ color: 'var(--danger)', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div style={fieldStyle}>
             <label style={labelStyle}>Name *</label>
@@ -206,13 +211,13 @@ function AddEquipmentModal({ onClose, onAdded }: { onClose: () => void; onAdded:
           </div>
           <div style={fieldStyle}>
             <label style={labelStyle}>Notes</label>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} style={{ ...inputStyle, resize: 'vertical', minHeight: 70 }} placeholder="Optional notes…" />
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} style={{ ...inputStyle, resize: 'vertical', minHeight: 70, fontFamily: 'var(--sans)' }} placeholder="Optional notes…" />
           </div>
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
-            <button type="button" onClick={onClose} style={{ padding: '8px 16px', borderRadius: 4, border: '1px solid #ccc', cursor: 'pointer', background: '#f8f9fa' }}>
+            <button type="button" onClick={onClose} className="btn-ghost">
               Cancel
             </button>
-            <button type="submit" disabled={saving} style={{ padding: '8px 16px', borderRadius: 4, border: 'none', background: '#0d6efd', color: '#fff', cursor: saving ? 'default' : 'pointer', fontWeight: 600 }}>
+            <button type="submit" disabled={saving} className="btn-primary">
               {saving ? 'Saving…' : 'Add Equipment'}
             </button>
           </div>

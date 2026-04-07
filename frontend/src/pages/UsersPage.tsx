@@ -27,29 +27,29 @@ export function UsersPage() {
     <div>
       <h1 className="page-title" style={{ marginBottom: '1.5rem' }}>Users</h1>
 
-      {loading && <p>Loading users…</p>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {loading && <p style={{ color: '#9ca3c8' }}>Loading users…</p>}
+      {error && <p style={{ color: 'var(--danger)' }}>Error: {error}</p>}
 
       {!loading && !error && users.length === 0 && (
-        <p style={{ color: '#888' }}>No users found.</p>
+        <p style={{ color: '#5a5a80' }}>No users found.</p>
       )}
 
       {!loading && !error && users.length > 0 && (
-        <div style={{ overflowX: 'auto' }}>
+        <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid #1e1e42' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '2px solid #dee2e6', textAlign: 'left' }}>
-              <th style={{ padding: '10px 8px' }}>Name</th>
-              <th style={{ padding: '10px 8px' }}>Username</th>
-              <th style={{ padding: '10px 8px' }}>Email</th>
+            <tr style={{ borderBottom: '1px solid #1e1e42', background: '#0d0d2b', textAlign: 'left' }}>
+              <th style={{ padding: '10px 8px', color: '#9ca3c8', fontWeight: 500, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Name</th>
+              <th style={{ padding: '10px 8px', color: '#9ca3c8', fontWeight: 500, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Username</th>
+              <th style={{ padding: '10px 8px', color: '#9ca3c8', fontWeight: 500, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Email</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((u) => (
-              <tr key={u.id} style={{ borderBottom: '1px solid #dee2e6' }}>
-                <td style={{ padding: '10px 8px', fontWeight: 500 }}>{u.name}</td>
-                <td style={{ padding: '10px 8px', color: '#555' }}>@{u.userName}</td>
-                <td style={{ padding: '10px 8px', color: '#555' }}>{u.email}</td>
+            {users.map((u, idx) => (
+              <tr key={u.id} style={{ borderBottom: '1px solid #1e1e42', background: idx % 2 === 0 ? 'transparent' : 'rgba(13,13,43,0.4)' }}>
+                <td style={{ padding: '10px 8px', fontWeight: 500, color: '#e8e8ff' }}>{u.name}</td>
+                <td style={{ padding: '10px 8px', color: '#9ca3c8' }}>@{u.userName}</td>
+                <td style={{ padding: '10px 8px', color: '#9ca3c8' }}>{u.email}</td>
               </tr>
             ))}
           </tbody>
@@ -62,15 +62,17 @@ export function UsersPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            style={{ padding: '6px 14px', borderRadius: 4, cursor: page === 1 ? 'default' : 'pointer' }}
+            className="btn-ghost"
+            style={{ padding: '6px 14px', borderRadius: 4, opacity: page === 1 ? 0.4 : 1 }}
           >
             Prev
           </button>
-          <span style={{ color: '#555' }}>Page {page}</span>
+          <span style={{ color: '#5a5a80' }}>Page {page}</span>
           <button
             onClick={() => setPage((p) => p + 1)}
             disabled={!hasMore}
-            style={{ padding: '6px 14px', borderRadius: 4, cursor: !hasMore ? 'default' : 'pointer' }}
+            className="btn-ghost"
+            style={{ padding: '6px 14px', borderRadius: 4, opacity: !hasMore ? 0.4 : 1 }}
           >
             Next
           </button>

@@ -40,17 +40,19 @@ const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '8px 10px',
   borderRadius: 4,
-  border: '1px solid #ced4da',
+  border: '1px solid #1e1e42',
   fontSize: '1rem',
   boxSizing: 'border-box',
+  background: '#060612',
+  color: '#e8e8ff',
 };
 
 function FormField({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <label style={{ fontWeight: 500, fontSize: '0.9rem' }}>{label}</label>
+      <label style={{ fontWeight: 500, fontSize: '0.9rem', color: '#9ca3c8' }}>{label}</label>
       {children}
-      {error && <span style={{ color: '#dc3545', fontSize: '0.82rem' }}>{error}</span>}
+      {error && <span style={{ color: 'var(--danger)', fontSize: '0.82rem' }}>{error}</span>}
     </div>
   );
 }
@@ -99,7 +101,7 @@ export function RegisterPage() {
       <h1 style={{ marginBottom: '1.5rem' }}>Create Account</h1>
 
       {apiError && (
-        <div style={{ background: '#f8d7da', color: '#842029', padding: '10px 14px', borderRadius: 6, marginBottom: '1rem' }}>
+        <div style={{ background: 'var(--danger-bg)', color: 'var(--danger)', padding: '10px 14px', borderRadius: 6, marginBottom: '1rem', border: '1px solid rgba(255,56,96,0.3)' }}>
           {apiError}
         </div>
       )}
@@ -124,13 +126,14 @@ export function RegisterPage() {
         <button
           type="submit"
           disabled={submitting}
-          style={{ background: '#0d6efd', color: '#fff', border: 'none', padding: '10px', borderRadius: 6, cursor: 'pointer', fontWeight: 600, fontSize: '1rem' }}
+          className="btn-primary"
+          style={{ padding: '10px', borderRadius: 6, fontSize: '1rem' }}
         >
           {submitting ? 'Creating account…' : 'Register'}
         </button>
       </form>
 
-      <p style={{ marginTop: '1rem', color: '#555' }}>
+      <p style={{ marginTop: '1rem', color: '#5a5a80' }}>
         Already have an account? <Link to="/login">Sign in</Link>
       </p>
     </div>
