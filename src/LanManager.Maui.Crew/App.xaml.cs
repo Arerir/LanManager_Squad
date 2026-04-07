@@ -1,3 +1,6 @@
+using LanManager.Maui.Crew.Views;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace LanManager.Maui.Crew;
 
 public partial class App : Application
@@ -9,6 +12,7 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new CrewAppShell());
+        var loginPage = IPlatformApplication.Current!.Services.GetRequiredService<LoginPage>();
+        return new Window(loginPage);
     }
 }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:LanManager.Maui.Crew.ViewModels"
+             x:Class="LanManager.Maui.Crew.Views.LoginPage"
+             x:DataType="viewmodels:LoginViewModel"
+             Title="LAN Manager Login"
+             BackgroundColor="#1a1a2e">
+
+    <Grid VerticalOptions="Center" Padding="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0"
+               Text="LAN Manager"
+               FontSize="32"
+               FontAttributes="Bold"
+               TextColor="#e0e0e0"
+               HorizontalTextAlignment="Center"
+               Margin="0,0,0,8" />
+
+        <Label Grid.Row="1"
+               Text="Sign in to continue"
+               FontSize="16"
+               TextColor="#888888"
+               HorizontalTextAlignment="Center"
+               Margin="0,0,0,40" />
+
+        <Border Grid.Row="2"
+                BackgroundColor="#16213e"
+                Stroke="#333366"
+                StrokeShape="RoundRectangle 8"
+                Padding="4,0"
+                Margin="0,0,0,14">
+            <Entry Placeholder="Email"
+                   Text="{Binding Email}"
+                   Keyboard="Email"
+                   PlaceholderColor="#555577"
+                   TextColor="#e0e0e0"
+                   BackgroundColor="Transparent"
+                   FontSize="16" />
+        </Border>
+
+        <Border Grid.Row="3"
+                BackgroundColor="#16213e"
+                Stroke="#333366"
+                StrokeShape="RoundRectangle 8"
+                Padding="4,0"
+                Margin="0,0,0,24">
+            <Entry Placeholder="Password"
+                   Text="{Binding Password}"
+                   IsPassword="True"
+                   PlaceholderColor="#555577"
+                   TextColor="#e0e0e0"
+                   BackgroundColor="Transparent"
+                   FontSize="16" />
+        </Border>
+
+        <Label Grid.Row="4"
+               Text="{Binding ErrorMessage}"
+               IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotEmptyConverter}}"
+               TextColor="#e74c3c"
+               FontSize="14"
+               HorizontalTextAlignment="Center"
+               Margin="0,0,0,16" />
+
+        <Grid Grid.Row="5">
+            <Button Text="Sign In"
+                    Command="{Binding LoginCommand}"
+                    IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                    BackgroundColor="#e94560"
+                    TextColor="White"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
+                    Padding="0,14" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="#e94560"
+                               HeightRequest="46" />
+        </Grid>
+    </Grid>
+
+</ContentPage>
+

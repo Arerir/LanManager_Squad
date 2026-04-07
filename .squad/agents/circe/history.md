@@ -8,6 +8,7 @@
 ## Learnings
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
+- Crew app logins must validate Admin/Organizer roles and logout non-staff users.
 
 - LanManager.Maui now always routes event selection to AttendeeHubPage; admin/organizer flows live in LanManager.Maui.Crew.
 
