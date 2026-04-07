@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using LanManager.Maui.Shared.Services;
 using LanManager.Maui.Services;
 
 namespace LanManager.Maui.ViewModels;
@@ -63,3 +64,4 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
         }
     }
 }
+

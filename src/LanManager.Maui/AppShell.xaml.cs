@@ -1,4 +1,4 @@
-﻿using LanManager.Maui.Services;
+using LanManager.Maui.Shared.Services;
 using LanManager.Maui.Views;
 
 namespace LanManager.Maui;
@@ -22,3 +22,4 @@ public partial class AppShell : Shell
 		ScannerContent.IsVisible = canScan;
 	}
 }
+

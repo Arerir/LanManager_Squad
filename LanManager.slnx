@@ -5,6 +5,7 @@
     <Project Path="src/LanManager.AppHost/LanManager.AppHost.csproj" />
     <Project Path="src/LanManager.Data/LanManager.Data.csproj" />
     <Project Path="src/LanManager.Maui/LanManager.Maui.csproj" />
+    <Project Path="src/LanManager.Maui.Shared/LanManager.Maui.Shared.csproj" />
     <Project Path="src/LanManager.ServiceDefaults/LanManager.ServiceDefaults.csproj" />
   </Folder>
 </Solution>
