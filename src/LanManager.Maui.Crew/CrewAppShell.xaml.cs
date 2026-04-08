@@ -7,6 +7,6 @@ public partial class CrewAppShell : Shell
     public CrewAppShell()
     {
         InitializeComponent();
-        Routing.RegisterRoute("LoginPage", typeof(LoginPage));
+        Routing.RegisterRoute(nameof(DoorScanPage), typeof(DoorScanPage));
     }
 }
