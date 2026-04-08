@@ -24,7 +24,7 @@ Agent Scribe initialized and ready for work.
 - Real-time SignalR hub documentation
 - Development notes for contributors
 
-**Why:** Previous README was outdated—only 5 lines covering old state (.NET 9, Aspire AppHost as primary entry point). Project has shipped 111 merged PRs with major features (report pipeline, Crew app, door scanning, E2E testing). New README targets developers cloning the repo.
+**Why:** Previous README was outdated—only 5 lines covering old state (.NET 10, Aspire AppHost as primary entry point). Project has shipped 111 merged PRs with major features (report pipeline, Crew app, door scanning, E2E testing). New README targets developers cloning the repo.
 
 **Key facts learned:**
 - Solution uses `.slnx` (dotnet 10 XML format) with 8 projects organized under `src/`

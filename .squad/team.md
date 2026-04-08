@@ -26,7 +26,7 @@
 
 - **Owner:** Daniel Eli
 - **Project:** LanManager_Squad — LAN party management platform
-- **Stack:** .NET Aspire orchestration, React frontend, .NET 9 Web API backend, .NET MAUI check-in/check-out apps
+- **Stack:** .NET Aspire orchestration, React frontend, .NET 10 Web API backend, .NET MAUI check-in/check-out apps
 - **Created:** 2026-04-05
 - **Universe:** Wizard Names
 

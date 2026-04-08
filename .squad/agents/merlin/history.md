@@ -2,7 +2,7 @@
 
 - **Owner:** Daniel Eli
 - **Project:** LanManager_Squad — LAN party management platform
-- **Stack:** .NET Aspire orchestration, React frontend, .NET 9 Web API backend, .NET MAUI check-in/check-out apps
+- **Stack:** .NET Aspire orchestration, React frontend, .NET 10 Web API backend, .NET MAUI check-in/check-out apps
 - **Created:** 2026-04-05
 
 ## Learnings
@@ -116,7 +116,29 @@ Added QuestPDF 2026.2.4 to LanManager.Api.csproj. Set `QuestPDF.Settings.License
 
 **Build:** MAUI (0 warnings, 0 errors) MAUI.Crew (0 warnings, 0 errors) | **Branch:** fix/local-qr-and-crew-operator-role | **PR:** https://github.com/Arerir/LanManager_Squad/pull/124
 
-## PR #126 — Door Scan Auto-Direction, Attendee Status, QR Colors, Crew Login Gate (2026-04-09)
+## PR #127 — Camera Flip Button on Scanner Pages (2026-04-09)
+
+### Task: Camera toggle for DoorScan (Crew) and EquipmentScan (Attendee)
+
+**Changes Made:**
+- Added `using ZXing.Net.Maui;` to both ViewModels
+- Added `[ObservableProperty] CameraLocation CameraFacing` defaulting to `CameraLocation.Rear` on both ViewModels
+- Added `[RelayCommand] ToggleCamera()` toggling Rear ↔ Front on both ViewModels
+- Wrapped `CameraBarcodeReaderView` in a `<Grid>` in both XAML pages with an overlay `Button` (semi-transparent dark pill, top-right corner) bound to `ToggleCameraCommand`
+- `CameraLocation` bound on the camera view via `{Binding CameraFacing}`
+
+**Files Modified:**
+- `src/LanManager.Maui.Crew/ViewModels/DoorScanViewModel.cs`
+- `src/LanManager.Maui/ViewModels/EquipmentScanViewModel.cs`
+- `src/LanManager.Maui.Crew/Views/DoorScanPage.xaml`
+- `src/LanManager.Maui/Views/EquipmentScanPage.xaml`
+
+**Build Results:** MAUI ✅ (0 warnings, 0 errors) | MAUI.Crew ✅ (0 warnings, 0 errors)
+
+**Branch:** feat/camera-toggle-scanners  
+**PR:** https://github.com/Arerir/LanManager_Squad/pull/127
+
+
 
 ### Task 1 — Backend: Auto-flip door direction after Exit
 - In `DoorPassController.DoorScan`, after parsing direction and before `isCheckedIn` check, queries the user's latest door pass. If last pass was Exit, forces `dir = Entry`. Ensures after any exit the next scan is always Entry regardless of what crew app sends.
