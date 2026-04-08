@@ -34,3 +34,4 @@ public record DoorScanBroadcast(
 **Event Name:** `UserDoorScanned` on `/hubs/attendance`
 
 📌 Team update (2026-04-07T15-26-09): Morgana implemented EventContext for nav persistence; Circe wired MAUI listener with JWT auth and auto-clearing notifications — decided by Tank, Morgana, Circe
+
