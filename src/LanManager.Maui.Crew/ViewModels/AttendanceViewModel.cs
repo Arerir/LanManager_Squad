@@ -8,8 +8,10 @@ namespace LanManager.Maui.Crew.ViewModels;
 public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
+    private readonly AuthService _authService;
     private readonly AppStateService _appState;
     private Guid _eventId;
+    private string _eventStatus = string.Empty;
 
     [ObservableProperty]
     private ObservableCollection<AttendanceDto> _attendees = new();
@@ -23,9 +25,34 @@ public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty]
     private string _statusMessage = string.Empty;
 
-    public AttendanceViewModel(ApiService apiService, AppStateService appState)
+    [ObservableProperty]
+    private bool _isEventClosed;
+
+    [ObservableProperty]
+    private bool _canDownloadReport;
+
+    [ObservableProperty]
+    private bool _showReportPanel;
+
+    [ObservableProperty]
+    private bool _isDownloading;
+
+    [ObservableProperty]
+    private bool _includeRegistrations = true;
+
+    [ObservableProperty]
+    private bool _includeCheckIns = true;
+
+    [ObservableProperty]
+    private bool _includeEquipment = true;
+
+    [ObservableProperty]
+    private bool _includeTournaments = true;
+
+    public AttendanceViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {
         _apiService = apiService;
+        _authService = authService;
         _appState = appState;
     }
 
@@ -52,13 +79,20 @@ public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
         
         try
         {
-            var attendance = await _apiService.GetAttendanceAsync(_eventId);
+            var attendanceTask = _apiService.GetAttendanceAsync(_eventId);
+            var eventsTask = _apiService.GetEventsAsync();
+            await Task.WhenAll(attendanceTask, eventsTask);
+
+            var attendance = await attendanceTask;
             Attendees.Clear();
-            
             foreach (var attendee in attendance.OrderByDescending(a => a.CheckedInAt))
-            {
                 Attendees.Add(attendee);
-            }
+
+            var evt = (await eventsTask).FirstOrDefault(e => e.Id == _eventId);
+            _eventStatus = evt?.Status ?? string.Empty;
+            IsEventClosed = string.Equals(_eventStatus, "Closed", StringComparison.OrdinalIgnoreCase);
+            CanDownloadReport = IsEventClosed &&
+                (_authService.CurrentUser?.Roles.Any(r => r == "Admin" || r == "Organizer") ?? false);
 
             StatusMessage = Attendees.Count == 0 ? "No attendees checked in" : string.Empty;
         }
@@ -85,6 +119,49 @@ public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
     {
         await Shell.Current.GoToAsync($"//CheckInPage?eventId={_eventId}");
     }
+
+    [RelayCommand]
+    private void ToggleReportPanel()
+    {
+        ShowReportPanel = !ShowReportPanel;
+    }
+
+    [RelayCommand]
+    private async Task DownloadReportAsync()
+    {
+        var selected = new List<string>();
+        if (IncludeRegistrations) selected.Add("Registrations");
+        if (IncludeCheckIns) selected.Add("CheckIns");
+        if (IncludeEquipment) selected.Add("Equipment");
+        if (IncludeTournaments) selected.Add("Tournaments");
+
+        var sections = selected.Count == 4 ? "All" : selected.Count > 0 ? string.Join(",", selected) : "Summary";
+
+        IsDownloading = true;
+        try
+        {
+            var pdfBytes = await _apiService.DownloadReportAsync(_eventId, sections);
+            if (pdfBytes == null || pdfBytes.Length == 0)
+            {
+                await Shell.Current.DisplayAlertAsync("Download Failed", "Could not download the report. The event must be closed and you must have Admin or Organizer role.", "OK");
+                return;
+            }
+
+            var filePath = Path.Combine(FileSystem.CacheDirectory, $"event-report-{_eventId}.pdf");
+            await File.WriteAllBytesAsync(filePath, pdfBytes);
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = "Event Report",
+                File = new ShareFile(filePath)
+            });
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlertAsync("Error", $"Report download failed: {ex.Message}", "OK");
+        }
+        finally
+        {
+            IsDownloading = false;
+        }
+    }
 }
-
-
