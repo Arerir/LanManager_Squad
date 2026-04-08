@@ -1,12 +1,12 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LanManager.Maui.Shared.Services;
+using QRCoder;
 using AppStateService = LanManager.Maui.Services.AppStateService;
 
 namespace LanManager.Maui.ViewModels;
 
 public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
 {
-    private readonly ApiService _apiService;
     private readonly AuthService _authService;
     private readonly AppStateService _appState;
     private Guid _eventId;
@@ -16,9 +16,8 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] public partial bool IsLoading { get; set; }
     [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
 
-    public AttendeeQrViewModel(ApiService apiService, AuthService authService, AppStateService appState)
+    public AttendeeQrViewModel(AuthService authService, AppStateService appState)
     {
-        _apiService = apiService;
         _authService = authService;
         _appState = appState;
     }
@@ -48,15 +47,18 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
 
         try
         {
-            var bytes = await _apiService.GetAttendeeQrCodeAsync(_eventId, userGuid);
-            if (bytes != null)
-                QrImageSource = ImageSource.FromStream(() => new MemoryStream(bytes));
-            else
-                StatusMessage = "QR code not available. Check your event registration.";
+            var pngBytes = await Task.Run(() =>
+            {
+                var qrGenerator = new QRCodeGenerator();
+                var qrData = qrGenerator.CreateQrCode(userGuid.ToString(), QRCodeGenerator.ECCLevel.M);
+                var qrCode = new PngByteQRCode(qrData);
+                return qrCode.GetGraphic(10);
+            });
+            QrImageSource = ImageSource.FromStream(() => new MemoryStream(pngBytes));
         }
-        catch
+        catch (Exception ex)
         {
-            StatusMessage = "Failed to load QR code.";
+            StatusMessage = $"Failed to generate QR code: {ex.Message}";
         }
         finally
         {
@@ -64,4 +66,3 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
         }
     }
 }
-
