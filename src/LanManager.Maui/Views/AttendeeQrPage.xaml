@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:LanManager.Maui.ViewModels"
              x:Class="LanManager.Maui.Views.AttendeeQrPage"
              x:DataType="vm:AttendeeQrViewModel"
-             BackgroundColor="#0d0d1a"
+             BackgroundColor="{Binding PageBackground}"
              Title="My QR Code">
   <Grid RowDefinitions="Auto,*,Auto" Padding="20">
     <Label Grid.Row="0" Text="{Binding UserName}" TextColor="White" FontSize="22"
@@ -16,7 +16,7 @@
     </Border>
     <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
                        Color="White" VerticalOptions="Center"/>
-    <Label Grid.Row="2" Text="{Binding StatusMessage}" TextColor="#aaa"
+    <Label Grid.Row="2" Text="{Binding StatusMessage}" TextColor="White"
            HorizontalOptions="Center" Margin="0,20,0,0"/>
   </Grid>
 </ContentPage>

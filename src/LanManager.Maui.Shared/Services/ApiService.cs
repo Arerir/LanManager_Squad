@@ -209,6 +209,21 @@ public class ApiService
         if (!response.IsSuccessStatusCode) return null;
         return await response.Content.ReadAsByteArrayAsync();
     }
+
+    public async Task<string?> GetAttendeeDoorStatusAsync(Guid eventId, Guid userId)
+    {
+        try
+        {
+            var response = await _httpClient.GetFromJsonAsync<JsonElement>(
+                $"/api/events/{eventId}/attendees/{userId}/door-status", _jsonOptions);
+            return response.GetProperty("status").GetString();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetAttendeeDoorStatusAsync error: {ex.Message}");
+            return null;
+        }
+    }
 }
 
 public record CheckInRequest(Guid UserId);

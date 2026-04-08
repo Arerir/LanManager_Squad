@@ -7,6 +7,7 @@ namespace LanManager.Maui.ViewModels;
 
 public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
 {
+    private readonly ApiService _apiService;
     private readonly AuthService _authService;
     private readonly AppStateService _appState;
     private Guid _eventId;
@@ -15,9 +16,11 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] public partial string UserName { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsLoading { get; set; }
     [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
+    [ObservableProperty] public partial Color PageBackground { get; set; } = Color.FromArgb("#0d0d1a");
 
-    public AttendeeQrViewModel(AuthService authService, AppStateService appState)
+    public AttendeeQrViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {
+        _apiService = apiService;
         _authService = authService;
         _appState = appState;
     }
@@ -47,6 +50,7 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
 
         try
         {
+            // Generate QR on background thread
             var pngBytes = await Task.Run(() =>
             {
                 var qrGenerator = new QRCodeGenerator();
@@ -55,14 +59,45 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
                 return qrCode.GetGraphic(10);
             });
             QrImageSource = ImageSource.FromStream(() => new MemoryStream(pngBytes));
+
+            // Fetch door status
+            if (_eventId != Guid.Empty)
+            {
+                var status = await _apiService.GetAttendeeDoorStatusAsync(_eventId, userGuid);
+                ApplyStatus(status);
+            }
+            else
+            {
+                StatusMessage = "Show this QR to check in";
+                PageBackground = Color.FromArgb("#2d0050"); // Purple — unregistered
+            }
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Failed to generate QR code: {ex.Message}";
+            StatusMessage = $"Failed to load: {ex.Message}";
         }
         finally
         {
             IsLoading = false;
+        }
+    }
+
+    private void ApplyStatus(string? status)
+    {
+        switch (status)
+        {
+            case "Entry":
+                StatusMessage = "✅ You are checked in";
+                PageBackground = Color.FromArgb("#0a3a1a"); // Dark green
+                break;
+            case "Exit":
+                StatusMessage = "🚪 You are currently outside";
+                PageBackground = Color.FromArgb("#3a0a0a"); // Dark red
+                break;
+            default: // Unregistered or null
+                StatusMessage = "Show this QR to check in";
+                PageBackground = Color.FromArgb("#2d0050"); // Dark purple
+                break;
         }
     }
 }
