@@ -274,6 +274,22 @@ Test Summary:
 - Consider badge generation for README
 - Explore code coverage trend tracking
 
+### 2026-04-08: Remove admin pages from attendee MAUI app
+**By:** Circe (MAUI Dev)  
+**Status:** Approved ✅
+
+**What:** LanManager.Maui is now attendee-only. Admin pages (CheckIn, Attendance, DoorScan) removed and owned by LanManager.Maui.Crew.
+
+**Why:** Crew application owns staff workflows. Removing admin pages from attendee app prevents duplicated UI and ensures operators use the dedicated crew build.
+
+### 2026-04-08: Crew app scaffold
+**By:** Switch  
+**Status:** Approved ✅
+
+**What:** LanManager.Maui.Crew scaffolded with no new architectural decisions. Mirrors existing MAUI structure (MVVM, CommunityToolkit.Mvvm, centralized ApiService, DI container).
+
+**Why:** Consistency with established MAUI patterns supports parallel development and team onboarding.
+
 ## Governance
 
 - All meaningful changes require team consensus
