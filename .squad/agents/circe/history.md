@@ -18,7 +18,6 @@
 
 - Created LanManager.Maui.Shared to host AuthService, AuthHandler, ApiService, and Config for reuse across MAUI apps.
 - LanManager.Maui now references the shared library; AppStateService remains app-specific.
-### 2026-04-07: SignalR Attendee Notifications
 
 - Added `Microsoft.AspNetCore.SignalR.Client` (version `10.*`) to `LanManager.Maui.csproj`.
 - `SignalRService` lives in `Services/` and is registered as a **singleton** (one connection per app session).
@@ -50,3 +49,14 @@
 - LanManager.Maui.Crew lives in src/LanManager.Maui.Crew, mirrors the main MAUI app resources/platforms, and references LanManager.Maui.Shared.
 - **Sprint 2026-04-08:** Completed MAUI Crew split + Playwright E2E tests. CrewAppShell configured with tab navigation (Login/Main outside tabs, CheckIn/Attendance/DoorScan inside tabs, DoorScan modal). CheckIn/DoorScan/Attendance removed from main MAUI app. All 14 todos complete. 11 PRs merged (#94 crew-appshell, #95 maui-remove-admin, #96 maui-appshell, plus 8 prior). 3 PRs rebased and fixed (#80, #81, #82, #93 all merge-ready).
 - LanManager.Maui.Crew lives in src/LanManager.Maui.Crew, mirrors the main MAUI app resources/platforms, and references LanManager.Maui.Shared.
+
+### 2026-04-08: Report Download/Share — Crew App (Issue #105)
+
+- Report download lives on `AttendancePage` — natural home since operators review attendance before closing an event.
+- `DownloadReportAsync` added to `ApiService` in shared lib; follows same `GetAsync + ReadAsByteArrayAsync` pattern as `GetAttendeeQrCodeAsync`.
+- `AttendanceViewModel` now injects `AuthService` — needed to gate the button on Admin/Organizer roles.
+- `CanDownloadReport` is computed on page load (event Closed + role check).
+- Section toggles all default `true`; if all 4 selected, sends `sections=All`.
+- Use `Shell.Current.DisplayAlertAsync` in .NET 10 MAUI — `DisplayAlert` is obsolete.
+- `Share.RequestAsync` with `ShareFileRequest` + `ShareFile` works cross-platform with no extra NuGet packages.
+- PR #111 opened targeting `master`.
