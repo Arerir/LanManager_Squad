@@ -4,6 +4,7 @@ using LanManager.Maui.ViewModels;
 using LanManager.Maui.Views;
 using ZXing.Net.Maui.Controls;
 using AppStateService = LanManager.Maui.Services.AppStateService;
+using LanManager.Maui.Services;
 
 namespace LanManager.Maui;
 

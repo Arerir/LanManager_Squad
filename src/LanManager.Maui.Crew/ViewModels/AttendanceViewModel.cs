@@ -14,40 +14,40 @@ public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
     private string _eventStatus = string.Empty;
 
     [ObservableProperty]
-    private ObservableCollection<AttendanceDto> _attendees = new();
+    public partial ObservableCollection<AttendanceDto> Attendees { get; set; } = new();
 
     [ObservableProperty]
-    private bool _isLoading;
+    public partial bool IsLoading { get; set; }
 
     [ObservableProperty]
-    private bool _isRefreshing;
+    public partial bool IsRefreshing { get; set; }
 
     [ObservableProperty]
-    private string _statusMessage = string.Empty;
+    public partial string StatusMessage { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isEventClosed;
+    public partial bool IsEventClosed { get; set; }
 
     [ObservableProperty]
-    private bool _canDownloadReport;
+    public partial bool CanDownloadReport { get; set; }
 
     [ObservableProperty]
-    private bool _showReportPanel;
+    public partial bool ShowReportPanel { get; set; }
 
     [ObservableProperty]
-    private bool _isDownloading;
+    public partial bool IsDownloading { get; set; }
 
     [ObservableProperty]
-    private bool _includeRegistrations = true;
+    public partial bool IncludeRegistrations { get; set; } = true;
 
     [ObservableProperty]
-    private bool _includeCheckIns = true;
+    public partial bool IncludeCheckIns { get; set; } = true;
 
     [ObservableProperty]
-    private bool _includeEquipment = true;
+    public partial bool IncludeEquipment { get; set; } = true;
 
     [ObservableProperty]
-    private bool _includeTournaments = true;
+    public partial bool IncludeTournaments { get; set; } = true;
 
     public AttendanceViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {

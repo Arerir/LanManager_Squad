@@ -9,11 +9,11 @@
   <Grid RowDefinitions="Auto,*,Auto" Padding="20">
     <Label Grid.Row="0" Text="{Binding UserName}" TextColor="White" FontSize="22"
            FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
-    <Frame Grid.Row="1" BackgroundColor="White" CornerRadius="12" Padding="16"
+    <Border Grid.Row="1" BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="16"
            HorizontalOptions="Center" VerticalOptions="Center"
            IsVisible="{Binding QrImageSource, Converter={StaticResource IsNotNullConverter}}">
       <Image Source="{Binding QrImageSource}" WidthRequest="260" HeightRequest="260"/>
-    </Frame>
+    </Border>
     <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
                        Color="White" VerticalOptions="Center"/>
     <Label Grid.Row="2" Text="{Binding StatusMessage}" TextColor="#aaa"

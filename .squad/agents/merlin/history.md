@@ -64,3 +64,25 @@ Added QuestPDF 2026.2.4 to LanManager.Api.csproj. Set `QuestPDF.Settings.License
 - `table.Header(header => {...})` for sticky header rows
 - `.Background(Colors.Grey.Darken2)` / `.Background(Colors.Grey.Lighten3)` for row coloring
 - Duration formatting: `$"{(int)ts.TotalHours}:{ts.Minutes:D2}"` from `TimeSpan`
+
+## 2026-04-08 16:05:26 - Attendance Display Name Fix
+
+**Task:** Fix AttendanceDto and SeatsController to use display Name instead of email
+
+**Changes Made:**
+- Updated AttendanceDto to include Name field alongside UserName
+- Modified CheckInController.GetAttendance to project User.Name in the query
+- Enhanced SeatsController.Assign to look up user from database and store display name
+
+**Files Modified:**
+- src/LanManager.Api/DTOs/CheckInDtos.cs
+- src/LanManager.Api/Controllers/CheckInController.cs  
+- src/LanManager.Api/Controllers/SeatsController.cs
+
+**Build & Test Results:**
+- Build: ✅ Success
+- Tests: ✅ All 62 tests passed
+
+**Branch:** fix/attendance-display-name
+**PR:** https://github.com/Arerir/LanManager_Squad/pull/121
+

@@ -11,10 +11,10 @@ public partial class EquipmentScanViewModel : ObservableObject
     private DateTime _lastScanTime = DateTime.MinValue;
     private const int ScanCooldownMs = 2000;
 
-    [ObservableProperty] private ObservableCollection<EquipmentLoanDto> _myLoans = new();
-    [ObservableProperty] private string _statusMessage = string.Empty;
-    [ObservableProperty] private Color _statusColor = Colors.Transparent;
-    [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] public partial ObservableCollection<EquipmentLoanDto> MyLoans { get; set; } = new();
+    [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
+    [ObservableProperty] public partial Color StatusColor { get; set; } = Colors.Transparent;
+    [ObservableProperty] public partial bool IsBusy { get; set; }
 
     public EquipmentScanViewModel(ApiService apiService)
     {

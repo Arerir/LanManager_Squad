@@ -13,14 +13,14 @@ public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
     private DateTime _lastScanTime = DateTime.MinValue;
     private const int ScanCooldownMs = 1000;
 
-    [ObservableProperty] private string _eventName = string.Empty;
-    [ObservableProperty] private bool _isExitMode = true; // true=Exit, false=Entry
-    [ObservableProperty] private string _directionLabel = "EXIT";
-    [ObservableProperty] private Color _directionColor = Colors.Red;
-    [ObservableProperty] private string _statusMessage = string.Empty;
-    [ObservableProperty] private Color _statusColor = Colors.Transparent;
-    [ObservableProperty] private int _outsideCount;
-    [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] public partial string EventName { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool IsExitMode { get; set; } = true; // true=Exit, false=Entry
+    [ObservableProperty] public partial string DirectionLabel { get; set; } = "EXIT";
+    [ObservableProperty] public partial Color DirectionColor { get; set; } = Colors.Red;
+    [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
+    [ObservableProperty] public partial Color StatusColor { get; set; } = Colors.Transparent;
+    [ObservableProperty] public partial int OutsideCount { get; set; }
+    [ObservableProperty] public partial bool IsBusy { get; set; }
 
     public DoorScanViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {

@@ -11,10 +11,10 @@ public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
     private readonly AppStateService _appState;
     private Guid _eventId;
 
-    [ObservableProperty] private ImageSource? _qrImageSource;
-    [ObservableProperty] private string _userName = string.Empty;
-    [ObservableProperty] private bool _isLoading;
-    [ObservableProperty] private string _statusMessage = string.Empty;
+    [ObservableProperty] public partial ImageSource? QrImageSource { get; set; }
+    [ObservableProperty] public partial string UserName { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool IsLoading { get; set; }
+    [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
 
     public AttendeeQrViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {

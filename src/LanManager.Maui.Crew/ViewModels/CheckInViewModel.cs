@@ -14,31 +14,31 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
     private Guid _eventId;
 
     [ObservableProperty]
-    private string _eventName = string.Empty;
+    public partial string EventName { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private int _checkedInCount;
+    public partial int CheckedInCount { get; set; }
 
     [ObservableProperty]
-    private string _searchText = string.Empty;
+    public partial string SearchText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private ObservableCollection<UserDto> _filteredUsers = new();
+    public partial ObservableCollection<UserDto> FilteredUsers { get; set; } = new();
 
     [ObservableProperty]
-    private bool _isCheckOutMode;
+    public partial bool IsCheckOutMode { get; set; }
 
     [ObservableProperty]
-    private bool _isLoading;
+    public partial bool IsLoading { get; set; }
 
     [ObservableProperty]
-    private bool _canAccessDoorScan;
+    public partial bool CanAccessDoorScan { get; set; }
 
     [ObservableProperty]
-    private string _statusMessage = string.Empty;
+    public partial string StatusMessage { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private Color _statusColor = Colors.Transparent;
+    public partial Color StatusColor { get; set; } = Colors.Transparent;
 
     public CheckInViewModel(ApiService apiService, AuthService authService, AppStateService appState)
     {

@@ -11,13 +11,13 @@
     <StackLayout Padding="20" Spacing="20">
 
       <!-- Seat card -->
-      <Frame BackgroundColor="#1a1a2e" CornerRadius="10" Padding="16">
+      <Border BackgroundColor="#1a1a2e" StrokeShape="RoundRectangle 10" Padding="16">
         <StackLayout>
           <Label Text="My Seat" TextColor="#aaa" FontSize="14"/>
           <Label Text="{Binding SeatLabel}" TextColor="White" FontSize="32" FontAttributes="Bold"/>
           <Label Text="{Binding SeatDetail}" TextColor="#aaa" FontSize="14"/>
         </StackLayout>
-      </Frame>
+      </Border>
 
       <!-- My QR code button -->
       <Button Text="📷 Show My QR Code" Command="{Binding GoToQrPageCommand}"
@@ -34,7 +34,7 @@
       <CollectionView ItemsSource="{Binding Tournaments}">
         <CollectionView.ItemTemplate>
           <DataTemplate x:DataType="services:TournamentDto">
-            <Frame BackgroundColor="#1a1a2e" CornerRadius="8" Padding="12" Margin="0,0,0,8">
+            <Border BackgroundColor="#1a1a2e" StrokeShape="RoundRectangle 8" Padding="12" Margin="0,0,0,8">
               <Grid ColumnDefinitions="*,Auto">
                 <StackLayout Grid.Column="0">
                   <Label Text="{Binding Name}" TextColor="White" FontSize="16" FontAttributes="Bold"/>
@@ -47,7 +47,7 @@
                         BackgroundColor="#27ae60" TextColor="White"
                         CornerRadius="6" Padding="10,6"/>
               </Grid>
-            </Frame>
+            </Border>
           </DataTemplate>
         </CollectionView.ItemTemplate>
       </CollectionView>
