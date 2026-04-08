@@ -134,32 +134,34 @@ export function SeatingPage() {
             No seats configured.{canSetup ? ' Use ⚙ Setup Grid to create seats.' : ''}
           </div>
         ) : (
-          <svg width={(maxCol + 1) * (SEAT_W + GAP)} height={(maxRow + 1) * (SEAT_H + GAP) + 24} style={{ display: 'block', minWidth: '100%' }}>
-            <text x={(maxCol + 1) * (SEAT_W + GAP) / 2} y={14} textAnchor="middle" fill="#555" fontSize={11} letterSpacing={4}>▲ STAGE ▲</text>
-            {Array.from({ length: maxRow + 1 }, (_, r) =>
-              Array.from({ length: maxCol + 1 }, (_, c) => {
-                const seat = seatAt(r, c);
-                if (!seat) return null;
-                const x = c * (SEAT_W + GAP);
-                const y = r * (SEAT_H + GAP) + 22;
-                const isSelected = selectedSeat?.id === seat.id;
-                const isOccupied = !!seat.assignedUserId;
-                const fill = isSelected ? '#1a5276' : isOccupied ? '#8b0000' : '#2d2d4e';
-                const stroke = isSelected ? '#3498db' : isOccupied ? '#c0392b' : '#444';
-                return (
-                  <g key={seat.id} onClick={() => handleSeatClick(seat)} style={{ cursor: canManage ? 'pointer' : 'default' }}>
-                    <rect x={x} y={y} width={SEAT_W} height={SEAT_H} rx={4} fill={fill} stroke={stroke} strokeWidth={isSelected ? 2 : 1} />
-                    <text x={x + SEAT_W / 2} y={y + 18} textAnchor="middle" fill="#fff" fontSize={11} fontWeight={600}>{seat.label}</text>
-                    {isOccupied && (
-                      <text x={x + SEAT_W / 2} y={y + 35} textAnchor="middle" fill="#ffaaaa" fontSize={9}>
-                        {(seat.assignedUserName ?? '').split(' ')[0]}
-                      </text>
-                    )}
-                  </g>
-                );
-              })
-            )}
-          </svg>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <svg width={(maxCol + 1) * (SEAT_W + GAP)} height={(maxRow + 1) * (SEAT_H + GAP) + 24} style={{ display: 'block' }}>
+              <text x={(maxCol + 1) * (SEAT_W + GAP) / 2} y={14} textAnchor="middle" fill="#555" fontSize={11} letterSpacing={4}>▲ STAGE ▲</text>
+              {Array.from({ length: maxRow + 1 }, (_, r) =>
+                Array.from({ length: maxCol + 1 }, (_, c) => {
+                  const seat = seatAt(r, c);
+                  if (!seat) return null;
+                  const x = c * (SEAT_W + GAP);
+                  const y = r * (SEAT_H + GAP) + 22;
+                  const isSelected = selectedSeat?.id === seat.id;
+                  const isOccupied = !!seat.assignedUserId;
+                  const fill = isSelected ? '#1a5276' : isOccupied ? '#8b0000' : '#2d2d4e';
+                  const stroke = isSelected ? '#3498db' : isOccupied ? '#c0392b' : '#444';
+                  return (
+                    <g key={seat.id} onClick={() => handleSeatClick(seat)} style={{ cursor: canManage ? 'pointer' : 'default' }}>
+                      <rect x={x} y={y} width={SEAT_W} height={SEAT_H} rx={4} fill={fill} stroke={stroke} strokeWidth={isSelected ? 2 : 1} />
+                      <text x={x + SEAT_W / 2} y={y + 18} textAnchor="middle" fill="#fff" fontSize={11} fontWeight={600}>{seat.label}</text>
+                      {isOccupied && (
+                        <text x={x + SEAT_W / 2} y={y + 35} textAnchor="middle" fill="#ffaaaa" fontSize={9}>
+                          {(seat.assignedUserName ?? '').split(' ')[0]}
+                        </text>
+                      )}
+                    </g>
+                  );
+                })
+              )}
+            </svg>
+          </div>
         )}
 
         {/* Selected seat callout — inline at bottom of the seating panel */}
@@ -205,7 +207,7 @@ export function SeatingPage() {
         {attendees.length === 0 && <p style={{ color: '#aaa', fontSize: '0.9rem' }}>No attendees checked in.</p>}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
           gap: 8,
         }}>
           {attendees.map(a => {
@@ -215,15 +217,29 @@ export function SeatingPage() {
               <div key={a.userId}
                 onClick={() => { if (isClickable) handleAssign(a); }}
                 style={{
-                  padding: '8px 12px', borderRadius: 6,
-                  background: hasSeat ? '#1a3a1a' : '#1a1a2e',
+                  minHeight: 80,
+                  padding: '12px 14px',
+                  borderRadius: 8,
+                  background: hasSeat ? '#1a3a1a' : '#3a0000',
                   cursor: isClickable ? 'pointer' : 'default',
                   border: isClickable ? '1px solid #3498db' : '1px solid #333',
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
                   transition: 'border-color 0.15s',
                 }}>
-                <span>{a.userName}</span>
-                {hasSeat && <span style={{ fontSize: '0.8rem', color: '#2ecc71' }}>Seat {hasSeat.label}</span>}
+                <div style={{
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  color: hasSeat ? '#2ecc71' : '#e74c3c',
+                }}>
+                  {hasSeat ? `Seat ${hasSeat.label}` : 'Unassigned'}
+                </div>
+                <div style={{ fontSize: '1rem', fontWeight: 500, color: '#fff' }}>
+                  {a.userName}
+                </div>
               </div>
             );
           })}
