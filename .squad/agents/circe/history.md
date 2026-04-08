@@ -60,3 +60,15 @@
 - Use `Shell.Current.DisplayAlertAsync` in .NET 10 MAUI — `DisplayAlert` is obsolete.
 - `Share.RequestAsync` with `ShareFileRequest` + `ShareFile` works cross-platform with no extra NuGet packages.
 - PR #111 opened targeting `master`.
+
+### 2026-04-08: PDF Report Sprint Complete — Orchestration Record
+**Orchestration Log:** Recorded in `.squad/orchestration-log/2026-04-08T12-20-03Z-circe.md`
+
+**Sprint Status:** ✅ Complete
+- Crew app report download/share delivered with section picker on AttendancePage
+- File handling: File.SaveAsync on device storage, Share.RequestAsync for native OS sharing
+- PR #111 merged successfully as commit 9cb0a15
+- Cross-platform support validated: iOS, Android, Windows
+- Team: Merlin (backend service/PDF/endpoint), Morgana (frontend), Radagast (tests), Gandalf (merge orchestration)
+
+**Session Record:** Full PDF report sprint documented in `.squad/log/2026-04-08T12-20-05Z-pdf-sprint-complete.md` (20 todos completed, 6 PRs merged clean, zero conflicts)

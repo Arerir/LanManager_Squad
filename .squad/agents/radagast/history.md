@@ -25,3 +25,15 @@
 **Gotcha — shared working directory:** The repo has no worktree isolation. Another agent can checkout a different branch mid-task, causing git checkout conflicts. Always check `git branch` before committing. Use `git stash` if needed to safely switch branches.
 **Namespace ambiguity fix:** Both `LanManager.Api.Models` and `LanManager.Data.Models` define `EventStatus`, `RegistrationStatus`, `Event`, `ApplicationUser`. In test files for the `Api.Models` layer, drop the `using LanManager.Data.Models;` global import and use `using DataModels = LanManager.Data.Models;` alias instead, then qualify as `DataModels.EventStatus.Closed` etc.
 **Branch:** `squad/103-report-tests-final` → PR #110.
+
+### 2026-04-08: PDF Report Sprint Complete — Orchestration Record
+**Orchestration Log:** Recorded in `.squad/orchestration-log/2026-04-08T12-20-01Z-radagast.md`
+
+**Sprint Status:** ✅ Complete
+- All 14 tests delivered (7 service, 3 PDF generator, 4 controller)
+- 1 test intentionally skipped (auth middleware)
+- PR #110 merged successfully as commit cb5704a
+- Master merge validated: no test failures, CI green
+- Team: Merlin (backend), Morgana (frontend), Circe (MAUI crew), Gandalf (merge orchestration)
+
+**Session Record:** Full PDF report sprint documented in `.squad/log/2026-04-08T12-20-05Z-pdf-sprint-complete.md` (20 todos completed, 6 PRs merged clean, zero conflicts)

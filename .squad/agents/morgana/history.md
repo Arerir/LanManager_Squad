@@ -72,3 +72,15 @@ Implemented `EventContext` at `frontend/src/context/EventContext.tsx` to persist
 **TypeScript:** All changes pass `tsc --noEmit` with zero errors. No implicit `any`.
 
 📌 Team update (2026-04-07T15-26-09): Merlin broadcast DoorScanBroadcast via SignalR; Circe wired MAUI listener with JWT auth and auto-clearing notifications — decided by Tank, Merlin, Circe
+
+### 2026-04-08: PDF Report Sprint Complete — Orchestration Record
+**Orchestration Log:** Recorded in `.squad/orchestration-log/2026-04-08T12-20-02Z-morgana.md`
+
+**Sprint Status:** ✅ Complete
+- ReportDownloadButton component delivered with inline section picker
+- PDF download pattern established: fetch → blob → createObjectURL → anchor click → revokeObjectURL
+- PR #109 merged successfully as commit 931b424
+- Frontend conventions established: `frontend/src/components/` directory created for reusable components
+- Team: Merlin (backend service/PDF generator/endpoint), Radagast (tests), Circe (MAUI crew), Gandalf (merge orchestration)
+
+**Session Record:** Full PDF report sprint documented in `.squad/log/2026-04-08T12-20-05Z-pdf-sprint-complete.md` (20 todos completed, 6 PRs merged clean, zero conflicts)
