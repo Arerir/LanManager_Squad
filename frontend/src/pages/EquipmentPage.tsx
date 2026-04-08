@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getUser } from '../api/auth';
-import { getEquipment, createEquipment, returnEquipment } from '../api/equipment';
+import { getEquipment, createEquipment } from '../api/equipment';
 import type { EquipmentDto } from '../api/equipment';
 import { EquipmentDetailModal } from '../components/EquipmentDetailModal';
 
 const TYPES = ['Computer', 'Keyboard', 'Mouse', 'Mousemat', 'VrHeadset', 'Other'];
 
-const thStyle: React.CSSProperties = { padding: '10px 8px', color: '#9ca3c8', fontWeight: 500, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em' };
-const tdStyle: React.CSSProperties = { padding: '10px 8px', color: '#e8e8ff' };
+const thStyle: React.CSSProperties = { padding: '10px 8px', color: '#9ca3c8', fontWeight: 500, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' };
+const tdStyle: React.CSSProperties = { padding: '10px 8px', color: '#e8e8ff', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' };
+const tdMutedStyle: React.CSSProperties = { ...tdStyle, color: '#9ca3c8' };
+const tdCodeStyle: React.CSSProperties = { ...tdStyle, maxWidth: 120 };
+const tdStatusStyle: React.CSSProperties = { padding: '10px 8px', whiteSpace: 'nowrap' };
+const tdActionStyle: React.CSSProperties = { padding: '10px 8px', whiteSpace: 'nowrap' };
 
 const selectStyle: React.CSSProperties = {
   padding: '6px 10px',
@@ -27,7 +30,6 @@ export function EquipmentPage() {
   const [availFilter, setAvailFilter] = useState('');
   const [showAdd, setShowAdd] = useState(false);
   const [selectedItem, setSelectedItem] = useState<EquipmentDto | null>(null);
-  const navigate = useNavigate();
 
   const user = getUser();
   const canManage = user?.roles.some(r => ['Admin', 'Organizer', 'Operator'].includes(r));
@@ -44,15 +46,6 @@ export function EquipmentPage() {
       setError(e instanceof Error ? e.message : 'Load failed');
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleReturn(id: string) {
-    try {
-      await returnEquipment(id);
-      await loadEquipment();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Return failed');
     }
   }
 
@@ -122,22 +115,22 @@ export function EquipmentPage() {
                   style={{ borderBottom: '1px solid #1e1e42', background: idx % 2 === 0 ? 'transparent' : 'rgba(13,13,43,0.4)', cursor: 'pointer' }}
                 >
                   <td style={tdStyle}>{item.name}</td>
-                  <td style={{ ...tdStyle, color: '#9ca3c8' }}>{item.type}</td>
-                  <td style={tdStyle}><code style={{ fontSize: '0.85rem' }}>{item.qrCode}</code></td>
-                  <td style={tdStyle}>
+                  <td style={tdMutedStyle}>{item.type}</td>
+                  <td style={tdCodeStyle}><code style={{ fontSize: '0.85rem' }}>{item.qrCode}</code></td>
+                  <td style={tdStatusStyle}>
                     <span className={item.isAvailable ? 'badge-available' : 'badge-loan'}>
                       {item.isAvailable ? 'Available' : 'On Loan'}
                     </span>
                   </td>
-                  <td style={{ ...tdStyle, color: '#9ca3c8' }}>{item.activeLoan?.userName ?? '—'}</td>
-                  <td style={{ ...tdStyle, color: '#9ca3c8' }}>
+                  <td style={tdMutedStyle}>{item.activeLoan?.userName ?? '—'}</td>
+                  <td style={tdMutedStyle}>
                     {item.activeLoan ? new Date(item.activeLoan.borrowedAt).toLocaleString() : '—'}
                   </td>
                   {canManage && (
-                    <td style={tdStyle}>
+                    <td style={tdActionStyle}>
                       {!item.isAvailable && (
-                        <button onClick={e => { e.stopPropagation(); handleReturn(item.id); }} className="btn-danger">
-                          Return
+                        <button onClick={e => { e.stopPropagation(); setSelectedItem(item); }} className="btn-danger" style={{ fontSize: '0.82rem', padding: '4px 8px' }}>
+                          Manage
                         </button>
                       )}
                     </td>
@@ -160,7 +153,8 @@ export function EquipmentPage() {
         <EquipmentDetailModal
           equipment={selectedItem}
           onClose={() => setSelectedItem(null)}
-          onEdit={id => { setSelectedItem(null); navigate(`/equipment/${id}/edit`); }}
+          onSaved={updated => { setSelectedItem(updated); loadEquipment(); }}
+          onUnregistered={() => { setSelectedItem(null); loadEquipment(); }}
         />
       )}
     </div>
