@@ -26,10 +26,22 @@
         <Label Grid.Row="2" Text="{Binding OutsideCount, StringFormat='{0} outside'}"
                HorizontalOptions="Center" Margin="8" FontSize="14" TextColor="Gray"/>
 
-        <!-- Camera -->
-        <zxing:CameraBarcodeReaderView Grid.Row="3"
-                          x:Name="cameraView"
-                          BarcodesDetected="OnBarcodesDetected"/>
+        <!-- Camera with flip button overlay -->
+        <Grid Grid.Row="3">
+            <zxing:CameraBarcodeReaderView x:Name="cameraView"
+                              CameraLocation="{Binding CameraFacing}"
+                              BarcodesDetected="OnBarcodesDetected"/>
+            <Button Text="⇄ Flip Camera"
+                    Command="{Binding ToggleCameraCommand}"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    Margin="8"
+                    BackgroundColor="#AA000000"
+                    TextColor="White"
+                    FontSize="13"
+                    CornerRadius="20"
+                    Padding="12,6"/>
+        </Grid>
 
         <!-- Status Banner -->
         <Border Grid.Row="4" BackgroundColor="{Binding StatusColor}"

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LanManager.Maui.Shared.Services;
+using ZXing.Net.Maui;
 
 namespace LanManager.Maui.Crew.ViewModels;
 
@@ -15,6 +16,7 @@ public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
 
     [ObservableProperty] public partial string EventName { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsExitMode { get; set; } = true; // true=Exit, false=Entry
+    [ObservableProperty] public partial CameraLocation CameraFacing { get; set; } = CameraLocation.Rear;
     [ObservableProperty] public partial string DirectionLabel { get; set; } = "EXIT";
     [ObservableProperty] public partial Color DirectionColor { get; set; } = Colors.Red;
     [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
@@ -47,6 +49,12 @@ public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
     private async Task InitAsync()
     {
         await RefreshOutsideCountAsync();
+    }
+
+    [RelayCommand]
+    private void ToggleCamera()
+    {
+        CameraFacing = CameraFacing == CameraLocation.Rear ? CameraLocation.Front : CameraLocation.Rear;
     }
 
     [RelayCommand]

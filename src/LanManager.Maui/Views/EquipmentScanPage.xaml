@@ -16,8 +16,22 @@
               BackgroundColor="Transparent" TextColor="White"/>
     </Grid>
 
-    <!-- Camera -->
-    <zxing:CameraBarcodeReaderView Grid.Row="1" x:Name="cameraView" BarcodesDetected="OnBarcodesDetected"/>
+    <!-- Camera with flip button overlay -->
+    <Grid Grid.Row="1">
+      <zxing:CameraBarcodeReaderView x:Name="cameraView"
+                        CameraLocation="{Binding CameraFacing}"
+                        BarcodesDetected="OnBarcodesDetected"/>
+      <Button Text="⇄ Flip Camera"
+              Command="{Binding ToggleCameraCommand}"
+              HorizontalOptions="End"
+              VerticalOptions="Start"
+              Margin="8"
+              BackgroundColor="#AA000000"
+              TextColor="White"
+              FontSize="13"
+              CornerRadius="20"
+              Padding="12,6"/>
+    </Grid>
 
     <!-- Active loans list -->
     <Border Grid.Row="2" BackgroundColor="#1a1a2e" Padding="12" Margin="0" StrokeShape="RoundRectangle 0">

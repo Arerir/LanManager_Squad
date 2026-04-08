@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LanManager.Maui.Shared.Services;
 using System.Collections.ObjectModel;
+using ZXing.Net.Maui;
 
 namespace LanManager.Maui.ViewModels;
 
@@ -18,6 +19,7 @@ public partial class EquipmentScanViewModel : ObservableObject, IQueryAttributab
             _eventId = guid;
     }
 
+    [ObservableProperty] public partial CameraLocation CameraFacing { get; set; } = CameraLocation.Rear;
     [ObservableProperty] public partial ObservableCollection<EquipmentLoanDto> MyLoans { get; set; } = new();
     [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
     [ObservableProperty] public partial Color StatusColor { get; set; } = Colors.Transparent;
@@ -58,6 +60,12 @@ public partial class EquipmentScanViewModel : ObservableObject, IQueryAttributab
         {
             IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    private void ToggleCamera()
+    {
+        CameraFacing = CameraFacing == CameraLocation.Rear ? CameraLocation.Front : CameraLocation.Rear;
     }
 
     [RelayCommand]
