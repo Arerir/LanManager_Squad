@@ -36,7 +36,6 @@ public partial class LoginViewModel : ObservableObject
             if (success)
             {
                 var shell = new AppShell();
-                shell.UpdateMenuForUser(_authService.CurrentUser);
                 if (Application.Current?.Windows.Count > 0)
                     Application.Current.Windows[0].Page = shell;
             }
