@@ -1,5 +1,6 @@
 ﻿import { config } from '../config';
 import { apiFetch } from './apiClient';
+import { getToken } from './auth';
 import type { UserDto } from './users';
 
 export interface EventDto {
@@ -93,10 +94,10 @@ export async function downloadEventReport(
   eventId: string,
   sections: string[] = ['All']
 ): Promise<void> {
-  const token = localStorage.getItem('jwt_token');
+  const token = getToken();
   const sectionsParam = sections.join(',');
   const response = await fetch(
-    `/api/events/${eventId}/report?sections=${sectionsParam}`,
+    `${config.apiUrl}/api/events/${eventId}/report?sections=${sectionsParam}`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
   if (!response.ok) {
