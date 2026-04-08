@@ -53,7 +53,7 @@ export function SeatingPage() {
   async function handleAssign(a: AttendanceDto) {
     if (!selectedSeat || selectedSeat.assignedUserId || !canManage) return;
     try {
-      const updated = await assignSeat(eventId, selectedSeat.id, a.userId, a.userName);
+      const updated = await assignSeat(eventId, selectedSeat.id, a.userId, a.name);
       setSeats(prev => prev.map(s => {
         if (s.assignedUserId === a.userId) return { ...s, assignedUserId: undefined, assignedUserName: undefined, assignedAt: undefined };
         if (s.id === updated.id) return updated;
@@ -237,8 +237,13 @@ export function SeatingPage() {
                 }}>
                   {hasSeat ? `Seat ${hasSeat.label}` : 'Unassigned'}
                 </div>
-                <div style={{ fontSize: '1rem', fontWeight: 500, color: '#fff' }}>
-                  {a.userName}
+                <div>
+                  <div style={{ fontSize: '1rem', fontWeight: 500, color: '#fff' }}>
+                    {a.name}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#aaa', opacity: 0.7, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {a.userName}
+                  </div>
                 </div>
               </div>
             );

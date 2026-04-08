@@ -12,6 +12,7 @@ interface CheckedInBroadcast {
   eventId: string;
   userId: string;
   userName: string;
+  name: string;
   checkedInAt: string;
 }
 
@@ -59,6 +60,7 @@ function LiveAttendanceTab({ eventId }: { eventId: string }) {
         return [...prev, {
           userId: broadcast.userId,
           userName: broadcast.userName,
+          name: broadcast.name,
           checkedInAt: broadcast.checkedInAt,
         }];
       });
