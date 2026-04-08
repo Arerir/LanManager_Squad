@@ -68,7 +68,7 @@ public class EventReportServiceTests
         var result = await svc.GetReportDataAsync(ev.Id, ApiModels.ReportSections.All);
 
         Assert.NotNull(result);
-        Assert.Equal(ev.Name, result.EventName);
+        Assert.Equal(ev.Name, result.Name);
         Assert.Equal(ev.StartDate, result.StartDate);
         Assert.Equal(ev.EndDate, result.EndDate);
         Assert.Equal(ev.Location, result.Location);
@@ -95,7 +95,7 @@ public class EventReportServiceTests
 
         Assert.NotNull(result);
         Assert.NotNull(result.Registrations);
-        Assert.True(result.Registrations.Count > 0);
+        Assert.True(result.Registrations.Length > 0);
     }
 
     [Fact]
@@ -143,7 +143,7 @@ public class EventReportServiceTests
 
         Assert.NotNull(result);
         Assert.NotNull(result.CheckIns);
-        Assert.True(result.CheckIns.Count > 0);
+        Assert.True(result.CheckIns.Length > 0);
     }
 
     [Fact]
