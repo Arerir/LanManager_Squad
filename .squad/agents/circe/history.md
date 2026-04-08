@@ -12,6 +12,7 @@
 - Crew app uses shared admin pages (Login/Main/CheckIn/Attendance/DoorScan) wired via CrewAppShell and AppStateService for event context.
 - Crew app shell keeps login and event selection outside operator tabs, with check-in and attendance in a tab bar and DoorScan registered as a modal route.
 - LanManager.Maui is attendee-only; admin pages (CheckIn/Attendance/DoorScan) live in LanManager.Maui.Crew.
+- LanManager.Maui AppShell registers attendee routes (Login, Main, AttendeeHub, AttendeeQr, EquipmentScan) only.
 
 - LanManager.Maui now always routes event selection to AttendeeHubPage; admin/organizer flows live in LanManager.Maui.Crew.
 

@@ -7,10 +7,10 @@ public partial class AppShell : Shell
 	public AppShell()
 	{
 		InitializeComponent();
-		Routing.RegisterRoute("LoginPage", typeof(LoginPage));
-		Routing.RegisterRoute("AttendeeHubPage", typeof(AttendeeHubPage));
-		Routing.RegisterRoute("AttendeeQrPage", typeof(AttendeeQrPage));
-		Routing.RegisterRoute("EquipmentScanPage", typeof(EquipmentScanPage));
+		Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+		Routing.RegisterRoute(nameof(AttendeeHubPage), typeof(AttendeeHubPage));
+		Routing.RegisterRoute(nameof(AttendeeQrPage), typeof(AttendeeQrPage));
+		Routing.RegisterRoute(nameof(EquipmentScanPage), typeof(EquipmentScanPage));
 	}
 }
 
