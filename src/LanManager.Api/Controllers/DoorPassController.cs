@@ -33,9 +33,9 @@ public class DoorPassController(
                 return Forbid();
         }
 
-        var isRegistered = await db.Registrations
-            .AnyAsync(r => r.EventId == eventId && r.UserId == userId);
-        if (!isRegistered)
+        var hasAccess = await db.Registrations.AnyAsync(r => r.EventId == eventId && r.UserId == userId)
+            || await db.CheckInRecords.AnyAsync(c => c.EventId == eventId && c.UserId == userId);
+        if (!hasAccess)
             return NotFound(new { message = "User is not registered for this event." });
 
         var qrGenerator = new QRCodeGenerator();

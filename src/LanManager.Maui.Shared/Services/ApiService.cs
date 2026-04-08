@@ -194,9 +194,9 @@ public class ApiService
         }
     }
 
-    public async Task<EquipmentLoanDto?> BorrowEquipmentAsync(string qrCode)
+    public async Task<EquipmentLoanDto?> BorrowEquipmentAsync(string qrCode, Guid eventId)
     {
-        var response = await _httpClient.PostAsync($"/api/equipment/borrow/{Uri.EscapeDataString(qrCode)}", null);
+        var response = await _httpClient.PostAsync($"/api/equipment/borrow/{Uri.EscapeDataString(qrCode)}?eventId={eventId}", null);
         if (response.IsSuccessStatusCode)
             return await response.Content.ReadFromJsonAsync<EquipmentLoanDto>(_jsonOptions);
         var error = await response.Content.ReadAsStringAsync();
