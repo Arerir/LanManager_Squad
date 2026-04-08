@@ -1,3 +1,5 @@
+using LanManager.Maui.Shared;
+using LanManager.Maui.Shared.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace LanManager.Maui.Services;

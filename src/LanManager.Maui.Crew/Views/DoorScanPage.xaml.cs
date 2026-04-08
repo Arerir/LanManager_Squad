@@ -13,7 +13,7 @@ public partial class DoorScanPage : ContentPage
         BindingContext = viewModel;
     }
 
-    private void OnBarcodesDetected(object sender, BarcodeDetectionEventArgs e)
+    private void OnBarcodesDetected(object? sender, BarcodeDetectionEventArgs e)
     {
         var first = e.Results.FirstOrDefault();
         if (first is null) return;

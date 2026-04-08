@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using LanManager.Maui.Shared.Services;
 using System.Collections.ObjectModel;
 using LanManager.Maui.Services;
+using AppStateService = LanManager.Maui.Services.AppStateService;
 
 namespace LanManager.Maui.ViewModels;
 
@@ -14,13 +15,13 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
     private readonly SignalRService _signalRService;
     private Guid _eventId;
 
-    [ObservableProperty] private string _seatLabel = "No seat assigned";
-    [ObservableProperty] private string _seatDetail = string.Empty;
-    [ObservableProperty] private ObservableCollection<TournamentDto> _tournaments = new();
-    [ObservableProperty] private bool _isLoading;
-    [ObservableProperty] private string _statusMessage = string.Empty;
-    [ObservableProperty] private Color _statusColor = Colors.Gray;
-    [ObservableProperty] private string _tournamentStatus = string.Empty;
+    [ObservableProperty] public partial string SeatLabel { get; set; } = "No seat assigned";
+    [ObservableProperty] public partial string SeatDetail { get; set; } = string.Empty;
+    [ObservableProperty] public partial ObservableCollection<TournamentDto> Tournaments { get; set; } = new();
+    [ObservableProperty] public partial bool IsLoading { get; set; }
+    [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
+    [ObservableProperty] public partial Color StatusColor { get; set; } = Colors.Gray;
+    [ObservableProperty] public partial string TournamentStatus { get; set; } = string.Empty;
 
     public AttendeeHubViewModel(ApiService apiService, AppStateService appState, AuthService authService, SignalRService signalRService)
     {

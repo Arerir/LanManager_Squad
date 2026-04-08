@@ -20,7 +20,7 @@
     <zxing:CameraBarcodeReaderView Grid.Row="1" x:Name="cameraView" BarcodesDetected="OnBarcodesDetected"/>
 
     <!-- Active loans list -->
-    <Frame Grid.Row="2" BackgroundColor="#1a1a2e" Padding="12" Margin="0" CornerRadius="0">
+    <Border Grid.Row="2" BackgroundColor="#1a1a2e" Padding="12" Margin="0" StrokeShape="RoundRectangle 0">
       <StackLayout>
         <Label Text="Currently borrowed:" TextColor="#aaa" FontSize="13"/>
         <CollectionView ItemsSource="{Binding MyLoans}">
@@ -40,7 +40,7 @@
         <Label Text="None" TextColor="#666" FontSize="13"
                IsVisible="{Binding MyLoans.Count, Converter={StaticResource IsZeroConverter}}"/>
       </StackLayout>
-    </Frame>
+    </Border>
 
     <!-- Status Banner -->
     <Border Grid.Row="3" BackgroundColor="{Binding StatusColor}"

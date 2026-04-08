@@ -11,16 +11,16 @@ public partial class MainViewModel : ObservableObject
     private readonly AppStateService _appState;
 
     [ObservableProperty]
-    private ObservableCollection<EventDto> _events = new();
+    public partial ObservableCollection<EventDto> Events { get; set; } = new();
 
     [ObservableProperty]
-    private EventDto? _selectedEvent;
+    public partial EventDto? SelectedEvent { get; set; }
 
     [ObservableProperty]
-    private bool _isLoading;
+    public partial bool IsLoading { get; set; }
 
     [ObservableProperty]
-    private string _statusMessage = string.Empty;
+    public partial string StatusMessage { get; set; } = string.Empty;
 
     public MainViewModel(ApiService apiService, AppStateService appState)
     {
