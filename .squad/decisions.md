@@ -92,6 +92,23 @@ All issues properly labeled for triage workflow.
 **DTO Shapes:** `DoorScanRequest(UserId, Direction)`, `DoorPassDto(Id, EventId, UserId, UserName, Direction, ScannedAt)`, `OutsideUserDto(UserId, UserName, ExitedAt)`.  
 **Why:** QR-based door workflow for venue access tracking. Separates entry/exit scanning from check-in (which happens via API). Door log provides audit trail; outside query enables live occupancy.
 
+### 2026-04-07: Playwright E2E scaffolding for frontend
+**By:** Apoc  
+**Issue:** #71  
+**What:** Use Playwright config scoped to `frontend/e2e` with `npm run dev` webServer at `http://localhost:5173`. Auth fixture logs in through the UI using email/password selectors and waits for `/events`. Smoke tests minimal (root response status + login password field visibility) to validate setup without backend dependencies.  
+**Why:** Provides a stable foundation for future E2E suites without requiring API seeding upfront.
+
+### 2026-04-07: MAUI shared services library
+**By:** Switch/Circe  
+**Date:** 2026-04-08  
+**What:** Create `LanManager.Maui.Shared` class library to hold AuthService, AuthHandler, ApiService, and Config. Both attendee and crew apps reference the shared library for unified service layer without duplication.  
+**Why:** Both MAUI apps need identical auth and API wiring. Centralizing these services keeps configuration aligned and reduces maintenance.
+
+### 2026-04-07: Crew app scaffold
+**By:** Switch  
+**What:** No new architectural decisions required. Crew app mirrors existing MAUI structure: MVVM with CommunityToolkit.Mvvm, centralized ApiService singleton, DI container in MauiProgram. File structure: ViewModels/, Views/, Converters/, Resources/Styles/.  
+**Why:** Consistency with established MAUI patterns supports parallel development and team onboarding.
+
 ## Governance
 
 - All meaningful changes require team consensus
