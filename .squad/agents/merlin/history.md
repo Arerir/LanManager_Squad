@@ -9,6 +9,16 @@
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
 
+## Event Update JSON Deserialization Fix — squad/fix-event-update-dto
+Root cause: `UpdateEventRequest.Status` (and `CreateEventRequest.Status`) are typed as `EventStatus` (a C# enum). By default, `System.Text.Json` deserializes enums as integers, but the frontend sends string values (`"Active"`, `"Draft"`, etc.). Fix: registered `JsonStringEnumConverter` globally via `AddJsonOptions` in `Program.cs`. All 62 tests pass.
+
+**Pattern to remember:** Any C# enum in a DTO that is received from the React frontend needs `JsonStringEnumConverter` registered (globally or per-property), because the frontend always serialises enums as strings.
+
+## PDF Download Bug (2026-04-08) — PR #112
+Root cause: `downloadEventReport()` in `frontend/src/api/events.ts` used a relative URL (`/api/events/{id}/report`) while all other API functions use `${config.apiUrl}/api/...` (absolute). In development, Vite has no `/api` proxy, so the request hit the Vite server and returned the React SPA `index.html` (~630 bytes) with 200 OK. This HTML was saved as a `.pdf`, producing an invalid file. Fix: use absolute URL with `config.apiUrl` and `getToken()` helper. Strengthened test assertion to `bytes.Length > 1024`.
+
+**Pattern to remember:** Any new `fetch()` call in `frontend/src/api/` MUST use `${config.apiUrl}/api/...` (absolute), not a bare `/api/...` relative path. The Vite dev server has no proxy for `/api`.
+
 ## Issue #2 — EF Core data models (2026-04-05)
 Created Event, User, Registration, CheckInRecord entities. LanManagerDbContext in src/LanManager.Api/Data/. SQLite dev DB. Unique index on Registration(EventId, UserId). InitialCreate migration created. PR opened.
 
