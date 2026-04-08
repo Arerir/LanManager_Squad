@@ -1,4 +1,4 @@
-# Project Context
+﻿# Project Context
 
 - **Owner:** Daniel Eli
 - **Project:** LanManager_Squad — LAN party management platform
@@ -99,4 +99,21 @@ Added QuestPDF 2026.2.4 to LanManager.Api.csproj. Set `QuestPDF.Settings.License
 
 **Branch:** fix/attendance-display-name
 **PR:** https://github.com/Arerir/LanManager_Squad/pull/121
+
+## PR #124 — Local QR Generation (QRCoder) and Crew Full Role Access (2026-04-09)
+
+**Fix 1 — Local QR code in Attendee app:**
+- AttendeeQrViewModel now uses QRCoder locally via Task.Run — no API call, no main thread blocking.
+- QR content: userGuid.ToString() (GUID string, matching what the API was generating).
+- Exposes QrImageSource (ImageSource?) + IsLoading + StatusMessage; constructor takes only (AuthService, AppStateService).
+- AttendeeQrPage.xaml uses <Image Source=QrImageSource> + <ActivityIndicator> with IsNotNullConverter.
+- QRCoder 1.* added to LanManager.Maui.csproj; NoWarn CA1416 suppresses System.Drawing platform warning.
+
+**Fix 2 — Crew app full elevated-role access:**
+- CheckInViewModel.CanAccessDoorScan set to true in constructor + LoadDataAsync — all crew users see Door Scanner.
+- DoorScanViewModel.InitAsync() role check removed — Operators can scan without Access denied redirect.
+- Crew app is elevated-only by design; no intra-app role gating needed.
+
+**Build:** MAUI (0 warnings, 0 errors) MAUI.Crew (0 warnings, 0 errors) | **Branch:** fix/local-qr-and-crew-operator-role | **PR:** https://github.com/Arerir/LanManager_Squad/pull/124
+
 
