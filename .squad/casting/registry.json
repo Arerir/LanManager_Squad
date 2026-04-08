@@ -1,36 +1,50 @@
 {
   "agents": {
-    "morpheus": {
-      "persistent_name": "Morpheus",
-      "universe": "The Matrix",
+    "gandalf": {
+      "persistent_name": "Gandalf",
+      "universe": "Wizard Names",
       "created_at": "2026-04-05T08:02:02.180Z",
       "legacy_named": false,
       "status": "active"
     },
-    "trinity": {
-      "persistent_name": "Trinity",
-      "universe": "The Matrix",
+    "morgana": {
+      "persistent_name": "Morgana",
+      "universe": "Wizard Names",
       "created_at": "2026-04-05T08:02:02.180Z",
       "legacy_named": false,
       "status": "active"
     },
-    "tank": {
-      "persistent_name": "Tank",
-      "universe": "The Matrix",
+    "merlin": {
+      "persistent_name": "Merlin",
+      "universe": "Wizard Names",
       "created_at": "2026-04-05T08:02:02.180Z",
       "legacy_named": false,
       "status": "active"
     },
-    "switch": {
-      "persistent_name": "Switch",
-      "universe": "The Matrix",
+    "circe": {
+      "persistent_name": "Circe",
+      "universe": "Wizard Names",
       "created_at": "2026-04-05T08:02:02.180Z",
       "legacy_named": false,
       "status": "active"
     },
-    "apoc": {
-      "persistent_name": "Apoc",
-      "universe": "The Matrix",
+    "radagast": {
+      "persistent_name": "Radagast",
+      "universe": "Wizard Names",
+      "created_at": "2026-04-05T08:02:02.180Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    "sibyll": {
+      "persistent_name": "Sibyll",
+      "universe": "Wizard Names",
+      "created_at": "2026-04-05T08:02:02.180Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    "ponder": {
+      "persistent_name": "Ponder",
+      "universe": "Wizard Names",
       "created_at": "2026-04-05T08:02:02.180Z",
       "legacy_named": false,
       "status": "active"

@@ -12,13 +12,15 @@
 
 | Name | Role | Charter | Status |
 |------|------|---------|--------|
-| Morpheus | 🏗️ Lead/Architect | [charter](.squad/agents/morpheus/charter.md) | ✅ Active |
-| Trinity | ⚛️ Frontend Dev | [charter](.squad/agents/trinity/charter.md) | ✅ Active |
-| Tank | 🔧 Backend Dev | [charter](.squad/agents/tank/charter.md) | ✅ Active |
-| Switch | 📱 MAUI Dev | [charter](.squad/agents/switch/charter.md) | ✅ Active |
-| Apoc | 🧪 Tester | [charter](.squad/agents/apoc/charter.md) | ✅ Active |
-| Scribe | 📋 Session Logger | [charter](.squad/agents/scribe/charter.md) | ✅ Active |
-| Ralph | 🔄 Work Monitor | [charter](.squad/agents/ralph/charter.md) | ✅ Active |
+| Gandalf | 🏗️ Lead/Architect | [charter](.squad/agents/gandalf/charter.md) | ✅ Active |
+| Morgana | ⚛️ Frontend Dev | [charter](.squad/agents/morgana/charter.md) | ✅ Active |
+| Merlin | 🔧 Backend Dev | [charter](.squad/agents/merlin/charter.md) | ✅ Active |
+| Circe | 📱 MAUI Dev | [charter](.squad/agents/circe/charter.md) | ✅ Active |
+| Radagast | 🧪 Tester | [charter](.squad/agents/radagast/charter.md) | ✅ Active |
+| Sibyll | 🧠 Memory Agent | [charter](.squad/agents/sibyll/charter.md) | ✅ Active |
+| Ponder | 📝 Documentation Specialist | [charter](.squad/agents/ponder/charter.md) | ✅ Active |
+| Scribe | 📋 Session Logger | — | ✅ Active |
+| Ralph | 🔄 Work Monitor | — | ✅ Active |
 
 ## Project Context
 
@@ -26,7 +28,7 @@
 - **Project:** LanManager_Squad — LAN party management platform
 - **Stack:** .NET Aspire orchestration, React frontend, .NET 9 Web API backend, .NET MAUI check-in/check-out apps
 - **Created:** 2026-04-05
-- **Universe:** The Matrix
+- **Universe:** Wizard Names
 
 ## Issue Source
 
