@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:LanManager.Maui.ViewModels"
-             xmlns:services="clr-namespace:LanManager.Maui.Services"
-             x:Class="LanManager.Maui.Views.AttendancePage"
+             xmlns:viewmodels="clr-namespace:LanManager.Maui.Crew.ViewModels"
+             xmlns:services="clr-namespace:LanManager.Maui.Shared.Services"
+             x:Class="LanManager.Maui.Crew.Views.AttendancePage"
              x:DataType="viewmodels:AttendanceViewModel"
              Title="Current Attendance">
 
@@ -70,3 +70,4 @@
     </Grid>
 
 </ContentPage>
+

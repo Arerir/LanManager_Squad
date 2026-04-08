@@ -1,7 +1,7 @@
-using LanManager.Maui.ViewModels;
+using LanManager.Maui.Crew.ViewModels;
 using ZXing.Net.Maui;
 
-namespace LanManager.Maui.Views;
+namespace LanManager.Maui.Crew.Views;
 
 public partial class DoorScanPage : ContentPage
 {
@@ -21,3 +21,4 @@ public partial class DoorScanPage : ContentPage
             await _viewModel.OnBarcodeDetectedAsync(first.Value));
     }
 }
+

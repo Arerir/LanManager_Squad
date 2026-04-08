@@ -1,6 +1,6 @@
-using LanManager.Maui.ViewModels;
+using LanManager.Maui.Crew.ViewModels;
 
-namespace LanManager.Maui.Views;
+namespace LanManager.Maui.Crew.Views;
 
 public partial class AttendancePage : ContentPage
 {
@@ -10,3 +10,4 @@ public partial class AttendancePage : ContentPage
         BindingContext = viewModel;
     }
 }
+

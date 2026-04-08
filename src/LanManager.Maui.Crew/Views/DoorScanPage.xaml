@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
-             xmlns:vm="clr-namespace:LanManager.Maui.ViewModels"
-             x:Class="LanManager.Maui.Views.DoorScanPage"
+             xmlns:vm="clr-namespace:LanManager.Maui.Crew.ViewModels"
+             x:Class="LanManager.Maui.Crew.Views.DoorScanPage"
              x:DataType="vm:DoorScanViewModel"
              Title="Door Scanner">
 
@@ -40,3 +40,4 @@
         </Border>
     </Grid>
 </ContentPage>
+

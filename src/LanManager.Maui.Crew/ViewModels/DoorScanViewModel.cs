@@ -1,9 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LanManager.Maui.Shared.Services;
-using LanManager.Maui.Services;
 
-namespace LanManager.Maui.ViewModels;
+namespace LanManager.Maui.Crew.ViewModels;
 
 public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
 {
@@ -117,4 +116,5 @@ public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
         StatusMessage = string.Empty; StatusColor = Colors.Transparent;
     }
 }
+
 

@@ -2,9 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LanManager.Maui.Shared.Services;
 using System.Collections.ObjectModel;
-using LanManager.Maui.Services;
 
-namespace LanManager.Maui.ViewModels;
+namespace LanManager.Maui.Crew.ViewModels;
 
 public partial class CheckInViewModel : ObservableObject, IQueryAttributable
 {
@@ -217,4 +216,5 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
         StatusColor = Colors.Transparent;
     }
 }
+
 

@@ -1,8 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LanManager.Maui.Shared.Services;
-
-namespace LanManager.Maui.ViewModels;
+namespace LanManager.Maui.Crew.ViewModels;
 
 public partial class LoginViewModel : ObservableObject
 {
@@ -35,9 +34,7 @@ public partial class LoginViewModel : ObservableObject
             var success = await _authService.LoginAsync(Email, Password);
             if (success)
             {
-                var shell = new AppShell();
-                if (Application.Current?.Windows.Count > 0)
-                    Application.Current.Windows[0].Page = shell;
+                await Shell.Current.GoToAsync("//MainPage");
             }
             else
             {
@@ -54,4 +51,5 @@ public partial class LoginViewModel : ObservableObject
         }
     }
 }
+
 
