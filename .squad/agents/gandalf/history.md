@@ -15,3 +15,13 @@
 
 - **Sprint 2026-04-08:** Reviewed all 14 squad PRs for MAUI Crew split + Playwright E2E. Merged 11 PRs (6 Playwright chain + 4 MAUI Crew chain + retroactive fixes). Blocked 4 PRs: #80, #81 rebased (merge conflicts resolved); #82 tests fixed (77/77 passing, merge-ready); #93 rebased (base branch auto-update, merge-ready). All 4 now merge-ready. Sprint 100% complete.
 
+### PDF Report Sprint Issues (2026-04-08)
+Created 6 GitHub issues for PDF report generation sprint:
+- Issue #100: EventReportService (squad:tank)
+- Issue #101: EventReportPdfGenerator (squad:tank)
+- Issue #102: Report endpoint (squad:tank)
+- Issue #103: Report tests (squad:apoc)
+- Issue #104: Frontend download UI (squad:trinity)
+- Issue #105: Crew app download/share (squad:switch)
+Labels used: squad, enhancement, squad:tank, squad:apoc, squad:trinity, squad:switch
+

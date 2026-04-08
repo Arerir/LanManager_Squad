@@ -15,6 +15,7 @@ builder.Services.AddSignalR();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<DataSeeder>();
 builder.Services.AddScoped<BracketService>();
+builder.Services.AddScoped<EventReportService>();
 
 builder.Services.AddCors(options =>
 {
