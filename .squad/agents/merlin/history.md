@@ -37,3 +37,6 @@ public record DoorScanBroadcast(
 
 ## PR #82 — Door Scan Broadcast Test Fixes (2026-04-08)
 Fixed failing tests in PR #82 (feat/79-api-doorscan-broadcast). The DoorPassController constructor was updated to include a third parameter `IHubContext<AttendanceHub>` for SignalR broadcasting, but the tests were not updated. Added `MockHubContext()` helper method in DoorPassControllerTests that creates a properly mocked `IHubContext<AttendanceHub>` with chained `Clients.All` setup. Updated all three test methods to pass the mocked hub context to the controller constructor. Tests now build and pass locally (77/77 tests passing).
+
+## Issue #100 — EventReportService (2026-04-08)
+Implemented `ReportSections` [Flags] enum, `EventReportData` DTO (with `RegistrationSummary` and `CheckInSummary` nested types), and `EventReportService` with conditional EF Core `Include()` per section. `CheckInSummary.Duration` is computed in C# from `CheckedInAt`/`CheckedOutAt` diff after the EF query. Registered as scoped in `Program.cs`. **Ambiguity note:** `LanManager.Api.Models` duplicates some entity types from `LanManager.Data.Models` — DTOs and service must fully qualify enum references (e.g., `Data.Models.EventStatus`, `Data.Models.RegistrationStatus`) to avoid CS0104/CS0266 compile errors. PR #106 opened against master.

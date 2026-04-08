@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -16,6 +18,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<DataSeeder>();
 builder.Services.AddScoped<BracketService>();
 builder.Services.AddScoped<EventReportService>();
+builder.Services.AddScoped<EventReportPdfGenerator>();
 
 builder.Services.AddCors(options =>
 {
