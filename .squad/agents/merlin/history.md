@@ -40,3 +40,14 @@ Fixed failing tests in PR #82 (feat/79-api-doorscan-broadcast). The DoorPassCont
 
 ## Issue #100 — EventReportService (2026-04-08)
 Implemented `ReportSections` [Flags] enum, `EventReportData` DTO (with `RegistrationSummary` and `CheckInSummary` nested types), and `EventReportService` with conditional EF Core `Include()` per section. `CheckInSummary.Duration` is computed in C# from `CheckedInAt`/`CheckedOutAt` diff after the EF query. Registered as scoped in `Program.cs`. **Ambiguity note:** `LanManager.Api.Models` duplicates some entity types from `LanManager.Data.Models` — DTOs and service must fully qualify enum references (e.g., `Data.Models.EventStatus`, `Data.Models.RegistrationStatus`) to avoid CS0104/CS0266 compile errors. PR #106 opened against master.
+
+## Issue #101 — EventReportPdfGenerator (2026-04-08)
+Added QuestPDF 2026.2.4 to LanManager.Api.csproj. Set `QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community` before `builder.Build()` in Program.cs. Created `EventReportPdfGenerator` at `src/LanManager.Api/Services/EventReportPdfGenerator.cs` with `GeneratePdf(EventReportData)` returning `byte[]`. Conditional sections: Registrations table (Name, Status, Registered At), Check-Ins table (Name, Checked In, Checked Out, Duration as h:mm or "Still inside"), Equipment placeholder, Tournaments placeholder. Tables use alternating white/grey row backgrounds with dark header rows. Registered as scoped in Program.cs. PR #107 opened against squad/100-report-service. Build verified clean.
+
+**QuestPDF patterns used:**
+- `Document.Create(...).GeneratePdf()` → `byte[]`
+- `page.Header().Element(Action<IContainer>)` for header composition
+- `Table` + `ColumnsDefinition` + `RelativeColumn` for proportional columns
+- `table.Header(header => {...})` for sticky header rows
+- `.Background(Colors.Grey.Darken2)` / `.Background(Colors.Grey.Lighten3)` for row coloring
+- Duration formatting: `$"{(int)ts.TotalHours}:{ts.Minutes:D2}"` from `TimeSpan`
