@@ -14,5 +14,6 @@ public record CheckInDto(
 public record AttendanceDto(
     Guid UserId,
     string UserName,
+    string Name,
     DateTime CheckedInAt
 );

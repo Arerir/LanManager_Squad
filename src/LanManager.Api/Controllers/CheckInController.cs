@@ -84,7 +84,7 @@ public class CheckInController(
         var records = await db.CheckInRecords
             .Where(c => c.EventId == eventId && c.CheckedOutAt == null)
             .Include(c => c.User)
-            .Select(c => new AttendanceDto(c.UserId, c.User.UserName ?? string.Empty, c.CheckedInAt))
+            .Select(c => new AttendanceDto(c.UserId, c.User.UserName ?? string.Empty, c.User.Name, c.CheckedInAt))
             .ToListAsync();
 
         return Ok(records);
