@@ -86,6 +86,7 @@ export function SeatingPage() {
 
   return (
     <div>
+      {/* ── Page header ──────────────────────────────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         <h1 className="page-title">Seating Map</h1>
         <span style={{ color: '#aaa', fontSize: '0.9rem' }}>{assignedCount}/{seats.length} seats assigned</span>
@@ -119,87 +120,113 @@ export function SeatingPage() {
       {error && <p style={{ color: '#f66', marginBottom: '1rem' }}>Error: {error}</p>}
       {loading && <p style={{ color: '#aaa' }}>Loading…</p>}
 
-      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-        {/* SVG Map */}
-        <div style={{ flex: 1, overflowX: 'auto', minWidth: 280 }}>
-          {seats.length === 0 && !loading ? (
-            <div style={{ color: '#aaa', padding: '3rem', textAlign: 'center', border: '2px dashed #333', borderRadius: 8 }}>
-              No seats configured.{canSetup ? ' Use ⚙ Setup Grid to create seats.' : ''}
-            </div>
-          ) : (
-            <svg width={(maxCol + 1) * (SEAT_W + GAP)} height={(maxRow + 1) * (SEAT_H + GAP) + 24} style={{ display: 'block' }}>
-              <text x={(maxCol + 1) * (SEAT_W + GAP) / 2} y={14} textAnchor="middle" fill="#555" fontSize={11} letterSpacing={4}>▲ STAGE ▲</text>
-              {Array.from({ length: maxRow + 1 }, (_, r) =>
-                Array.from({ length: maxCol + 1 }, (_, c) => {
-                  const seat = seatAt(r, c);
-                  if (!seat) return null;
-                  const x = c * (SEAT_W + GAP);
-                  const y = r * (SEAT_H + GAP) + 22;
-                  const isSelected = selectedSeat?.id === seat.id;
-                  const isOccupied = !!seat.assignedUserId;
-                  const fill = isSelected ? '#1a5276' : isOccupied ? '#8b0000' : '#2d2d4e';
-                  const stroke = isSelected ? '#3498db' : isOccupied ? '#c0392b' : '#444';
-                  return (
-                    <g key={seat.id} onClick={() => handleSeatClick(seat)} style={{ cursor: canManage ? 'pointer' : 'default' }}>
-                      <rect x={x} y={y} width={SEAT_W} height={SEAT_H} rx={4} fill={fill} stroke={stroke} strokeWidth={isSelected ? 2 : 1} />
-                      <text x={x + SEAT_W / 2} y={y + 18} textAnchor="middle" fill="#fff" fontSize={11} fontWeight={600}>{seat.label}</text>
-                      {isOccupied && (
-                        <text x={x + SEAT_W / 2} y={y + 35} textAnchor="middle" fill="#ffaaaa" fontSize={9}>
-                          {(seat.assignedUserName ?? '').split(' ')[0]}
-                        </text>
-                      )}
-                    </g>
-                  );
-                })
-              )}
-            </svg>
-          )}
-        </div>
-
-        {/* Right panel */}
-        <div style={{ width: 280, flexShrink: 0, minWidth: 240, flex: '1 1 240px' }}>
-          {selectedSeat && (
-            <div style={{ background: '#1a1a2e', borderRadius: 8, padding: '1rem', marginBottom: '1rem', border: `1px solid ${selectedSeat.assignedUserId ? '#c0392b' : '#3498db'}` }}>
-              <strong>Seat {selectedSeat.label}</strong>
-              {selectedSeat.assignedUserId ? (
-                <div style={{ marginTop: 8 }}>
-                  <span style={{ color: '#aaa', fontSize: '0.9rem' }}>Assigned: </span>
-                  <strong>{selectedSeat.assignedUserName}</strong>
-                  {canManage && (
-                    <button onClick={handleUnassign}
-                      style={{ display: 'block', marginTop: 8, padding: '4px 12px', background: '#c0392b', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: '0.85rem' }}>
-                      Unassign
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <p style={{ color: '#aaa', fontSize: '0.85rem', margin: '4px 0 0' }}>
-                  {canManage ? 'Click an attendee to assign.' : 'Empty seat'}
-                </p>
-              )}
-            </div>
-          )}
-
-          <h3 style={{ margin: '0 0 0.75rem' }}>Checked-in Attendees</h3>
-          <div style={{ maxHeight: 500, overflowY: 'auto' }}>
-            {attendees.length === 0 && <p style={{ color: '#aaa', fontSize: '0.9rem' }}>No attendees checked in.</p>}
-            {attendees.map(a => {
-              const hasSeat = seats.find(s => s.assignedUserId === a.userId);
-              return (
-                <div key={a.userId}
-                  onClick={() => { if (canManage && selectedSeat && !selectedSeat.assignedUserId) handleAssign(a); }}
-                  style={{
-                    padding: '8px 12px', borderRadius: 6, marginBottom: 4,
-                    background: hasSeat ? '#1a3a1a' : '#1a1a2e',
-                    cursor: canManage && selectedSeat && !selectedSeat.assignedUserId ? 'pointer' : 'default',
-                    border: '1px solid #333', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-                  }}>
-                  <span>{a.userName}</span>
-                  {hasSeat && <span style={{ fontSize: '0.8rem', color: '#2ecc71' }}>Seat {hasSeat.label}</span>}
-                </div>
-              );
-            })}
+      {/* ── Dedicated seating panel (full-width) ─────────────────────────────── */}
+      <div style={{
+        background: '#12122a',
+        border: '1px solid #2a2a4a',
+        borderRadius: 10,
+        padding: '1.5rem',
+        marginBottom: '2rem',
+        overflowX: 'auto',
+      }}>
+        {seats.length === 0 && !loading ? (
+          <div style={{ color: '#aaa', padding: '3rem', textAlign: 'center', border: '2px dashed #333', borderRadius: 8 }}>
+            No seats configured.{canSetup ? ' Use ⚙ Setup Grid to create seats.' : ''}
           </div>
+        ) : (
+          <svg width={(maxCol + 1) * (SEAT_W + GAP)} height={(maxRow + 1) * (SEAT_H + GAP) + 24} style={{ display: 'block', minWidth: '100%' }}>
+            <text x={(maxCol + 1) * (SEAT_W + GAP) / 2} y={14} textAnchor="middle" fill="#555" fontSize={11} letterSpacing={4}>▲ STAGE ▲</text>
+            {Array.from({ length: maxRow + 1 }, (_, r) =>
+              Array.from({ length: maxCol + 1 }, (_, c) => {
+                const seat = seatAt(r, c);
+                if (!seat) return null;
+                const x = c * (SEAT_W + GAP);
+                const y = r * (SEAT_H + GAP) + 22;
+                const isSelected = selectedSeat?.id === seat.id;
+                const isOccupied = !!seat.assignedUserId;
+                const fill = isSelected ? '#1a5276' : isOccupied ? '#8b0000' : '#2d2d4e';
+                const stroke = isSelected ? '#3498db' : isOccupied ? '#c0392b' : '#444';
+                return (
+                  <g key={seat.id} onClick={() => handleSeatClick(seat)} style={{ cursor: canManage ? 'pointer' : 'default' }}>
+                    <rect x={x} y={y} width={SEAT_W} height={SEAT_H} rx={4} fill={fill} stroke={stroke} strokeWidth={isSelected ? 2 : 1} />
+                    <text x={x + SEAT_W / 2} y={y + 18} textAnchor="middle" fill="#fff" fontSize={11} fontWeight={600}>{seat.label}</text>
+                    {isOccupied && (
+                      <text x={x + SEAT_W / 2} y={y + 35} textAnchor="middle" fill="#ffaaaa" fontSize={9}>
+                        {(seat.assignedUserName ?? '').split(' ')[0]}
+                      </text>
+                    )}
+                  </g>
+                );
+              })
+            )}
+          </svg>
+        )}
+
+        {/* Selected seat callout — inline at bottom of the seating panel */}
+        {selectedSeat && (
+          <div style={{
+            marginTop: '1.25rem',
+            padding: '0.75rem 1rem',
+            borderRadius: 8,
+            background: '#1a1a2e',
+            border: `1px solid ${selectedSeat.assignedUserId ? '#c0392b' : '#3498db'}`,
+            display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap',
+          }}>
+            <strong style={{ fontSize: '1rem' }}>Seat {selectedSeat.label}</strong>
+            {selectedSeat.assignedUserId ? (
+              <>
+                <span style={{ color: '#aaa', fontSize: '0.9rem' }}>
+                  Assigned to <strong style={{ color: '#fff' }}>{selectedSeat.assignedUserName}</strong>
+                </span>
+                {canManage && (
+                  <button onClick={handleUnassign}
+                    style={{ padding: '4px 12px', background: '#c0392b', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: '0.85rem' }}>
+                    Unassign
+                  </button>
+                )}
+              </>
+            ) : (
+              <span style={{ color: '#aaa', fontSize: '0.85rem' }}>
+                {canManage ? 'Select an attendee below to assign this seat.' : 'Empty seat'}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* ── Attendees section ────────────────────────────────────────────────── */}
+      <div style={{
+        background: '#12122a',
+        border: '1px solid #2a2a4a',
+        borderRadius: 10,
+        padding: '1.5rem',
+      }}>
+        <h2 style={{ margin: '0 0 1rem', fontSize: '1.15rem' }}>Checked-in Attendees</h2>
+        {attendees.length === 0 && <p style={{ color: '#aaa', fontSize: '0.9rem' }}>No attendees checked in.</p>}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+          gap: 8,
+        }}>
+          {attendees.map(a => {
+            const hasSeat = seats.find(s => s.assignedUserId === a.userId);
+            const isClickable = !!(canManage && selectedSeat && !selectedSeat.assignedUserId);
+            return (
+              <div key={a.userId}
+                onClick={() => { if (isClickable) handleAssign(a); }}
+                style={{
+                  padding: '8px 12px', borderRadius: 6,
+                  background: hasSeat ? '#1a3a1a' : '#1a1a2e',
+                  cursor: isClickable ? 'pointer' : 'default',
+                  border: isClickable ? '1px solid #3498db' : '1px solid #333',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  transition: 'border-color 0.15s',
+                }}>
+                <span>{a.userName}</span>
+                {hasSeat && <span style={{ fontSize: '0.8rem', color: '#2ecc71' }}>Seat {hasSeat.label}</span>}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
