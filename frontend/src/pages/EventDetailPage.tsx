@@ -4,6 +4,8 @@ import { getEvent, getEventAttendees, deleteEvent } from '../api/events';
 import type { EventDto } from '../api/events';
 import type { UserDto } from '../api/users';
 import { useEventContext } from '../context/EventContext';
+import { getUser } from '../api/auth';
+import { ReportDownloadButton } from '../components/ReportDownloadButton';
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
   Draft:     { bg: 'rgba(90,90,128,0.2)',   color: '#9ca3c8' },
@@ -22,6 +24,9 @@ export function EventDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  const currentUser = getUser();
+  const userRole = currentUser?.roles?.[0] ?? '';
 
   useEffect(() => {
     if (!id) return;
@@ -90,6 +95,11 @@ export function EventDetailPage() {
             style={{ padding: '8px 16px', borderRadius: 6 }}>
             🏆 Tournaments
           </button>
+          <ReportDownloadButton
+            eventId={event.id}
+            eventStatus={event.status}
+            userRole={userRole}
+          />
           <button
             onClick={handleDelete}
             disabled={deleting}

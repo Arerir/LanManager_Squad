@@ -88,3 +88,27 @@ export async function registerForEvent(eventId: string, userId: string): Promise
   });
   if (!res.ok) throw new Error(`Failed to register for event: ${res.statusText}`);
 }
+
+export async function downloadEventReport(
+  eventId: string,
+  sections: string[] = ['All']
+): Promise<void> {
+  const token = localStorage.getItem('jwt_token');
+  const sectionsParam = sections.join(',');
+  const response = await fetch(
+    `/api/events/${eventId}/report?sections=${sectionsParam}`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to download report: ${response.status}`);
+  }
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `event-report.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
