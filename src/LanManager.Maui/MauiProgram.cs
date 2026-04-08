@@ -29,6 +29,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<AppStateService>();
 		builder.Services.AddSingleton<AuthService>();
 		builder.Services.AddTransient<AuthHandler>();
+		builder.Services.AddSingleton<SignalRService>();
 
 		// Register HttpClient (with AuthHandler) and ApiService
 		builder.Services.AddSingleton<ApiService>(sp =>

@@ -10,6 +10,8 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
     private readonly AppStateService _appState;
+    private readonly AuthService _authService;
+    private readonly SignalRService _signalRService;
     private Guid _eventId;
 
     [ObservableProperty] private string _seatLabel = "No seat assigned";
@@ -20,10 +22,15 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] private Color _statusColor = Colors.Gray;
     [ObservableProperty] private string _tournamentStatus = string.Empty;
 
-    public AttendeeHubViewModel(ApiService apiService, AppStateService appState)
+    public AttendeeHubViewModel(ApiService apiService, AppStateService appState, AuthService authService, SignalRService signalRService)
     {
         _apiService = apiService;
         _appState = appState;
+        _authService = authService;
+        _signalRService = signalRService;
+
+        _signalRService.OnCheckedIn = msg => ShowNotification(msg, Colors.Green);
+        _signalRService.OnDoorScanned = msg => ShowNotification(msg, Colors.CornflowerBlue);
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -53,7 +60,7 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
             var seatTask = _apiService.GetMySeatAsync(_eventId);
             var tournamentsTask = _apiService.GetTournamentsAsync(_eventId);
 
-            await Task.WhenAll(seatTask, tournamentsTask);
+            await Task.WhenAll(seatTask, tournamentsTask, _signalRService.ConnectAsync(_eventId));
 
             var seat = await seatTask;
             if (seat != null)
@@ -137,6 +144,18 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
     {
         var name = Uri.EscapeDataString(!string.IsNullOrEmpty(_appState.EventName) ? _appState.EventName : string.Empty);
         await Shell.Current.GoToAsync($"DoorScanPage?eventId={_eventId}&eventName={name}");
+    }
+
+    public async Task CleanupAsync()
+        => await _signalRService.DisconnectAsync();
+
+    private async void ShowNotification(string msg, Color color)
+    {
+        StatusMessage = msg;
+        StatusColor = color;
+        await Task.Delay(4000);
+        StatusMessage = string.Empty;
+        StatusColor = Colors.Gray;
     }
 }
 
