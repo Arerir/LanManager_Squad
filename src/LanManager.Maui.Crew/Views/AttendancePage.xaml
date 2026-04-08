@@ -13,6 +13,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0"
@@ -63,7 +65,68 @@
             </CollectionView>
         </RefreshView>
 
+        <!-- Download Report button — visible only for closed events with Admin/Organizer role -->
         <Button Grid.Row="3"
+                Text="📄 Download Report"
+                Command="{Binding ToggleReportPanelCommand}"
+                IsVisible="{Binding CanDownloadReport}"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                CornerRadius="6"
+                Margin="0,10,0,0" />
+
+        <!-- Section picker panel -->
+        <Border Grid.Row="4"
+                IsVisible="{Binding ShowReportPanel}"
+                StrokeShape="RoundRectangle 8"
+                BackgroundColor="{StaticResource Gray100}"
+                Padding="15"
+                Margin="0,8,0,0">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Select Report Sections"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       Margin="0,0,0,4" />
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Registrations" FontSize="15" VerticalOptions="Center" />
+                    <Switch Grid.Column="1" IsToggled="{Binding IncludeRegistrations}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Check-ins" FontSize="15" VerticalOptions="Center" />
+                    <Switch Grid.Column="1" IsToggled="{Binding IncludeCheckIns}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Equipment" FontSize="15" VerticalOptions="Center" />
+                    <Switch Grid.Column="1" IsToggled="{Binding IncludeEquipment}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Tournaments" FontSize="15" VerticalOptions="Center" />
+                    <Switch Grid.Column="1" IsToggled="{Binding IncludeTournaments}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
+                    <Button Grid.Column="0"
+                            Text="Download / Share"
+                            Command="{Binding DownloadReportCommand}"
+                            IsEnabled="{Binding IsDownloading, Converter={StaticResource InvertedBoolConverter}}"
+                            BackgroundColor="#2ecc71"
+                            TextColor="White"
+                            CornerRadius="6"
+                            Margin="0,0,6,0" />
+                    <ActivityIndicator Grid.Column="1"
+                                       IsRunning="{Binding IsDownloading}"
+                                       IsVisible="{Binding IsDownloading}"
+                                       Color="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+
+        <Button Grid.Row="5"
                 Text="Back to Check-In"
                 Command="{Binding GoBackCommand}"
                 Margin="0,10,0,0" />

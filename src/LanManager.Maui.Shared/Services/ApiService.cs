@@ -202,6 +202,13 @@ public class ApiService
         var error = await response.Content.ReadAsStringAsync();
         throw new HttpRequestException($"Borrow failed ({(int)response.StatusCode}): {error}", null, response.StatusCode);
     }
+
+    public async Task<byte[]?> DownloadReportAsync(Guid eventId, string sections = "All")
+    {
+        var response = await _httpClient.GetAsync($"api/events/{eventId}/report?sections={sections}");
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadAsByteArrayAsync();
+    }
 }
 
 public record CheckInRequest(Guid UserId);
