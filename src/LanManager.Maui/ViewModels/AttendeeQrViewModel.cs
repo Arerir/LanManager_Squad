@@ -6,62 +6,36 @@ namespace LanManager.Maui.ViewModels;
 
 public partial class AttendeeQrViewModel : ObservableObject, IQueryAttributable
 {
-    private readonly ApiService _apiService;
     private readonly AuthService _authService;
     private readonly AppStateService _appState;
-    private Guid _eventId;
 
-    [ObservableProperty] public partial ImageSource? QrImageSource { get; set; }
+    [ObservableProperty] public partial string QrValue { get; set; } = string.Empty;
     [ObservableProperty] public partial string UserName { get; set; } = string.Empty;
-    [ObservableProperty] public partial bool IsLoading { get; set; }
     [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
 
-    public AttendeeQrViewModel(ApiService apiService, AuthService authService, AppStateService appState)
+    public AttendeeQrViewModel(AuthService authService, AppStateService appState)
     {
-        _apiService = apiService;
         _authService = authService;
         _appState = appState;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.TryGetValue("eventId", out var id) && Guid.TryParse(id?.ToString(), out var guid))
-            _eventId = guid;
-        else if (_appState.HasEvent)
-            _eventId = _appState.EventId;
-        _ = LoadAsync();
+        Load();
     }
 
-    private async Task LoadAsync()
+    private void Load()
     {
-        IsLoading = true;
-        StatusMessage = string.Empty;
         UserName = _authService.CurrentUser?.Name ?? string.Empty;
         var userId = _authService.CurrentUser?.Id;
 
-        if (userId == null || !Guid.TryParse(userId, out var userGuid))
+        if (string.IsNullOrEmpty(userId))
         {
             StatusMessage = "Not logged in";
-            IsLoading = false;
             return;
         }
 
-        try
-        {
-            var bytes = await _apiService.GetAttendeeQrCodeAsync(_eventId, userGuid);
-            if (bytes != null)
-                QrImageSource = ImageSource.FromStream(() => new MemoryStream(bytes));
-            else
-                StatusMessage = "QR code not available. Check your event registration.";
-        }
-        catch
-        {
-            StatusMessage = "Failed to load QR code.";
-        }
-        finally
-        {
-            IsLoading = false;
-        }
+        QrValue = userId;
+        StatusMessage = string.Empty;
     }
 }
-

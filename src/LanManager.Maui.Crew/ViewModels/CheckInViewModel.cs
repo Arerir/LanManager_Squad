@@ -45,8 +45,7 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
         _apiService = apiService;
         _authService = authService;
         _appState = appState;
-        CanAccessDoorScan = _authService.CurrentUser?.Roles
-            .Any(r => r == "Admin" || r == "Organizer") ?? false;
+        CanAccessDoorScan = true;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -80,8 +79,7 @@ public partial class CheckInViewModel : ObservableObject, IQueryAttributable
             return;
         }
 
-        CanAccessDoorScan = _authService.CurrentUser?.Roles
-            .Any(r => r == "Admin" || r == "Organizer") ?? false;
+        CanAccessDoorScan = true;
 
         IsLoading = true;
         

@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LanManager.Maui.ViewModels"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
              x:Class="LanManager.Maui.Views.AttendeeQrPage"
              x:DataType="vm:AttendeeQrViewModel"
              BackgroundColor="#0d0d1a"
@@ -10,12 +11,16 @@
     <Label Grid.Row="0" Text="{Binding UserName}" TextColor="White" FontSize="22"
            FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
     <Border Grid.Row="1" BackgroundColor="White" StrokeShape="RoundRectangle 12" Padding="16"
-           HorizontalOptions="Center" VerticalOptions="Center"
-           IsVisible="{Binding QrImageSource, Converter={StaticResource IsNotNullConverter}}">
-      <Image Source="{Binding QrImageSource}" WidthRequest="260" HeightRequest="260"/>
+            HorizontalOptions="Center" VerticalOptions="Center"
+            IsVisible="{Binding QrValue, Converter={StaticResource StringNotEmptyConverter}}">
+      <zxing:BarcodeGeneratorView
+          Format="QrCode"
+          Value="{Binding QrValue}"
+          WidthRequest="260"
+          HeightRequest="260"
+          ForegroundColor="Black"
+          BackgroundColor="White"/>
     </Border>
-    <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
-                       Color="White" VerticalOptions="Center"/>
     <Label Grid.Row="2" Text="{Binding StatusMessage}" TextColor="#aaa"
            HorizontalOptions="Center" Margin="0,20,0,0"/>
   </Grid>

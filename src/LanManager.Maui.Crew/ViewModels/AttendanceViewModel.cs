@@ -92,7 +92,7 @@ public partial class AttendanceViewModel : ObservableObject, IQueryAttributable
             _eventStatus = evt?.Status ?? string.Empty;
             IsEventClosed = string.Equals(_eventStatus, "Closed", StringComparison.OrdinalIgnoreCase);
             CanDownloadReport = IsEventClosed &&
-                (_authService.CurrentUser?.Roles.Any(r => r == "Admin" || r == "Organizer") ?? false);
+                (_authService.CurrentUser?.Roles.Any(r => r == "Admin" || r == "Organizer" || r == "Operator") ?? false);
 
             StatusMessage = Attendees.Count == 0 ? "No attendees checked in" : string.Empty;
         }

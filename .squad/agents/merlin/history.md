@@ -65,6 +65,20 @@ Added QuestPDF 2026.2.4 to LanManager.Api.csproj. Set `QuestPDF.Settings.License
 - `.Background(Colors.Grey.Darken2)` / `.Background(Colors.Grey.Lighten3)` for row coloring
 - Duration formatting: `$"{(int)ts.TotalHours}:{ts.Minutes:D2}"` from `TimeSpan`
 
+## PR #123 — MAUI Equipment Borrow eventId & Attendee QR Fix
+
+**Bug 1 — Equipment borrow sent Guid.Empty as event ID:**
+- `AttendeeHubViewModel.GoToEquipmentScanAsync()` now navigates with `?eventId={_eventId}`
+- `EquipmentScanViewModel` now implements `IQueryAttributable` to receive `eventId` from navigation query
+- `ApiService.BorrowEquipmentAsync(string qrCode, Guid eventId)` signature updated; URL now includes `?eventId={eventId}`
+
+**Bug 2 — Attendee QR code returned 404 for checked-in users:**
+- Root cause: `DoorPassController.GetQrCode` only checked `db.Registrations`; door-scan auto-check-in creates `CheckInRecord` without a `Registration`
+- Fix: combined check — `db.Registrations.AnyAsync(...) || db.CheckInRecords.AnyAsync(...)` so checked-in attendees can retrieve their QR code
+
+**Files changed:** `ApiService.cs`, `EquipmentScanViewModel.cs`, `AttendeeHubViewModel.cs`, `DoorPassController.cs`  
+**Build:** API ✅ MAUI ✅ | **Branch:** fix/maui-borrow-eventid-and-qr | **PR:** https://github.com/Arerir/LanManager_Squad/pull/123
+
 ## 2026-04-08 16:05:26 - Attendance Display Name Fix
 
 **Task:** Fix AttendanceDto and SeatsController to use display Name instead of email

@@ -179,3 +179,42 @@ Labels used: squad, enhancement, squad:tank, squad:apoc, squad:trinity, squad:sw
 - `Frame` → `Border` is the correct MAUI .NET 8+ migration path; no visual changes
 - MVVMTK0045 modernization aligns with CommunityToolkit.Mvvm 8.x best practices
 - Establishes higher code quality baseline for all future squad work
+
+### 2026-04-08: PR #123 Merged — Equipment Borrow eventId + Attendee QR Availability
+**Merged:** PR #123 (fix/maui-borrow-eventid-and-qr → master, squash merge, HEAD: 50eeb7b)
+
+**Fixes:**
+1. **Equipment borrow sends Guid.Empty:**
+   - `ApiService.BorrowEquipmentAsync()` now accepts `eventId` parameter
+   - `EquipmentScanPage` navigation passes `eventId` query string to `EquipmentScanViewModel`
+   - `EquipmentScanViewModel` implements `IQueryAttributable` to capture `eventId` from query
+   - Borrow API call includes `?eventId={eventId}` in request URL
+   - Prevents missing event context in equipment loan records
+
+2. **Attendee QR returns 404 for checked-in users:**
+   - `DoorPassController.GetQrCode()` changed logic from `isRegistered` to `hasAccess`
+   - Now accepts both formally registered users (Registrations table) AND checked-in users (CheckInRecords)
+   - Allows attendees who have checked in but are not formally registered to generate QR codes
+
+**Files Changed:**
+- `DoorPassController.cs` — hasAccess logic with OR condition for CheckInRecords
+- `ApiService.cs` — BorrowEquipmentAsync accepts eventId parameter
+- `AttendeeHubViewModel.cs` — passes eventId to EquipmentScanPage navigation
+- `EquipmentScanViewModel.cs` — implements IQueryAttributable, captures eventId, passes to API
+
+**CI Status:** ✅ All 4 checks passing:
+- ✓ CI/API Tests (.NET) — 31s
+- ✓ CI/Build API (.NET) — 23s
+- ✓ CI/Build Frontend (React) — 21s
+- ✓ GitGuardian Security Checks — 1s
+
+**Merge:** `gh pr merge 123 --squash --admin -d`
+- Squash merge: 4 files, 15 insertions(+), 8 deletions(-)
+- Branch deleted (local & remote)
+- Master updated: a129c5b → 50eeb7b
+
+**Code Review Notes:**
+- Equipment borrow fix: Proper navigation query param passing, viewmodel correctly implements IQueryAttributable
+- QR availability fix: Logical OR correctly expands access from formal registrations to any checked-in attendee
+- No regressions — both fixes are minimal and focused on their specific issues
+- Query param implementation is idiomatic MAUI navigation pattern

@@ -46,15 +46,6 @@ public partial class DoorScanViewModel : ObservableObject, IQueryAttributable
 
     private async Task InitAsync()
     {
-        var roles = _authService.CurrentUser?.Roles;
-        var hasAccess = roles?.Any(r => r == "Admin" || r == "Organizer") ?? false;
-        if (!hasAccess)
-        {
-            ShowError("Access denied: insufficient role.");
-            await Task.Delay(1500);
-            await Shell.Current.GoToAsync("..");
-            return;
-        }
         await RefreshOutsideCountAsync();
     }
 
