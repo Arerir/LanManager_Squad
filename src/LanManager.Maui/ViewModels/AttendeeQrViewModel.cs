@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LanManager.Maui.Shared.Services;
-using LanManager.Maui.Services;
+using AppStateService = LanManager.Maui.Services.AppStateService;
 
 namespace LanManager.Maui.ViewModels;
 

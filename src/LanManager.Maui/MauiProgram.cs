@@ -3,7 +3,7 @@ using LanManager.Maui.Shared.Services;
 using LanManager.Maui.ViewModels;
 using LanManager.Maui.Views;
 using ZXing.Net.Maui.Controls;
-using LanManager.Maui.Services;
+using AppStateService = LanManager.Maui.Services.AppStateService;
 
 namespace LanManager.Maui;
 
@@ -43,9 +43,6 @@ public static class MauiProgram
 		// Register ViewModels
 		builder.Services.AddTransient<LoginViewModel>();
 		builder.Services.AddTransient<MainViewModel>();
-		builder.Services.AddTransient<CheckInViewModel>();
-		builder.Services.AddTransient<AttendanceViewModel>();
-		builder.Services.AddTransient<DoorScanViewModel>();
 		builder.Services.AddTransient<AttendeeHubViewModel>();
 		builder.Services.AddTransient<AttendeeQrViewModel>();
 		builder.Services.AddTransient<EquipmentScanViewModel>();
@@ -53,9 +50,6 @@ public static class MauiProgram
 		// Register Views
 		builder.Services.AddTransient<LoginPage>();
 		builder.Services.AddTransient<MainPage>();
-		builder.Services.AddTransient<CheckInPage>();
-		builder.Services.AddTransient<AttendancePage>();
-		builder.Services.AddTransient<DoorScanPage>();
 		builder.Services.AddTransient<AttendeeHubPage>();
 		builder.Services.AddTransient<AttendeeQrPage>();
 		builder.Services.AddTransient<EquipmentScanPage>();
