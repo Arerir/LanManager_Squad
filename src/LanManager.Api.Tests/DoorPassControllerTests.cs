@@ -1,9 +1,11 @@
 using LanManager.Api.Controllers;
 using LanManager.Api.DTOs;
+using LanManager.Api.Hubs;
 using LanManager.Api.Tests.Helpers;
 using LanManager.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Moq;
 
 namespace LanManager.Api.Tests;
@@ -17,6 +19,18 @@ public class DoorPassControllerTests
             store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
         mgr.Setup(m => m.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(returnUser);
         return mgr.Object;
+    }
+
+    private static IHubContext<AttendanceHub> MockHubContext()
+    {
+        var mockClients = new Mock<IHubClients>();
+        var mockClientProxy = new Mock<IClientProxy>();
+        mockClients.Setup(c => c.All).Returns(mockClientProxy.Object);
+        
+        var mockHubContext = new Mock<IHubContext<AttendanceHub>>();
+        mockHubContext.Setup(h => h.Clients).Returns(mockClients.Object);
+        
+        return mockHubContext.Object;
     }
 
     [Fact]
@@ -44,7 +58,7 @@ public class DoorPassControllerTests
         });
         await db.SaveChangesAsync();
 
-        var controller = new DoorPassController(db, MockUserManager(user));
+        var controller = new DoorPassController(db, MockUserManager(user), MockHubContext());
         ClaimsHelper.SetUser(controller, userId, "Operator");
 
         var result = await controller.DoorScan(eventId, new DoorScanRequest(userId, "Entry"));
@@ -77,7 +91,7 @@ public class DoorPassControllerTests
         db.CheckInRecords.Add(new CheckInRecord { EventId = eventId, UserId = userId });
         await db.SaveChangesAsync();
 
-        var controller = new DoorPassController(db, MockUserManager(user));
+        var controller = new DoorPassController(db, MockUserManager(user), MockHubContext());
         ClaimsHelper.SetUser(controller, userId, "Operator");
 
         var result = await controller.DoorScan(eventId, new DoorScanRequest(userId, "Exit"));
@@ -134,7 +148,7 @@ public class DoorPassControllerTests
         });
         await db.SaveChangesAsync();
 
-        var controller = new DoorPassController(db, MockUserManager());
+        var controller = new DoorPassController(db, MockUserManager(), MockHubContext());
         ClaimsHelper.SetUser(controller, userId1, "Operator");
 
         var result = await controller.GetOutside(eventId);
