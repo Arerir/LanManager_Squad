@@ -245,6 +245,9 @@ Labels used: squad, enhancement, squad:tank, squad:apoc, squad:trinity, squad:sw
 - Direction auto-flip is a strong API-level guard; crew UI direction selection still works for first scan and Exit initiation
 - Crew login gate is correctly a UX guard (not sole security boundary); API auth remains authoritative
 
+**Orchestration log:** `.squad/orchestration-log/2026-04-09T10-00-02Z-gandalf-pr-review-sprint-2.md`  
+**Session log:** `.squad/log/2026-04-09T10-00-03Z-sprint-door-scan.md`
+
 ### 2026-04-09: PR #127 Reviewed & Merged — Camera Flip Button on Scanner Pages
 **Status:** ✅ Approved and Merged
 

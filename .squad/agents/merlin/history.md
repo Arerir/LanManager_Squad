@@ -156,9 +156,12 @@ Added QuestPDF 2026.2.4 to LanManager.Api.csproj. Set `QuestPDF.Settings.License
 ### Task 4 — Crew MAUI: Restrict login to crew roles
 - `LoginViewModel.LoginAsync` now checks `CurrentUser.Roles` post-login. If no Admin/Organizer/Operator role found, calls `LogoutAsync()` and shows "Access denied" error message.
 
-**Build:** API ✅ MAUI ✅ MAUI.Crew ✅ (0 warnings, 0 errors each) | **Branch:** feat/door-scan-status-sprint | **PR:** https://github.com/Arerir/LanManager_Squad/pull/126
+**Build:** API ✅ MAUI ✅ MAUI.Crew ✅ (0 warnings, 0 errors each) | **Branch:** feat/door-scan-status-sprint | **PR:** https://github.com/Arerir/LanManager_Squad/pull/126  
+**Merged by:** Gandalf (squash, `--admin`) | **CI:** ✅ 4/4 | **Master HEAD:** 344570f  
+**Orchestration log:** `.squad/orchestration-log/2026-04-09T10-00-01Z-merlin-sprint-backend-maui.md`  
+**Session log:** `.squad/log/2026-04-09T10-00-03Z-sprint-door-scan.md`
 
-## PR #127 — Camera Flip Button on DoorScan & EquipmentScan (2026-04-09)
+## PR #127— Camera Flip Button on DoorScan & EquipmentScan (2026-04-09)
 
 ### Task: Add camera orientation toggle (Rear ↔ Front) to scanner pages
 
