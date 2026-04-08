@@ -23,6 +23,14 @@ interface CheckedOutBroadcast {
   checkedOutAt: string;
 }
 
+interface DoorScanBroadcast {
+  eventId: string;
+  userId: string;
+  userName: string;
+  direction: string;
+  scannedAt: string;
+}
+
 function elapsed(isoDate: string): string {
   const mins = Math.floor((Date.now() - new Date(isoDate).getTime()) / 60000);
   if (mins < 1) return 'just now';
@@ -217,6 +225,7 @@ function DoorLogTab({ eventId }: { eventId: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const [hubStatus, setHubStatus] = useState<string>('Connecting…');
 
   useEffect(() => {
     setLoading(true);
@@ -227,6 +236,40 @@ function DoorLogTab({ eventId }: { eventId: string }) {
       .finally(() => setLoading(false));
   }, [eventId]);
 
+  useEffect(() => {
+    const connection = new HubConnectionBuilder()
+      .withUrl(`${config.apiUrl}/hubs/attendance`)
+      .withAutomaticReconnect()
+      .build();
+
+    connection.on('UserDoorScanned', (payload: DoorScanBroadcast) => {
+      if (payload.eventId !== eventId) return;
+      setRecords(prev => [{
+        id: `${payload.userId}-${payload.scannedAt}`,
+        eventId: payload.eventId,
+        userId: payload.userId,
+        userName: payload.userName,
+        direction: payload.direction as 'Entry' | 'Exit',
+        scannedAt: payload.scannedAt,
+      }, ...prev]);
+      setPage(1);
+    });
+
+    connection.start()
+      .then(() => setHubStatus('Live'))
+      .catch(() => setHubStatus('Disconnected'));
+
+    connection.onreconnecting(() => setHubStatus('Reconnecting…'));
+    connection.onreconnected(() => setHubStatus('Live'));
+    connection.onclose(() => {
+      if (connection.state !== HubConnectionState.Connecting) {
+        setHubStatus('Disconnected');
+      }
+    });
+
+    return () => { connection.stop(); };
+  }, [eventId]);
+
   const totalPages = Math.max(1, Math.ceil(records.length / PAGE_SIZE));
   const pageRecords = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -234,6 +277,13 @@ function DoorLogTab({ eventId }: { eventId: string }) {
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
         <h2 style={{ margin: 0 }}>Door Log</h2>
+        <span style={{
+          background: hubStatus === 'Live' ? '#2a7a2a' : '#555',
+          color: '#fff', borderRadius: '999px', padding: '2px 12px',
+          fontSize: '0.8rem', fontWeight: 600,
+        }}>
+          {hubStatus}
+        </span>
         <span style={{
           background: '#1a1a2e', color: '#7eb3ff', borderRadius: '999px',
           padding: '2px 12px', fontSize: '0.85rem', fontWeight: 600,
@@ -264,10 +314,14 @@ function DoorLogTab({ eventId }: { eventId: string }) {
                 <tr key={r.id} style={{ borderBottom: '1px solid #222' }}>
                   <td style={{ padding: '8px 12px' }}>
                     <span style={{
-                      color: r.direction === 'Exit' ? '#e74c3c' : '#2ecc71',
+                      background: r.direction === 'Exit' ? '#c0392b' : '#27ae60',
+                      color: '#fff',
+                      borderRadius: '999px',
+                      padding: '2px 12px',
+                      fontSize: '0.8rem',
                       fontWeight: 600,
                     }}>
-                      {r.direction === 'Exit' ? '🚪 Exit' : '↩ Entry'}
+                      {r.direction === 'Exit' ? 'Exit' : 'Entry'}
                     </span>
                   </td>
                   <td style={{ padding: '8px 12px' }}>{r.userName}</td>
