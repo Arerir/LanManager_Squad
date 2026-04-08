@@ -5,11 +5,18 @@ using System.Collections.ObjectModel;
 
 namespace LanManager.Maui.ViewModels;
 
-public partial class EquipmentScanViewModel : ObservableObject
+public partial class EquipmentScanViewModel : ObservableObject, IQueryAttributable
 {
     private readonly ApiService _apiService;
+    private Guid _eventId;
     private DateTime _lastScanTime = DateTime.MinValue;
     private const int ScanCooldownMs = 2000;
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("eventId", out var id) && Guid.TryParse(id?.ToString(), out var guid))
+            _eventId = guid;
+    }
 
     [ObservableProperty] public partial ObservableCollection<EquipmentLoanDto> MyLoans { get; set; } = new();
     [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
@@ -37,7 +44,7 @@ public partial class EquipmentScanViewModel : ObservableObject
 
         try
         {
-            var loan = await _apiService.BorrowEquipmentAsync(barcodeValue);
+            var loan = await _apiService.BorrowEquipmentAsync(barcodeValue, _eventId);
             ShowSuccess($"✓ Borrowed: {loan?.EquipmentName}");
             await InitAsync();
         }

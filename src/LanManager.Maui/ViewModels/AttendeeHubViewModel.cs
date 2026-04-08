@@ -138,7 +138,7 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
 
     [RelayCommand]
     private async Task GoToEquipmentScanAsync()
-        => await Shell.Current.GoToAsync("EquipmentScanPage");
+        => await Shell.Current.GoToAsync($"EquipmentScanPage?eventId={_eventId}");
 
     [RelayCommand]
     private async Task GoToDoorScannerAsync()
