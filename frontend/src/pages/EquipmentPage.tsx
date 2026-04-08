@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getUser } from '../api/auth';
 import { getEquipment, createEquipment, returnEquipment } from '../api/equipment';
 import type { EquipmentDto } from '../api/equipment';
+import { EquipmentDetailModal } from '../components/EquipmentDetailModal';
 
 const TYPES = ['Computer', 'Keyboard', 'Mouse', 'Mousemat', 'VrHeadset', 'Other'];
 
@@ -24,6 +26,8 @@ export function EquipmentPage() {
   const [typeFilter, setTypeFilter] = useState('');
   const [availFilter, setAvailFilter] = useState('');
   const [showAdd, setShowAdd] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<EquipmentDto | null>(null);
+  const navigate = useNavigate();
 
   const user = getUser();
   const canManage = user?.roles.some(r => ['Admin', 'Organizer', 'Operator'].includes(r));
@@ -112,7 +116,11 @@ export function EquipmentPage() {
                 </tr>
               )}
               {filtered.map((item, idx) => (
-                <tr key={item.id} style={{ borderBottom: '1px solid #1e1e42', background: idx % 2 === 0 ? 'transparent' : 'rgba(13,13,43,0.4)' }}>
+                <tr
+                  key={item.id}
+                  onClick={() => setSelectedItem(item)}
+                  style={{ borderBottom: '1px solid #1e1e42', background: idx % 2 === 0 ? 'transparent' : 'rgba(13,13,43,0.4)', cursor: 'pointer' }}
+                >
                   <td style={tdStyle}>{item.name}</td>
                   <td style={{ ...tdStyle, color: '#9ca3c8' }}>{item.type}</td>
                   <td style={tdStyle}><code style={{ fontSize: '0.85rem' }}>{item.qrCode}</code></td>
@@ -128,7 +136,7 @@ export function EquipmentPage() {
                   {canManage && (
                     <td style={tdStyle}>
                       {!item.isAvailable && (
-                        <button onClick={() => handleReturn(item.id)} className="btn-danger">
+                        <button onClick={e => { e.stopPropagation(); handleReturn(item.id); }} className="btn-danger">
                           Return
                         </button>
                       )}
@@ -145,6 +153,14 @@ export function EquipmentPage() {
         <AddEquipmentModal
           onClose={() => setShowAdd(false)}
           onAdded={() => { setShowAdd(false); loadEquipment(); }}
+        />
+      )}
+
+      {selectedItem && (
+        <EquipmentDetailModal
+          equipment={selectedItem}
+          onClose={() => setSelectedItem(null)}
+          onEdit={id => { setSelectedItem(null); navigate(`/equipment/${id}/edit`); }}
         />
       )}
     </div>
