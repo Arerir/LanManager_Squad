@@ -153,3 +153,29 @@ Labels used: squad, enhancement, squad:tank, squad:apoc, squad:trinity, squad:sw
 - Clean, minimal changes — no regressions, well-scoped to the display name concern
 - Backend correctly sources name from DB rather than trusting client-supplied email
 - Frontend UX improvement: names are more human-readable; emails retained as subtext for clarity
+
+### 2026-04-08: PR #122 Merged — TreatWarningsAsErrors + Warning Fixes
+**Merged:** PR #122 (fix/treat-warnings-as-errors → master, squash merge, HEAD: 3880d5f)
+
+**Changes:**
+- **`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`** added to all 8 .csproj files:
+  - `LanManager.Api`, `LanManager.Api.Tests`, `LanManager.AppHost`, `LanManager.Data`
+  - `LanManager.Maui`, `LanManager.Maui.Crew`, `LanManager.Maui.Shared`, `LanManager.ServiceDefaults`
+- **CS0103** — undefined symbol reference resolved
+- **CS0618** — `Frame` → `Border` migration in XAML/code-behind (deprecated API replaced)
+- **CS8622** — nullability mismatches in delegate signatures corrected
+- **MVVMTK0045** — `ObservableProperty` modernized per CommunityToolkit.Mvvm guidance
+- ViewModels updated: `AttendanceViewModel`, `CheckInViewModel`, `DoorScanViewModel`, `LoginViewModel`, `MainViewModel` (both MAUI and Crew), `AttendeeHubViewModel`, `AttendeeQrViewModel`, `EquipmentScanViewModel`
+- Views updated: `DoorScanPage`, `AttendeeHubPage`, `AttendeeQrPage`, `EquipmentScanPage`
+- `MauiProgram.cs` and `SignalRService.cs` nullability annotations fixed
+- Agent history files updated (Merlin, Morgana)
+
+**CI Status:** ✅ All 3 checks passing (API Tests .NET, Build API .NET, Build Frontend React)
+**Merge:** `gh pr merge 122 --squash --admin -d`
+
+**Code Review Notes:**
+- Zero regressions — purely warning-elimination changes with no logic alterations
+- `TreatWarningsAsErrors` now enforced project-wide; future PRs must compile warning-free
+- `Frame` → `Border` is the correct MAUI .NET 8+ migration path; no visual changes
+- MVVMTK0045 modernization aligns with CommunityToolkit.Mvvm 8.x best practices
+- Establishes higher code quality baseline for all future squad work
