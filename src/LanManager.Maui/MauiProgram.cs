@@ -47,6 +47,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<AttendeeHubViewModel>();
 		builder.Services.AddTransient<AttendeeQrViewModel>();
 		builder.Services.AddTransient<EquipmentScanViewModel>();
+		builder.Services.AddTransient<MyEquipmentViewModel>();
 
 		// Register Views
 		builder.Services.AddTransient<LoginPage>();
@@ -54,6 +55,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<AttendeeHubPage>();
 		builder.Services.AddTransient<AttendeeQrPage>();
 		builder.Services.AddTransient<EquipmentScanPage>();
+		builder.Services.AddTransient<MyEquipmentPage>();
 
 		return builder.Build();
 	}

@@ -27,6 +27,10 @@
       <Button Text="🔧 Borrow Equipment" Command="{Binding GoToEquipmentScanCommand}"
               BackgroundColor="#8e44ad" TextColor="White" CornerRadius="8"/>
 
+      <!-- My equipment button -->
+      <Button Text="📦 My Equipment" Command="{Binding GoToMyEquipmentCommand}"
+              BackgroundColor="#2c3e50" TextColor="White" CornerRadius="8"/>
+
       <!-- Tournaments -->
       <Label Text="Tournaments" TextColor="White" FontSize="20" FontAttributes="Bold"/>
       <Label Text="{Binding TournamentStatus}" TextColor="#aaa" FontSize="14"
