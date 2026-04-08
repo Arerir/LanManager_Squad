@@ -6,22 +6,25 @@
        Title="LanManager Crew">
 
     <ShellContent
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage"
+        Shell.NavBarIsVisible="False" />
+
+    <ShellContent
         Title="Event Selector"
         ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />
 
-    <ShellContent
-        Title="Check-In"
-        ContentTemplate="{DataTemplate views:CheckInPage}"
-        Route="CheckInPage" />
-
-    <ShellContent
-        Title="Attendance"
-        ContentTemplate="{DataTemplate views:AttendancePage}"
-        Route="AttendancePage" />
-
-    <ShellContent
-        Title="QR Scanner"
-        ContentTemplate="{DataTemplate views:DoorScanPage}"
-        Route="DoorScanPage" />
+    <TabBar>
+        <Tab Title="Check In" Icon="icon_checkin.svg">
+            <ShellContent
+                ContentTemplate="{DataTemplate views:CheckInPage}"
+                Route="CheckInPage" />
+        </Tab>
+        <Tab Title="Attendance" Icon="icon_attendance.svg">
+            <ShellContent
+                ContentTemplate="{DataTemplate views:AttendancePage}"
+                Route="AttendancePage" />
+        </Tab>
+    </TabBar>
 </Shell>
