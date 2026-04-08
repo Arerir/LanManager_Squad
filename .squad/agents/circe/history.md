@@ -88,3 +88,15 @@
 
 **Status:** Effective immediately for future sprint planning.
 
+### 2026-04-09: Bug Fix — Crew App Role Claim Mismatch (PR #128)
+
+**Bug:** Crew app login always failed with "Access denied" for all users regardless of role.
+
+**Root cause:** `AuthController.GenerateToken` used `new Claim(ClaimTypes.Role, r)` with a directly-constructed `new JwtSecurityToken(claims: claims)`. In this code path, `JwtSecurityTokenHandler.WriteToken` does **not** apply `OutboundClaimTypeMap`, so `ClaimTypes.Role` was written verbatim as the full URI (`http://schemas.microsoft.com/ws/2008/06/identity/claims/role`) in the JWT payload. `AuthService.ParseJwtClaims` does a raw JSON decode and looks for `"role"` — never found — so `CurrentUser.Roles` was always empty.
+
+**Fix:** Changed `new Claim(ClaimTypes.Role, r)` → `new Claim("role", r)` in `AuthController.cs`. This emits the JWT-standard short form explicitly. No MAUI code changes needed — `AuthService` already reads `"role"` correctly.
+
+**Verification:** Both MAUI builds (Crew + attendee) pass with 0 warnings, 0 errors.
+
+**Decision written:** `.squad/decisions/inbox/circe-role-claim-fix.md`
+
