@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using LanManager.Api.Hubs;
 using LanManager.Api.Services;
 using LanManager.Data;
@@ -12,7 +13,9 @@ QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddSignalR();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<DataSeeder>();
