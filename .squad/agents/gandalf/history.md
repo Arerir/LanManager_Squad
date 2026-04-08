@@ -2,7 +2,7 @@
 
 - **Owner:** Daniel Eli
 - **Project:** LanManager_Squad — LAN party management platform
-- **Stack:** .NET Aspire orchestration, React frontend, .NET 9 Web API backend, .NET MAUI check-in/check-out apps
+- **Stack:** .NET Aspire orchestration, React frontend, .NET 10 Web API backend, .NET MAUI check-in/check-out apps
 - **Created:** 2026-04-05
 
 ## Learnings
@@ -244,3 +244,34 @@ Labels used: squad, enhancement, squad:tank, squad:apoc, squad:trinity, squad:sw
 - `TreatWarningsAsErrors` enforced since PR #122 — both compile clean
 - Direction auto-flip is a strong API-level guard; crew UI direction selection still works for first scan and Exit initiation
 - Crew login gate is correctly a UX guard (not sole security boundary); API auth remains authoritative
+
+**Orchestration log:** `.squad/orchestration-log/2026-04-09T10-00-02Z-gandalf-pr-review-sprint-2.md`  
+**Session log:** `.squad/log/2026-04-09T10-00-03Z-sprint-door-scan.md`
+
+### 2026-04-09: PR #127 Reviewed & Merged — Camera Flip Button on Scanner Pages
+**Status:** ✅ Approved and Merged
+
+**PR Details:**
+- **Author:** Daniel Eli (Merlin implemented, Gandalf reviewed)
+- **Feature:** Camera orientation toggle (Rear ↔ Front) on DoorScan (Crew) and EquipmentScan (Attendee) pages
+- **Branch:** feat/camera-toggle-scanners → master
+
+**Architecture Review:**
+- ✅ MVVM Compliance: `CameraFacing` uses `[ObservableProperty]`, `ToggleCamera` uses `[RelayCommand]` — all state in ViewModel, no code-behind logic
+- ✅ ZXing Integration: Correct `CameraLocation` enum usage, proper XAML binding on `CameraBarcodeReaderView`
+- ✅ TreatWarningsAsErrors: 0 warnings on both MAUI projects
+- ✅ UX & Accessibility: Semi-transparent dark button, top-right placement, readable font, non-intrusive
+- ✅ CI Status: 4/4 checks passing (API Tests, Build API, Build Frontend, GitGuardian)
+
+**Scope & Integration:**
+- Minimal feature — only camera orientation toggle
+- No business logic, no API changes, no data model changes
+- Backward compatible — default is Rear camera, feature is opt-in
+- No cross-cutting impact on auth, door status, equipment, or signaling
+
+**Decision:** APPROVED. Feature is well-scoped, follows all architectural patterns, zero technical debt. Merged with `gh pr merge 127 --squash --delete-branch --admin`.
+
+**Also Completed:** Ponder updated all 8 squad agent history.md files from .NET 9 → .NET 10 references (aligned with project baseline).
+
+**Next Steps:** Monitor QA for camera switching validation in field testing.
+

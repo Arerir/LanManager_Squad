@@ -2,7 +2,7 @@
 
 - **Owner:** Daniel Eli
 - **Project:** LanManager_Squad — LAN party management platform
-- **Stack:** .NET Aspire orchestration, React frontend, .NET 9 Web API backend, .NET MAUI check-in/check-out apps
+- **Stack:** .NET Aspire orchestration, React frontend, .NET 10 Web API backend, .NET MAUI check-in/check-out apps
 - **Created:** 2026-04-05
 
 ## Learnings
@@ -72,3 +72,31 @@
 - Team: Merlin (backend service/PDF/endpoint), Morgana (frontend), Radagast (tests), Gandalf (merge orchestration)
 
 **Session Record:** Full PDF report sprint documented in `.squad/log/2026-04-08T12-20-05Z-pdf-sprint-complete.md` (20 todos completed, 6 PRs merged clean, zero conflicts)
+
+### 2026-04-09: Future MAUI Work Routing — Circe Owns All Mobile Apps
+
+**Decision:** Going forward, all MAUI work (both attendee and crew apps) routes to Circe, not Merlin. Merlin focuses on backend API/services; Circe owns client-side mobile/desktop.
+
+**Context:** PR #127 (camera toggle) was implemented by Merlin on both MAUI apps. This was an exception for a quick feature. Standard workflow going forward:
+- **Merlin** → Backend API, services, controllers, business logic
+- **Circe** → All MAUI apps (LanManager.Maui attendee, LanManager.Maui.Crew), ViewModels, XAML, DI wiring
+- **Morgana** → React frontend (TypeScript, components, pages)
+- **Radagast** → Test coverage (unit, E2E, load)
+- **Gandalf** → Architecture review, PR orchestration, lead direction
+
+**Implementation Note:** LanManager.Maui.Shared (AuthService, ApiService, Config) is shared and maintained collaboratively by Circe and Morgana (coordinated during feature review).
+
+**Status:** Effective immediately for future sprint planning.
+
+### 2026-04-09: Bug Fix — Crew App Role Claim Mismatch (PR #128)
+
+**Bug:** Crew app login always failed with "Access denied" for all users regardless of role.
+
+**Root cause:** `AuthController.GenerateToken` used `new Claim(ClaimTypes.Role, r)` with a directly-constructed `new JwtSecurityToken(claims: claims)`. In this code path, `JwtSecurityTokenHandler.WriteToken` does **not** apply `OutboundClaimTypeMap`, so `ClaimTypes.Role` was written verbatim as the full URI (`http://schemas.microsoft.com/ws/2008/06/identity/claims/role`) in the JWT payload. `AuthService.ParseJwtClaims` does a raw JSON decode and looks for `"role"` — never found — so `CurrentUser.Roles` was always empty.
+
+**Fix:** Changed `new Claim(ClaimTypes.Role, r)` → `new Claim("role", r)` in `AuthController.cs`. This emits the JWT-standard short form explicitly. No MAUI code changes needed — `AuthService` already reads `"role"` correctly.
+
+**Verification:** Both MAUI builds (Crew + attendee) pass with 0 warnings, 0 errors.
+
+**Decision written:** `.squad/decisions/inbox/circe-role-claim-fix.md`
+

@@ -2,7 +2,7 @@
 
 - **Owner:** Daniel Eli
 - **Project:** LanManager_Squad — LAN party management platform
-- **Stack:** .NET Aspire orchestration, React frontend, .NET 9 Web API backend, .NET MAUI check-in/check-out apps
+- **Stack:** .NET Aspire orchestration, React frontend, .NET 10 Web API backend, .NET MAUI check-in/check-out apps
 - **Created:** 2026-04-05
 
 ## Learnings
@@ -172,3 +172,20 @@ ame field until backend is deployed
 **Branch/PR:** ix/seating-display-name-frontend → PR #120
 
 **Pattern:** When backend DTO changes in parallel, update TypeScript interfaces first, then usage sites, then build to catch any missed locations via compiler errors.
+
+## PR #125 — DoorLog SignalR Live Updates (2026-04-09)
+
+Wired `DoorLogTab` to `/hubs/attendance` SignalR using the identical pattern established in `LiveAttendanceTab`. New door scans from any crew device now appear instantly without polling.
+
+**Key implementation details:**
+- `DoorScanBroadcast` TypeScript interface fully typed: `{ eventId, userId, userName, direction, scannedAt }` — no `any`
+- Per-tab `HubConnectionBuilder` connection (not shared singleton)
+- `useEffect` cleanup: `connection.stop()` on unmount and `eventId` change — no connection leaks
+- Event scoping guard: `if (payload.eventId !== eventId) return` — no cross-event data bleed
+- `withAutomaticReconnect()` + all three reconnect state handlers
+- Direction column: colored pill badges — Entry = green (`#27ae60`), Exit = red (`#c0392b`)
+- Hub status badge (Live / Reconnecting... / Disconnected) mirrors CheckIn tab pattern
+- Synthetic React key: `userId + scannedAt` for broadcast rows
+
+**Branch:** `feat/doorlog-signalr-frontend` | **PR:** #125 | **Merged by:** Gandalf (squash, `--admin`)  
+**CI:** ✅ 4/4 passing | **Orchestration log:** `.squad/orchestration-log/2026-04-09T10-00-00Z-morgana-doorlog-signalr.md`
