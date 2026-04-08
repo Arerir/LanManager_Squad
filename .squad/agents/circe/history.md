@@ -78,6 +78,8 @@
 **Decision:** Going forward, all MAUI work (both attendee and crew apps) routes to Circe, not Merlin. Merlin focuses on backend API/services; Circe owns client-side mobile/desktop.
 
 **Context:** PR #127 (camera toggle) was implemented by Merlin on both MAUI apps. This was an exception for a quick feature. Standard workflow going forward:
+
+📌 Team update (2026-04-10T10-00-00Z): Fixed critical JWT role claim bug in AuthController — PR #128 merged. Role claims must use short-form "role" (not ClaimTypes.Role URI). Crew app logins now validate roles correctly. Decided by Circe, Gandalf
 - **Merlin** → Backend API, services, controllers, business logic
 - **Circe** → All MAUI apps (LanManager.Maui attendee, LanManager.Maui.Crew), ViewModels, XAML, DI wiring
 - **Morgana** → React frontend (TypeScript, components, pages)

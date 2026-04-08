@@ -488,6 +488,36 @@ Ponder updated all 8 squad agent history files (.squad/agents/*/history.md) to r
 **Merge Command:** `gh pr merge 127 --squash --delete-branch --admin`  
 **Outcome:** Feature merged to master, branch deleted. Ready for QA field testing.
 
+### 2026-04-10: JWT Role Claim Type — AuthController
+**By:** Circe  
+**Date:** 2026-04-10  
+**PR:** #128  
+**Status:** ✅ MERGED
+
+**What:** Fixed critical bug in `AuthController.GenerateToken`. Role claims must use JWT-standard short form `"role"` (not `ClaimTypes.Role` URI). When `JwtSecurityTokenHandler.WriteToken()` is called on a pre-built `JwtSecurityToken`, the `OutboundClaimTypeMap` is NOT applied, resulting in the full URI `http://schemas.microsoft.com/ws/2008/06/identity/claims/role` being written to the JWT payload instead of the short form key.
+
+**Impact:** MAUI's `AuthService` performs raw JSON decode of JWT payload and searches for the `"role"` key. The URI key was never found, leaving `CurrentUser.Roles` empty. Crew app's role gate denied all logins to non-staff users.
+
+**Solution:** Single-line fix in `AuthController.cs` line 56:
+```csharp
+// Before
+claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
+// After
+claims.AddRange(roles.Select(r => new Claim("role", r)));
+```
+
+**Implications:**
+- Any future claim additions in `AuthController` using long-form `ClaimTypes.*` URIs must verify the JWT payload key that will actually be written
+- `AuthService.ParseJwtClaims` reads `"role"` (raw JSON key) — this is correct and requires no change
+- No MAUI code changes required; fix is isolated to one line
+
+**Why:** The outbound claim type mapping is only applied when the handler creates the token via `CreateToken(SecurityTokenDescriptor)`, not when writing a pre-built token. Using the short form explicitly emits the JWT-standard key.
+
+**CI Status:** ✅ All checks passed (API Tests, Frontend Build, GitGuardian Security Checks)
+
+**Merge Notes:** PR #128 rebased onto master by Circe to resolve conflicts, then merged with squash strategy by Gandalf. All CI checks green.
+
 ## Governance
 
 - All meaningful changes require team consensus
