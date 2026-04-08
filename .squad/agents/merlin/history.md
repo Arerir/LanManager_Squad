@@ -116,4 +116,23 @@ Added QuestPDF 2026.2.4 to LanManager.Api.csproj. Set `QuestPDF.Settings.License
 
 **Build:** MAUI (0 warnings, 0 errors) MAUI.Crew (0 warnings, 0 errors) | **Branch:** fix/local-qr-and-crew-operator-role | **PR:** https://github.com/Arerir/LanManager_Squad/pull/124
 
+## PR #126 — Door Scan Auto-Direction, Attendee Status, QR Colors, Crew Login Gate (2026-04-09)
+
+### Task 1 — Backend: Auto-flip door direction after Exit
+- In `DoorPassController.DoorScan`, after parsing direction and before `isCheckedIn` check, queries the user's latest door pass. If last pass was Exit, forces `dir = Entry`. Ensures after any exit the next scan is always Entry regardless of what crew app sends.
+
+### Task 2 — Backend: Attendee door status endpoint
+- Added `GET /api/events/{eventId}/attendees/{userId}/door-status` returning `{ status: "Entry" | "Exit" | "Unregistered" }`.
+- Authorized: staff can query any user; attendees can only query themselves.
+
+### Task 3 — Attendee MAUI: QR page status colors + message
+- `ApiService.GetAttendeeDoorStatusAsync()` added to `LanManager.Maui.Shared`.
+- `AttendeeQrViewModel` now takes `(ApiService, AuthService, AppStateService)` — fetches door status after QR generation.
+- `PageBackground` property drives page color: green (Entry), red (Exit), purple (Unregistered/null).
+- `AttendeeQrPage.xaml` binds `BackgroundColor` to `PageBackground`; StatusMessage `TextColor` changed to `White`.
+
+### Task 4 — Crew MAUI: Restrict login to crew roles
+- `LoginViewModel.LoginAsync` now checks `CurrentUser.Roles` post-login. If no Admin/Organizer/Operator role found, calls `LogoutAsync()` and shows "Access denied" error message.
+
+**Build:** API ✅ MAUI ✅ MAUI.Crew ✅ (0 warnings, 0 errors each) | **Branch:** feat/door-scan-status-sprint | **PR:** https://github.com/Arerir/LanManager_Squad/pull/126
 

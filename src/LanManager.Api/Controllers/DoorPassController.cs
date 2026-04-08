@@ -57,6 +57,16 @@ public class DoorPassController(
         if (!Enum.TryParse<DoorPassDirection>(request.Direction, out var dir))
             return BadRequest(new { message = $"Invalid direction '{request.Direction}'. Use 'Exit' or 'Entry'." });
 
+        // Query the user's latest door pass for this event
+        var lastPass = await db.DoorPasses
+            .Where(d => d.EventId == eventId && d.UserId == request.UserId)
+            .OrderByDescending(d => d.ScannedAt)
+            .FirstOrDefaultAsync();
+
+        // If last pass was Exit → force Entry direction
+        if (lastPass?.Direction == DoorPassDirection.Exit)
+            dir = DoorPassDirection.Entry;
+
         var isCheckedIn = await db.CheckInRecords
             .AnyAsync(c => c.EventId == eventId && c.UserId == request.UserId && c.CheckedOutAt == null);
 
@@ -91,6 +101,30 @@ public class DoorPassController(
 
         var result = new DoorScanResultDto(passDto, wasAutoCheckedIn, user.UserName ?? string.Empty);
         return CreatedAtAction(nameof(GetDoorLog), new { eventId }, result);
+    }
+
+    [HttpGet("attendees/{userId:guid}/door-status")]
+    [Authorize]
+    public async Task<IActionResult> GetAttendeeDoorStatus(Guid eventId, Guid userId)
+    {
+        var callerIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var callerIsStaff = User.IsInRole("Admin") || User.IsInRole("Organizer") || User.IsInRole("Operator");
+
+        if (!callerIsStaff)
+        {
+            if (!Guid.TryParse(callerIdStr, out var callerId) || callerId != userId)
+                return Forbid();
+        }
+
+        var lastPass = await db.DoorPasses
+            .Where(d => d.EventId == eventId && d.UserId == userId)
+            .OrderByDescending(d => d.ScannedAt)
+            .FirstOrDefaultAsync();
+
+        if (lastPass == null)
+            return Ok(new { status = "Unregistered" });
+
+        return Ok(new { status = lastPass.Direction.ToString() });
     }
 
     [HttpGet("door-log")]

@@ -34,6 +34,15 @@ public partial class LoginViewModel : ObservableObject
             var success = await _authService.LoginAsync(Email, Password);
             if (success)
             {
+                var roles = _authService.CurrentUser?.Roles ?? new List<string>();
+                var isCrewRole = roles.Any(r => r == "Admin" || r == "Organizer" || r == "Operator");
+                if (!isCrewRole)
+                {
+                    await _authService.LogoutAsync();
+                    ErrorMessage = "Access denied. This app is for crew only (Admin, Organizer, or Operator).";
+                    IsBusy = false;
+                    return;
+                }
                 await Shell.Current.GoToAsync("//MainPage");
             }
             else
