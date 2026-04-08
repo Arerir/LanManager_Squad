@@ -54,7 +54,7 @@ public class EventReportPdfGeneratorTests
         var bytes = generator.GeneratePdf(data);
 
         Assert.NotNull(bytes);
-        Assert.NotEmpty(bytes);
+        Assert.True(bytes.Length > 1024, $"PDF is too small ({bytes.Length} bytes); expected > 1 KB. Likely empty document or license issue.");
     }
 
     [Fact]
