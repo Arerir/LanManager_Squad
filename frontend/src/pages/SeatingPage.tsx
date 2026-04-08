@@ -5,10 +5,12 @@ import type { SeatDto } from '../api/seats';
 import { getAttendance } from '../api/attendance';
 import type { AttendanceDto } from '../api/attendance';
 import { getUser } from '../api/auth';
+import { useEventContext } from '../context/EventContext';
 
 export function SeatingPage() {
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get('eventId') ?? '';
+  const { setSelectedEventId } = useEventContext();
   const [seats, setSeats] = useState<SeatDto[]>([]);
   const [attendees, setAttendees] = useState<AttendanceDto[]>([]);
   const [selectedSeat, setSelectedSeat] = useState<SeatDto | null>(null);
@@ -21,6 +23,10 @@ export function SeatingPage() {
   const currentUser = getUser();
   const canManage = currentUser?.roles.some(r => ['Admin', 'Organizer', 'Operator'].includes(r));
   const canSetup = currentUser?.roles.some(r => ['Admin', 'Organizer'].includes(r));
+
+  useEffect(() => {
+    if (eventId) setSelectedEventId(eventId);
+  }, [eventId, setSelectedEventId]);
 
   useEffect(() => {
     if (!eventId) return;

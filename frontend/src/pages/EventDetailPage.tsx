@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getEvent, getEventAttendees, deleteEvent } from '../api/events';
 import type { EventDto } from '../api/events';
 import type { UserDto } from '../api/users';
+import { useEventContext } from '../context/EventContext';
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
   Draft:     { bg: 'rgba(90,90,128,0.2)',   color: '#9ca3c8' },
@@ -14,6 +15,7 @@ const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { setSelectedEventId } = useEventContext();
 
   const [event, setEvent] = useState<EventDto | null>(null);
   const [attendees, setAttendees] = useState<UserDto[]>([]);
@@ -29,10 +31,11 @@ export function EventDetailPage() {
       .then(([ev, att]) => {
         setEvent(ev);
         setAttendees(att);
+        setSelectedEventId(ev.id);
       })
       .catch((e: Error) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, setSelectedEventId]);
 
   async function handleDelete() {
     if (!id || !window.confirm('Delete this event?')) return;

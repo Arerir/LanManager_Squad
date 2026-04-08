@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { EventProvider } from './context/EventContext';
 import { AppLayout } from './layouts/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { EventsPage } from './pages/EventsPage';
@@ -15,24 +16,26 @@ import { EquipmentPage } from './pages/EquipmentPage';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="events" element={<EventsPage />} />
-          <Route path="events/new" element={<EventFormPage />} />
-          <Route path="events/:id" element={<EventDetailPage />} />
-          <Route path="events/:id/edit" element={<EventFormPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="attendance" element={<AttendancePage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="seating" element={<SeatingPage />} />
-          <Route path="tournaments" element={<TournamentPage />} />
-          <Route path="equipment" element={<EquipmentPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <EventProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            <Route index element={<DashboardPage />} />
+            <Route path="events" element={<EventsPage />} />
+            <Route path="events/new" element={<EventFormPage />} />
+            <Route path="events/:id" element={<EventDetailPage />} />
+            <Route path="events/:id/edit" element={<EventFormPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="attendance" element={<AttendancePage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="seating" element={<SeatingPage />} />
+            <Route path="tournaments" element={<TournamentPage />} />
+            <Route path="equipment" element={<EquipmentPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </EventProvider>
   );
 }
