@@ -34,3 +34,26 @@ Agent Scribe initialized and ready for work.
 - No CI workflow configured (.github/workflows empty)
 - CORS configured for `localhost:5173` + `https:5173`
 - Database: SQLite dev, SQL Server prod (via EF Core migrations)
+
+### 2026-04-09: Documentation Sync — .NET 9 → .NET 10
+
+**Task:** Updated all 8 squad agent history.md files to reflect project baseline .NET 10 instead of stale .NET 9 references.
+
+**Files Updated:**
+1. `.squad/agents/merlin/history.md` — Updated .NET 9 → .NET 10
+2. `.squad/agents/gandalf/history.md` — Updated .NET 9 → .NET 10
+3. `.squad/agents/circe/history.md` — Updated .NET 9 → .NET 10
+4. `.squad/agents/morgana/history.md` — Updated .NET 9 → .NET 10
+5. `.squad/agents/radagast/history.md` — Updated .NET 9 → .NET 10
+6. `.squad/agents/apoc/history.md` — Updated .NET 9 → .NET 10
+7. `.squad/agents/sibyll/history.md` — Updated .NET 9 → .NET 10
+8. `.squad/agents/ponder/history.md` — Updated .NET 9 → .NET 10
+
+**Context:** Project targets `net10.0` across all csproj files. Agent history files contained outdated references to .NET 9, creating confusion for new team members and future maintenance. All 8 corrections were documentation-only (no code changes).
+
+**Validation:** Git diff confirmed version string corrections only.
+
+**Status:** Complete, committed to feat/camera-toggle-scanners (merged with PR #127).
+
+**Importance:** Squad documentation now consistently reflects the project's actual baseline (.NET 10). Reduces onboarding friction and eliminates version ambiguity.
+

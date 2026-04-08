@@ -158,3 +158,30 @@ Added QuestPDF 2026.2.4 to LanManager.Api.csproj. Set `QuestPDF.Settings.License
 
 **Build:** API ✅ MAUI ✅ MAUI.Crew ✅ (0 warnings, 0 errors each) | **Branch:** feat/door-scan-status-sprint | **PR:** https://github.com/Arerir/LanManager_Squad/pull/126
 
+## PR #127 — Camera Flip Button on DoorScan & EquipmentScan (2026-04-09)
+
+### Task: Add camera orientation toggle (Rear ↔ Front) to scanner pages
+
+**Changes Made:**
+- Added `[ObservableProperty] CameraLocation CameraFacing` (default: `Rear`) to both ViewModels
+- Added `[RelayCommand] ToggleCamera()` to both ViewModels
+- Wrapped `CameraBarcodeReaderView` in `<Grid>` with overlay button on both Pages
+- Button styling: Semi-transparent dark background (`#AA000000`), top-right placement, rounded corners, white text
+
+**Files Modified:**
+- `src/LanManager.Maui.Crew/ViewModels/DoorScanViewModel.cs` — CameraFacing property, ToggleCamera command
+- `src/LanManager.Maui.Crew/Views/DoorScanPage.xaml` — Grid + button overlay
+- `src/LanManager.Maui/ViewModels/EquipmentScanViewModel.cs` — CameraFacing property, ToggleCamera command
+- `src/LanManager.Maui/Views/EquipmentScanPage.xaml` — Grid + button overlay
+
+**Build Results:**
+- MAUI ✅ (0 warnings, 0 errors)
+- MAUI.Crew ✅ (0 warnings, 0 errors)
+- CI: 4/4 checks passing (API Tests, Build API, Build Frontend, GitGuardian)
+
+**Branch:** feat/camera-toggle-scanners  
+**PR:** https://github.com/Arerir/LanManager_Squad/pull/127  
+**Merged:** Yes (squash merge via `--admin`)
+
+**Pattern Established:** ZXing.Net.MAUI's `CameraLocation` is a bindable property — can toggle camera orientation purely via MVVM binding without code-behind. Grid overlay is idiomatic MAUI approach for floating UI over camera view.
+

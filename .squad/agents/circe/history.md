@@ -72,3 +72,19 @@
 - Team: Merlin (backend service/PDF/endpoint), Morgana (frontend), Radagast (tests), Gandalf (merge orchestration)
 
 **Session Record:** Full PDF report sprint documented in `.squad/log/2026-04-08T12-20-05Z-pdf-sprint-complete.md` (20 todos completed, 6 PRs merged clean, zero conflicts)
+
+### 2026-04-09: Future MAUI Work Routing — Circe Owns All Mobile Apps
+
+**Decision:** Going forward, all MAUI work (both attendee and crew apps) routes to Circe, not Merlin. Merlin focuses on backend API/services; Circe owns client-side mobile/desktop.
+
+**Context:** PR #127 (camera toggle) was implemented by Merlin on both MAUI apps. This was an exception for a quick feature. Standard workflow going forward:
+- **Merlin** → Backend API, services, controllers, business logic
+- **Circe** → All MAUI apps (LanManager.Maui attendee, LanManager.Maui.Crew), ViewModels, XAML, DI wiring
+- **Morgana** → React frontend (TypeScript, components, pages)
+- **Radagast** → Test coverage (unit, E2E, load)
+- **Gandalf** → Architecture review, PR orchestration, lead direction
+
+**Implementation Note:** LanManager.Maui.Shared (AuthService, ApiService, Config) is shared and maintained collaboratively by Circe and Morgana (coordinated during feature review).
+
+**Status:** Effective immediately for future sprint planning.
+

@@ -429,6 +429,65 @@ Test Summary:
 - ✅ Full event report feature delivered (backend + frontend + MAUI + tests)
 - ✅ Master in good state, ready for next sprint
 
+### 2026-04-09: PR #125 & #126 Merged — DoorLog SignalR + Door Scan Sprint
+**By:** Gandalf (Lead), Morgana, Merlin  
+**Status:** ✅ Complete
+
+#### PR #125 — DoorLog SignalR Live Updates (Morgana)
+- **Feature:** Real-time door scan updates in DoorLog tab via SignalR broadcast
+- **Implementation:** Per-tab HubConnectionBuilder with `useEffect` cleanup, event scoping by `eventId`
+- **Color coding:** Entry=green, Exit=red (consistent with seating card language)
+- **Status Badge:** Live/Reconnecting/Disconnected with automatic reconnect handling
+- **Architecture:** Identical pattern to `LiveAttendanceTab` for consistency
+
+#### PR #126 — Door Scan Auto-Direction, Attendee Status, QR Colors, Crew Login Gate (Merlin)
+1. **Auto-flip direction (API-level idempotency):** User's last pass was Exit → force next Entry regardless of crew app input
+2. **Attendee door status endpoint:** `GET /api/events/{eventId}/attendees/{userId}/door-status` returns `{ status: "Entry"|"Exit"|"Unregistered" }`
+3. **QR page background color:** Encodes scan status (dark green=Entry, dark red=Exit, dark purple=Unregistered)
+4. **Crew login role gate:** Only Admin/Organizer/Operator users can log in; non-crew immediately logged out with error
+
+**Merge Results:**
+- ✅ 4/4 CI checks passing (API Tests, Build API, Build Frontend, GitGuardian)
+- ✅ Zero warnings (TreatWarningsAsErrors enforced since PR #122)
+- ✅ Both PRs merged via `--squash --admin`, branches deleted
+
+### 2026-04-09: PR #127 Merged — Camera Flip Button on Scanner Pages
+**By:** Merlin (implementation), Gandalf (review)  
+**Status:** ✅ MERGED
+
+#### Feature: Camera Orientation Toggle
+Adds Rear ↔ Front camera toggle button overlay on barcode scanner views in both MAUI apps.
+
+**Implementation Pattern:**
+- `[ObservableProperty] CameraLocation CameraFacing` (default: `Rear`)
+- `[RelayCommand] ToggleCamera()` for state toggling
+- XAML: `CameraBarcodeReaderView` wrapped in `<Grid>` with overlay button
+- Button styling: Semi-transparent dark pill (`#AA000000`), top-right corner, rounded corners
+
+**Files Modified:**
+- `src/LanManager.Maui.Crew/ViewModels/DoorScanViewModel.cs` — CameraFacing + ToggleCamera
+- `src/LanManager.Maui.Crew/Views/DoorScanPage.xaml` — Grid overlay with button
+- `src/LanManager.Maui/ViewModels/EquipmentScanViewModel.cs` — CameraFacing + ToggleCamera
+- `src/LanManager.Maui/Views/EquipmentScanPage.xaml` — Grid overlay with button
+
+**Architecture Review Notes:**
+- ✅ MVVM compliant: No code-behind logic, pure binding pattern
+- ✅ ZXing integration: Correct `CameraLocation` enum usage, proper XAML binding
+- ✅ Zero warnings on both MAUI projects (TreatWarningsAsErrors enforced)
+- ✅ UX: Non-intrusive, accessible button placement
+- ✅ CI: 4/4 checks passing
+
+**Decision:** Approved. Feature is well-scoped, architecturally sound, introduces no technical debt.
+
+#### Documentation: .NET 9 → .NET 10 Sync
+Ponder updated all 8 squad agent history files (.squad/agents/*/history.md) to reflect project baseline of .NET 10 instead of stale .NET 9 references.
+- **Scope:** Documentation only, no code changes
+- **Validation:** Git diff confirmed only version string corrections
+- **Status:** Complete, committed to feat/camera-toggle-scanners
+
+**Merge Command:** `gh pr merge 127 --squash --delete-branch --admin`  
+**Outcome:** Feature merged to master, branch deleted. Ready for QA field testing.
+
 ## Governance
 
 - All meaningful changes require team consensus
