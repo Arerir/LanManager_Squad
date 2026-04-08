@@ -2,14 +2,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LanManager.Maui.Shared.Services;
 using System.Collections.ObjectModel;
-using LanManager.Maui.Services;
 
-namespace LanManager.Maui.ViewModels;
+namespace LanManager.Maui.Crew.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
     private readonly ApiService _apiService;
-    private readonly AuthService _authService;
     private readonly AppStateService _appState;
 
     [ObservableProperty]
@@ -24,10 +22,9 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private string _statusMessage = string.Empty;
 
-    public MainViewModel(ApiService apiService, AuthService authService, AppStateService appState)
+    public MainViewModel(ApiService apiService, AppStateService appState)
     {
         _apiService = apiService;
-        _authService = authService;
         _appState = appState;
     }
 
@@ -78,7 +75,9 @@ public partial class MainViewModel : ObservableObject
         }
 
         _appState.SetEvent(SelectedEvent.Id, SelectedEvent.Name);
-        await Shell.Current.GoToAsync($"AttendeeHubPage?eventId={SelectedEvent.Id}");
+
+        await Shell.Current.GoToAsync($"//CheckInPage?eventId={SelectedEvent.Id}");
     }
 }
+
 
