@@ -275,3 +275,41 @@ Labels used: squad, enhancement, squad:tank, squad:apoc, squad:trinity, squad:sw
 
 **Next Steps:** Monitor QA for camera switching validation in field testing.
 
+### 2026-04-10: PR #128 Review & Merge — JWT Role Claim Type Fix
+**Status:** ✅ Approved and Merged
+
+**PR Details:**
+- **Author:** Circe (diagnosed & fixed), Gandalf (reviewed & merged)
+- **Issue:** JWT role claim mismatch in Crew app login — `AuthController.GenerateToken` was using `ClaimTypes.Role` (URI) instead of JWT-standard short form `"role"`
+- **Branch:** fix/crew-role-claim-type → master
+- **Root Cause:** When `JwtSecurityTokenHandler.WriteToken()` is called on a pre-built `JwtSecurityToken`, the `OutboundClaimTypeMap` is NOT applied. Result: full URI `http://schemas.microsoft.com/ws/2008/06/identity/claims/role` written to JWT payload instead of short form `"role"`
+- **Impact:** MAUI `AuthService` performs raw JSON decode, looking for `"role"` key. The URI key was never found, leaving `CurrentUser.Roles` empty. Crew app's role gate denied all logins.
+
+**Fix:**
+```csharp
+// AuthController.cs, line 56
+// Before: claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+// After:  claims.AddRange(roles.Select(r => new Claim("role", r)));
+```
+
+**Architecture Review:**
+- ✅ One-line fix, minimal scope
+- ✅ Root cause properly understood: `OutboundClaimTypeMap` only applied in `CreateToken(SecurityTokenDescriptor)`, not `WriteToken(pre-built token)`
+- ✅ No MAUI code changes required — `AuthService.ParseJwtClaims` already expects `"role"` short form
+- ✅ CI Status: 5/5 checks passing (API Tests, Build API, Build Frontend, GitGuardian, Sync Squad Labels)
+- ✅ Both MAUI builds passed: LanManager.Maui.Crew (0 warnings, 0 errors), LanManager.Maui (0 warnings, 0 errors)
+- ✅ `TreatWarningsAsErrors` enforced — no warnings on any project
+
+**Merge Process:**
+1. Circe diagnosed root cause, opened PR #128
+2. Gandalf identified merge conflict blocker, approved pending rebase
+3. Circe rebased fix/crew-role-claim-type onto master, resolved .squad/ docs conflicts
+4. Gandalf merged with `gh pr merge 128 --squash --delete-branch --admin`
+5. Master updated with squash commit, branch cleaned up
+
+**Implications:**
+- Any future claim additions in `AuthController` using long-form `ClaimTypes.*` URIs must verify the JWT payload key that will actually be written
+- This is an architectural lesson: trust JWT spec, not .NET abstractions when the abstraction doesn't apply (pre-built tokens bypass claim type mapping)
+
+**Decision:** APPROVED. Core fix is correct, minimal, safe. No MAUI code changes needed. Crew app logins now validate roles correctly.
+
