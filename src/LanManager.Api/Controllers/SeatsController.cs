@@ -75,8 +75,9 @@ public class SeatsController : ControllerBase
         var prev = await _db.Seats.FirstOrDefaultAsync(s => s.EventId == eventId && s.AssignedUserId == request.UserId);
         if (prev != null) { prev.AssignedUserId = null; prev.AssignedUserName = null; prev.AssignedAt = null; }
 
+        var user = await _db.Users.FindAsync(request.UserId);
         seat.AssignedUserId = request.UserId;
-        seat.AssignedUserName = request.UserName;
+        seat.AssignedUserName = user?.Name ?? request.UserName;
         seat.AssignedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
         return Ok(new SeatDto(seat.Id, seat.EventId, seat.Row, seat.Column, seat.Label, seat.AssignedUserId, seat.AssignedUserName, seat.AssignedAt));

@@ -4,6 +4,7 @@ import { apiFetch } from './apiClient';
 export interface AttendanceDto {
   userId: string;
   userName: string;
+  name: string;
   checkedInAt: string;
 }
 
