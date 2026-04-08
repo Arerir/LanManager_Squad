@@ -218,3 +218,29 @@ Labels used: squad, enhancement, squad:tank, squad:apoc, squad:trinity, squad:sw
 - QR availability fix: Logical OR correctly expands access from formal registrations to any checked-in attendee
 - No regressions — both fixes are minimal and focused on their specific issues
 - Query param implementation is idiomatic MAUI navigation pattern
+
+### 2026-04-09: PRs #125 & #126 Merged — DoorLog SignalR + Door Scan Sprint
+**Merged:** PR #125 (Morgana — DoorLog SignalR), PR #126 (Merlin — Door scan auto-direction, status, QR colors, Crew login gate)
+
+**CI Status (both):** ✅ 4/4 checks passing (API Tests, Build API, Build Frontend, GitGuardian)
+
+**PR #125 — feat/doorlog-signalr-frontend:**
+- `DoorScanBroadcast` TypeScript interface fully typed (eventId, userId, userName, direction, scannedAt)
+- SignalR connection cleanup on unmount confirmed: `return () => { connection.stop(); }` — no leaks
+- Event scoping guard (`if (payload.eventId !== eventId) return`) prevents cross-event SignalR bleed
+- Entry=green (`#27ae60`), Exit=red (`#c0392b`) pill badges — semantically correct
+- Hub status badge (Live/Reconnecting.../Disconnected) with `withAutomaticReconnect()` + all three reconnect handlers
+- Merge: `gh pr merge 125 --squash --delete-branch --admin`
+
+**PR #126 — feat/door-scan-status-sprint:**
+- **Auto-flip direction**: Queries user's latest door pass before saving; if last was Exit, forces Entry regardless of what crew app sends. Idempotency at API level — prevents double-exits.
+- **Status endpoint**: `GET /api/events/{eventId}/attendees/{userId}/door-status` returns `{ status: "Entry"|"Exit"|"Unregistered" }`. Auth: staff can query any; attendees self-only. Matches GetQrCode pattern.
+- **QR page colors**: `BackgroundColor="{Binding PageBackground}"` binding; `ApplyStatus()` sets dark green/red/purple; `StatusMessage` TextColor changed to White for readability.
+- **Crew login gate**: `LogoutAsync()` called before setting `ErrorMessage` — user is cleanly logged out first, then shown "Access denied" message. `IsBusy = false` + `return` prevents navigation.
+- Merge: `gh pr merge 126 --squash --delete-branch --admin`
+
+**Review Notes:**
+- Both PRs are well-scoped, zero regressions detected
+- `TreatWarningsAsErrors` enforced since PR #122 — both compile clean
+- Direction auto-flip is a strong API-level guard; crew UI direction selection still works for first scan and Exit initiation
+- Crew login gate is correctly a UX guard (not sole security boundary); API auth remains authoritative
