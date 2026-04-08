@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LanManager.Maui.Shared.Services;
 using System.Collections.ObjectModel;
-using LanManager.Maui.Services;
+using AppStateService = LanManager.Maui.Services.AppStateService;
 
 namespace LanManager.Maui.ViewModels;
 
@@ -131,12 +131,5 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     private async Task GoToEquipmentScanAsync()
         => await Shell.Current.GoToAsync("EquipmentScanPage");
-
-    [RelayCommand]
-    private async Task GoToDoorScannerAsync()
-    {
-        var name = Uri.EscapeDataString(!string.IsNullOrEmpty(_appState.EventName) ? _appState.EventName : string.Empty);
-        await Shell.Current.GoToAsync($"DoorScanPage?eventId={_eventId}&eventName={name}");
-    }
 }
 

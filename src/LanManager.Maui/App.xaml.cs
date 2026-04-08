@@ -32,10 +32,6 @@ public partial class App : Application
             {
                 ShowLoginPage();
             }
-            else if (Windows.Count > 0 && Windows[0].Page is AppShell shell)
-            {
-                shell.UpdateMenuForUser(_authService.CurrentUser);
-            }
         }
         catch
         {
