@@ -41,14 +41,19 @@ public class TestServiceTests
     [Fact]
     public async Task GetDoorPassAsync_ReturnsClientResult()
     {
-        var expected = new DoorPassDto(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "user", "Entry", DateTime.UtcNow);
+        var expected = new List<DoorPassDto>
+        {
+            new DoorPassDto(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "user", "Entry", DateTime.UtcNow)
+        };
         var mockClient = new Mock<ICustomHttpClient>();
         mockClient.Setup(c => c.GetDoorPassAsync(DefaultTest, DefaultGuid)).ReturnsAsync(expected);
 
         var service = new TestService(mockClient.Object);
         var result = await service.GetDoorPassAsync(DefaultTest, DefaultGuid);
 
-        Assert.Equal(expected, result);
+        Assert.NotNull(result);
+        Assert.Single(result);
+        Assert.Equal(expected[0], result.First());
     }
 
     [Fact]
@@ -58,7 +63,7 @@ public class TestServiceTests
         var guid = Guid.NewGuid();
         var mockClient = new Mock<ICustomHttpClient>();
         mockClient.Setup(c => c.GetDoorPassAsync(test, guid))
-            .ReturnsAsync(new DoorPassDto(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "u", "Exit", DateTime.UtcNow));
+            .ReturnsAsync(new List<DoorPassDto> { new DoorPassDto(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "u", "Exit", DateTime.UtcNow) });
 
         var service = new TestService(mockClient.Object);
         await service.GetDoorPassAsync(test, guid);
