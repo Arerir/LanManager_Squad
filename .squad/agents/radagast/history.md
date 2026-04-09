@@ -37,3 +37,19 @@
 - Team: Merlin (backend), Morgana (frontend), Circe (MAUI crew), Gandalf (merge orchestration)
 
 **Session Record:** Full PDF report sprint documented in `.squad/log/2026-04-08T12-20-05Z-pdf-sprint-complete.md` (20 todos completed, 6 PRs merged clean, zero conflicts)
+
+### 2026-04-09: TestService Unit Tests (#135)
+**What:** Created `src/LanManager.Api.Tests/TestServiceTests.cs` with 7 xUnit tests covering all three methods of `TestService`: `GetCheckInAsync` (2), `GetDoorPassAsync` (2), `GetQrCodeAsync` (3). All 7 pass green, 0 warnings, 0 errors.
+**Key types:** `ICustomHttpClient` lives in `LanManager.Api.Clients` alongside `TestEnum`. `GetQrCodeAsync` takes `Guid userGuid` (not `UserDto`) — the service layer bridges the gap by passing `dto.Id`. `QrCodeAtt` is a record defined directly in `TestService.cs`.
+**Pattern:** Thin service tests use only `Mock<ICustomHttpClient>` — no DB, no WebApplicationFactory. Verify argument forwarding with `mockClient.Verify(...)` and assert return value mapping separately.
+**Branch:** `feat/testservice-tests` → PR #135 targeting `master`.
+
+### 2026-04-09: TestService GetDoorPassAsync IEnumerable update (#135 follow-up)
+**What:** Updated `TestServiceTests.cs` to match `GetDoorPassAsync` returning `Task<IEnumerable<DoorPassDto>>`. `ICustomHttpClient` and `TestService` were already updated by Daniel Eli before this task ran.
+**Changes:** `GetDoorPassAsync_ReturnsClientResult` now builds a `List<DoorPassDto>` and asserts via `Assert.Single` + `result.First()`. `GetDoorPassAsync_ForwardsCorrectArguments` returns a `List<DoorPassDto>` from the mock. Added `GetDoorPassAsync_ReturnsMultipleItems` to verify the full collection passes through. Total test count: 8 (7 original + 1 new), all pass.
+**Gotcha:** The `edit` tool matched the wrong occurrence when the target block appeared after a mid-edit state; always verify the file content with a raw read before assuming the view is current.
+
+### 2026-04-09: GetDoorPassAsync Signature Change — IEnumerable<DoorPassDto> (#135 followup)
+**What:** `ICustomHttpClient.GetDoorPassAsync` was updated to return `Task<IEnumerable<DoorPassDto>>`. Updated both `ITestService`/`TestService` in `TestService.cs` and the two `GetDoorPassAsync` tests in `TestServiceTests.cs` to match.
+**Pattern:** Happy-path test now asserts `Assert.NotNull`, `Assert.Single`, and `result.First()` equality. Argument forwarding test uses `List<DoorPassDto>` for the mock return value.
+**Gotcha:** When a client interface changes return type, both the service wrapper AND the ITestService interface declaration must be updated — they both lived in `TestService.cs`.
