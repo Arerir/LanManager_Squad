@@ -72,6 +72,23 @@ public class TestServiceTests
     }
 
     [Fact]
+    public async Task GetDoorPassAsync_ReturnsMultipleItems()
+    {
+        var expected = new List<DoorPassDto>
+        {
+            new DoorPassDto(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "user1", "Entry", DateTime.UtcNow),
+            new DoorPassDto(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "user2", "Exit", DateTime.UtcNow),
+        };
+        var mockClient = new Mock<ICustomHttpClient>();
+        mockClient.Setup(c => c.GetDoorPassAsync(DefaultTest, DefaultGuid)).ReturnsAsync(expected);
+
+        var service = new TestService(mockClient.Object);
+        var result = await service.GetDoorPassAsync(DefaultTest, DefaultGuid);
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
     public async Task GetQrCodeAsync_ReturnsQrCodeAttWithClientBytes()
     {
         var qrBytes = new byte[] { 1, 2, 3 };
