@@ -141,6 +141,10 @@ public partial class AttendeeHubViewModel : ObservableObject, IQueryAttributable
         => await Shell.Current.GoToAsync($"EquipmentScanPage?eventId={_eventId}");
 
     [RelayCommand]
+    private async Task GoToMyEquipmentAsync()
+        => await Shell.Current.GoToAsync($"MyEquipmentPage?eventId={_eventId}");
+
+    [RelayCommand]
     private async Task GoToDoorScannerAsync()
     {
         var name = Uri.EscapeDataString(!string.IsNullOrEmpty(_appState.EventName) ? _appState.EventName : string.Empty);

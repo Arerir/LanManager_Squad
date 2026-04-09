@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LanManager.Maui.ViewModels"
+             xmlns:services="clr-namespace:LanManager.Maui.Services"
+             x:Class="LanManager.Maui.Views.MyEquipmentPage"
+             x:DataType="vm:MyEquipmentViewModel"
+             BackgroundColor="#0d0d1a"
+             Title="My Equipment">
+
+  <Grid RowDefinitions="Auto,*">
+
+    <!-- Header -->
+    <Grid Grid.Row="0" Padding="12" ColumnDefinitions="*,Auto" BackgroundColor="#1a1a2e">
+      <Label Text="My Equipment" TextColor="White" FontSize="18" FontAttributes="Bold" VerticalOptions="Center"/>
+      <Button Grid.Column="1" Text="← Back" Command="{Binding GoBackCommand}"
+              BackgroundColor="Transparent" TextColor="White"/>
+    </Grid>
+
+    <!-- Content -->
+    <ScrollView Grid.Row="1">
+      <StackLayout Padding="16" Spacing="16">
+
+        <!-- Loading -->
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                           Color="#9b59b6" HorizontalOptions="Center" Margin="20,0"/>
+
+        <!-- Empty state -->
+        <Border BackgroundColor="#1a1a2e" StrokeShape="RoundRectangle 10" Padding="24"
+                IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotEmptyConverter}}">
+          <StackLayout Spacing="8" HorizontalOptions="Center">
+            <Label Text="📦" FontSize="40" HorizontalOptions="Center"/>
+            <Label Text="{Binding StatusMessage}" TextColor="#aaa" FontSize="16"
+                   HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+            <Label Text="Borrow equipment by scanning QR codes at the equipment desk."
+                   TextColor="#666" FontSize="13"
+                   HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+          </StackLayout>
+        </Border>
+
+        <!-- Active loans -->
+        <StackLayout IsVisible="{Binding HasActiveLoans}" Spacing="8">
+          <Label Text="Currently On Loan" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+          <CollectionView ItemsSource="{Binding ActiveLoans}">
+            <CollectionView.ItemTemplate>
+              <DataTemplate x:DataType="services:EquipmentLoanDto">
+                <Border BackgroundColor="#1a1a2e" StrokeShape="RoundRectangle 8"
+                        Stroke="#27ae60" StrokeThickness="1" Padding="14" Margin="0,0,0,8">
+                  <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="🟢" FontSize="20" VerticalOptions="Center" Margin="0,0,10,0"/>
+                    <StackLayout Grid.Column="1" Spacing="2">
+                      <Label Text="{Binding EquipmentName}" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                      <Label TextColor="#aaa" FontSize="12">
+                        <Label.FormattedText>
+                          <FormattedString>
+                            <Span Text="Borrowed: "/>
+                            <Span Text="{Binding BorrowedAt, StringFormat='{0:MMM d, HH:mm}'}"/>
+                          </FormattedString>
+                        </Label.FormattedText>
+                      </Label>
+                    </StackLayout>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+        </StackLayout>
+
+        <!-- Returned loans -->
+        <StackLayout IsVisible="{Binding HasReturnedLoans}" Spacing="8">
+          <Label Text="Returned" TextColor="#aaa" FontSize="16" FontAttributes="Bold"/>
+          <CollectionView ItemsSource="{Binding ReturnedLoans}">
+            <CollectionView.ItemTemplate>
+              <DataTemplate x:DataType="services:EquipmentLoanDto">
+                <Border BackgroundColor="#111126" StrokeShape="RoundRectangle 8"
+                        Stroke="#333" StrokeThickness="1" Padding="14" Margin="0,0,0,8">
+                  <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="⚪" FontSize="20" VerticalOptions="Center" Margin="0,0,10,0"/>
+                    <StackLayout Grid.Column="1" Spacing="2">
+                      <Label Text="{Binding EquipmentName}" TextColor="#888" FontSize="16"/>
+                      <Label TextColor="#555" FontSize="12">
+                        <Label.FormattedText>
+                          <FormattedString>
+                            <Span Text="Returned: "/>
+                            <Span Text="{Binding ReturnedAt, StringFormat='{0:MMM d, HH:mm}'}"/>
+                          </FormattedString>
+                        </Label.FormattedText>
+                      </Label>
+                    </StackLayout>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+        </StackLayout>
+
+        <!-- Refresh button -->
+        <Button Text="↻ Refresh" Command="{Binding RefreshCommand}"
+                BackgroundColor="#2c3e50" TextColor="White" CornerRadius="8"
+                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+
+      </StackLayout>
+    </ScrollView>
+  </Grid>
+</ContentPage>
